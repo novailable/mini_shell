@@ -3,43 +3,48 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aoo <marvin@42.fr>                         +#+  +:+       +#+         #
+#    By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 17:41:52 by aoo               #+#    #+#              #
-#    Updated: 2024/10/18 17:41:54 by aoo              ###   ########.fr        #
+#    Updated: 2024/12/17 18:21:34 by aoo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = mini-shell
+NAME = mini_shell
 CC = cc
 CFLAGS = -g -Wall -Wextra -Werror
-#HEADER = -lreadline
+HEADER = -I Libft
 RM = rm -rf
 
-#LIBFT_DIR = ./Libft
-#LIBFT = $(LIBFT_DIR)/libft.a
+LIBFT_DIR = ./Libft
+LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS = func_test.c
+SRCS = mini_shell.c
+
 OBJS = ${SRCS:.c=.o}
 
 all: ${NAME}
 
-${NAME}: ${OBJS}
-	${CC} ${CFLAGS} ${OBJS} -o ${NAME} -lreadline
-
-#${LIBFT}:
-#	make -C ${LIBFT_DIR}
+${NAME}: ${OBJS} ${LIBFT}
+	@echo "${NAME} compiling..."
+	@${CC} ${CFLAGS} ${HEADER} -lft -L${LIBFT_DIR} ${OBJS} ${LIBFT} -lreadline -o ${NAME}
+	@echo "${NAME} created."
+# cc -g -Wall -Wextra -Werror -I ft_printf -I Libft -I minilibix-linux -lft -L./Libft -L./ft_printf -L./minilibx-linux get_next_line.o get_next_line_utils.o fdf.o read_map.o draw_map.o bresenham.o ./ft_printf/libftprintf.a ./Libft/libft.a ./minilibx-linux/libmlx.a -lXext -lX11 -lm -lz -o fdf
+#gcc -o test test1.c -L./minilibx-linux -I minilibix-linux ./minilibx-linux/libmlx.a -lXext -lX11 -lm -lz
+${LIBFT}:
+	@make -C ${LIBFT_DIR}
 
 %.o: %.c
-	${CC} ${CFLAGS} ${HEADER} -c $< -o $@
+	@${CC} ${CFLAGS} ${HEADER} -c $< -o $@
 
 clean:
-	#make clean -C ${LIBFT_DIR}
-	${RM} ${OBJS}
+	@make clean -C ${LIBFT_DIR}
+	@echo "mini_shell cleaning..."
+	@${RM} ${OBJS}
 
 fclean: clean
-	#${RM} ${LIBFT}
-	${RM} ${NAME}
+	@${RM} ${LIBFT}
+	@${RM} ${NAME}
 
 re: fclean all
 
