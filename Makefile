@@ -3,23 +3,23 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+         #
+#    By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 17:41:52 by aoo               #+#    #+#              #
-#    Updated: 2024/12/17 18:21:34 by aoo              ###   ########.fr        #
+#    Updated: 2024/12/21 21:23:26 by aoo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = mini_shell
 CC = cc
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g #-Wall -Wextra -Werror
 HEADER = -I Libft
 RM = rm -rf
 
 LIBFT_DIR = ./Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS = mini_shell.c
+SRCS = mini_shell.c ft_split_2.c
 
 OBJS = ${SRCS:.c=.o}
 
