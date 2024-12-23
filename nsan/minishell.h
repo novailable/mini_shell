@@ -35,6 +35,14 @@ typedef enum e_token_types
 	T_VAR = 6, //$
 } t_token_types;
 
+typedef struct s_ast{
+	t_token_types type;
+	struct s_ast *left;
+	struct s_ast *right;
+	char **cmd;
+	char *file;
+}t_ast;
+
 typedef struct s_tokens
 {
 	char *str;
