@@ -6,7 +6,7 @@
 #    By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 17:41:52 by aoo               #+#    #+#              #
-#    Updated: 2024/12/21 21:23:26 by aoo              ###   ########.fr        #
+#    Updated: 2024/12/22 10:13:28 by aoo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ RM = rm -rf
 LIBFT_DIR = ./Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS = mini_shell.c ft_split_2.c
+SRCS = mini_shell.c ft_split_2.c built_in/export.c
 
 OBJS = ${SRCS:.c=.o}
 

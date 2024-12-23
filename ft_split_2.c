@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 13:35:49 by aoo               #+#    #+#             */
-/*   Updated: 2024/12/19 20:16:21 by aoo              ###   ########.fr       */
+/*   Updated: 2024/12/23 07:52:06 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	word_count(char *str, char *d_chars, char *q_chars)
 	in_word = 0;
 	in_quote = 0;
 	count = 0;
-	while (*str)
+	while (*str)               
 	{
 		if (is_quote(q_chars, *str, &in_quote))
 		{
@@ -96,7 +96,7 @@ int	word_count(char *str, char *d_chars, char *q_chars)
 	return (count);
 }
 
-static int	ft_strndup(char **r, const char *src, int len, int i)
+static int	ft_splitndup_2(char **r, const char *src, int len, int i)
 {
 	char	*result;
 	int		j;
@@ -134,7 +134,7 @@ char	*make_splitting(char *str, char *d_chars, char *q_chars, char **result)
 	{
 		start = ++str;
 		str = ft_strchr(str, in_quote);
-		ft_strndup(result, start, str - start, i++);
+		ft_splitndup_2(result, start, str - start, i++);
 		in_quote = 0;
 		str++;
 	}
@@ -143,7 +143,7 @@ char	*make_splitting(char *str, char *d_chars, char *q_chars, char **result)
 		start = str;
 		while (*str && !ft_strchr(d_chars, *str) && !ft_strchr(q_chars, *str))
 			str++;
-		ft_strndup(result, start, str - start, i++);
+		ft_splitndup_2(result, start, str - start, i++);
 	}
 	else
 		str++;
