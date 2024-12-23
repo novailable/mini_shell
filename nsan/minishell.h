@@ -54,6 +54,7 @@ void detect_str(char *str, t_tokens tokens);
 t_tokens *create_new_token(char *str);
 void	ft_lstadd_back(t_tokens **lst, t_tokens *new);
 void tokenize_str(t_tokens *new_token, char *str);
-void tokenization(char **dest, int count);
+t_tokens **tokenization(char **dest, int count);
+void ast(t_tokens **whole_list);
 
 #endif

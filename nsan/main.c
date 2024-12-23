@@ -112,11 +112,12 @@ int main() {
 	struct sigaction sa_int;
 	char **dest;
 	t_tokens tokens;
+	t_tokens **whole_list;
 	int	i;
 
 	while (1)
 	{
-		sa_int.sa_handler = handle_signal;
+		// sa_int.sa_handler = handle_signal;
 		if (sigaction(SIGINT, &sa_int, NULL) == -1)
 			printf("Sigaction failed\n");
 		sigemptyset(&sa_int.sa_mask);
@@ -132,7 +133,8 @@ int main() {
 			i = 0;
 			while (dest[i])
 				i++;
-			tokenization(dest, i);
+			whole_list = tokenization(dest, i);
+			ast(whole_list);
 			add_history(input);
 			if (strncmp(input, "clear", 5) == 0)
 				rl_clear_history();
