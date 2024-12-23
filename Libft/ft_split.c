@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 14:45:48 by aoo               #+#    #+#             */
-/*   Updated: 2024/10/31 21:17:20 by aoo              ###   ########.fr       */
+/*   Updated: 2024/12/23 07:44:34 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	free_mem(char **result, int i)
 	free(result);
 }
 
-static int	ft_strndup(char **r, const char *src, int len, int i)
+static int	ft_splitndup(char **r, const char *src, int len, int i)
 {
 	char	*result;
 	int		j;
@@ -89,7 +89,7 @@ char	**ft_split(char const *s, char *delimiters)
 			start = s;
 			while (*s && !is_delimiter(*s, delimiters))
 				s++;
-			if (!ft_strndup(result, start, s - start, i++))
+			if (!ft_splitndup(result, start, s - start, i++))
 				return (NULL);
 		}
 		else

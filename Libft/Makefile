@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+         #
+#    By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 12:01:02 by aoo               #+#    #+#              #
-#    Updated: 2024/12/17 19:33:13 by aoo              ###   ########.fr        #
+#    Updated: 2024/12/23 07:45:33 by aoo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS = -Wall -Wextra -Werror
 AR = ar rcs
 RM = rm -rf
 
-SRCS = ft_isalpha.c ft_isdigit.c ft_isdigit.c  ft_isalnum.c  ft_isascii.c ft_strstr.c\
+SRCS = ft_isalpha.c ft_isdigit.c ft_isdigit.c  ft_isalnum.c  ft_isascii.c ft_strstr.c ft_strndup.c\
        ft_isprint.c ft_strlen.c ft_memset.c ft_bzero.c ft_memcpy.c ft_memmove.c  ft_strlcpy.c \
        ft_strlcat.c ft_toupper.c ft_tolower.c ft_strchr.c ft_strrchr.c ft_strncmp.c ft_memchr.c \
        ft_memcmp.c ft_strnstr.c ft_atoi.c ft_calloc.c ft_strdup.c ft_substr.c ft_strjoin.c \

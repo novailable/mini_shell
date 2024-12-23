@@ -22,4 +22,8 @@ typedef struct s_envp {
 
 char	**ft_split_2(char *str, char *delimiters, char *ignchars);
 
+void	export(char **args, char ***envp);
+
+
+
 #endif
