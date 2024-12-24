@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 PROG 	= minishell
-SRCS 	= main.c str_utils.c utils_1.c libft/ft_strdup.c libft/ft_strncmp.c libft/ft_split.c
+SRCS 	= main.c str_utils.c utils_1.c parsing.c libft/ft_strdup.c libft/ft_strncmp.c libft/ft_split.c
 OBJS 	= ${SRCS:.c=.o}
 HEADER	= -Iincludes -lreadline
 CC 		= cc

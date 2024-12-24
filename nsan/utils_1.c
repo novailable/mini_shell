@@ -49,19 +49,19 @@ void ast(t_tokens **whole_list)
 	t_ast *ast_node;
 	t_tokens *current;
 
-	ast_node = malloc(sizeof(t_ast));
 	current = *whole_list;
 	while(current != NULL)
 	{
 		if(ft_strncmp(current->str, "|", 1) == 0)
 		{
-			// parse_pipe();
 			printf("is pipe\n");
+			parse_pipe(whole_list);
+			
 		}
 		else if(ft_strncmp(current->str, "<", 1) == 0 || ft_strncmp(current->str, ">", 1) == 0)
 		{
-			// parse_redirect();
 			printf("is redirection\n");
+			// parse_redirect(whole_list);
 		}
 		current = current->next;
 	}
