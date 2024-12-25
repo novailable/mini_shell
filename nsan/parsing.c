@@ -32,6 +32,11 @@ t_ast *parse_cmd(t_ast *ast_node, t_tokens **whole_list) //return the left node 
     int i = 0;
     ast_node->type = T_WORD;
     ast_node->cmd = cmd_list(whole_list);
+    while(ast_node->cmd[i] != NULL)
+    {
+        printf("%s\n", ast_node->cmd[i]);
+        i++;
+    }
     ast_node->left = NULL;
     ast_node->right = NULL;
     return (ast_node);
@@ -39,13 +44,15 @@ t_ast *parse_cmd(t_ast *ast_node, t_tokens **whole_list) //return the left node 
 
 void parse_pipe(t_tokens **whole_list)
 {
+    // int flag = 0;
     t_ast *ast_node;
     ast_node = malloc(sizeof(t_ast));
     ast_node->type = T_PIPE;
     // printf("type of main pipe node: %d\n",  ast_node->type);
     ast_node->left = parse_cmd(ast_node, whole_list); //this will be the node of the cmd word
+    *whole_list = (*whole_list)->next;
     // printf("type of left node: %d\n",  ast_node->left->type);
-    // ast_node->right = ast();
+    ast_node->right = ast(whole_list);
 }
 
 // void parse_redirect(t_ast **whole_list)

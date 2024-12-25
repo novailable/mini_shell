@@ -41,28 +41,38 @@ t_tokens **tokenization(char **dest, int count)
 	return (whole_list);
 }
 
-void ast(t_tokens **whole_list)
+t_ast *ast(t_tokens **whole_list)
 {
 	int i;
 
 	i = 0;
 	t_ast *ast_node;
 	t_tokens *current;
+	int flag = 0;
 
+	ast_node = NULL;
 	current = *whole_list;
+	if(current == NULL)
+		return NULL;
 	while(current != NULL)
 	{
 		if(ft_strncmp(current->str, "|", 1) == 0)
 		{
-			printf("is pipe\n");
+			// printf("is pipe\n");
+			if(flag > 0)
+				*whole_list = current->next;
+			flag++;
 			parse_pipe(whole_list);
-			
+			return (ast_node);
 		}
 		else if(ft_strncmp(current->str, "<", 1) == 0 || ft_strncmp(current->str, ">", 1) == 0)
 		{
 			printf("is redirection\n");
+			// *whole_list = current->next;
 			// parse_redirect(whole_list);
+			// return (ast_node);
 		}
 		current = current->next;
 	}
+	return (ast_node);
 }

@@ -55,7 +55,7 @@ t_tokens *create_new_token(char *str);
 void	ft_lstadd_back(t_tokens **lst, t_tokens *new);
 void tokenize_str(t_tokens *new_token, char *str);
 t_tokens **tokenization(char **dest, int count);
-void ast(t_tokens **whole_list);
+t_ast *ast(t_tokens **whole_list);
 t_ast *parse_cmd(t_ast *ast_node, t_tokens **whole_list);
 void parse_pipe(t_tokens **whole_list);
 void parse_redirect(t_ast **whole_list);
