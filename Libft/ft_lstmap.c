@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <marvin@42.fr>                         +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 15:20:10 by aoo               #+#    #+#             */
-/*   Updated: 2024/05/27 15:20:14 by aoo              ###   ########.fr       */
+/*   Updated: 2024/12/23 13:26:13 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	result = NULL;
 	while (lst)
 	{
-		item = f(lst->content);
+		item = f(lst->data);
 		n_node = ft_lstnew(item);
 		if (!n_node)
 		{

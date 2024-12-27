@@ -15,14 +15,18 @@
 
 //built_in
 
-typedef struct s_envp {
-	char	**envp;
-	int		size;
+typedef struct s_envp
+{
+	char			*key;
+	char			*value;
 }	t_envp;
 
 char	**ft_split_2(char *str, char *delimiters, char *ignchars);
 
+//built_in
 void	export(char **args, char ***envp);
+void	print_env(void *data);
+void	env(char **envp);
 
 
 
