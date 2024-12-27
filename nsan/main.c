@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2024/12/18 11:26:15 by marvin           ###   ########.fr       */
+/*   Updated: 2024/12/23 13:32:48 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void handle_signal(int sig)
+void	handle_signal(int sig)
 {
-	if(sig == SIGINT)
+	if (sig == SIGINT)
 	{
 		write(1, "minishell> \n", 13);
 		rl_on_new_line();

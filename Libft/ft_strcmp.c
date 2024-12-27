@@ -1,22 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstiter.c                                       :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <marvin@42.fr>                         +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/27 15:19:08 by aoo               #+#    #+#             */
-/*   Updated: 2024/05/27 15:19:17 by aoo              ###   ########.fr       */
+/*   Created: 2024/12/23 13:06:06 by aoo               #+#    #+#             */
+/*   Updated: 2024/12/27 11:04:10 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstiter(t_list *lst, void (*f)(void *))
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	while (lst && f)
+	unsigned char	*str1;
+	unsigned char	*str2;
+
+	str1 = (unsigned char *)s1;
+	str2 = (unsigned char *)s2;
+	while (*str1 && *str2 && *str1 == *str2)
 	{
-		f(lst->content);
-		lst = lst->next;
+		str1++;
+		str2++;
 	}
+	return (*str1 - *str2);
 }

@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 13:35:49 by aoo               #+#    #+#             */
-/*   Updated: 2024/12/23 07:52:06 by aoo              ###   ########.fr       */
+/*   Updated: 2024/12/27 08:23:25 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,29 +70,25 @@ int	is_quote(char *q_chars, char c, int *in_quote)
 int	word_count(char *str, char *d_chars, char *q_chars)
 {
 	int	count;
-	int	in_word;
 	int	in_quote;
 
-	in_word = 0;
 	in_quote = 0;
 	count = 0;
 	while (*str)               
 	{
-		if (is_quote(q_chars, *str, &in_quote))
-		{
-			str++;
-			str = ft_strchr(str, in_quote) + 1;
-			in_quote = 0;
-			count++;
-		}
 		if (!ft_strchr(d_chars, *str))
 		{
 			count++;
-			while (*str && !ft_strchr(d_chars, *str) && !ft_strchr(q_chars, *str))
+			while (*str && (!ft_strchr(d_chars, *str) || \
+			is_quote(q_chars, *str, &in_quote)))
 				str++;
 		}
-		str++;
+		else
+			str++;
+		if (!*str && in_quote)
+			return (0);
 	}
+	printf("word count : %d\n", count);
 	return (count);
 }
 
@@ -155,6 +151,9 @@ char	**ft_split_2(char *str, char *d_chars, char *q_chars)
 	char		**result;
 	int			w_count;
 	int			i;
+	int			in_quote;
+	char		*start;
+
 	if (!str)
 		return (NULL);
 	w_count = word_count(str, d_chars, q_chars);
@@ -164,19 +163,29 @@ char	**ft_split_2(char *str, char *d_chars, char *q_chars)
 	if (!result)
 		return (perror("malloc failed"), NULL);
 	i = 0;
+	in_quote = 0;
 	while (i < w_count)
 		result[i++] = NULL;
 	while (*str)
 	{
-		str = make_splitting(str, d_chars, q_chars, result);
-		if (!str)
+		if (!ft_strchr(d_chars, *str))
 		{
-			while (i-- > 0)
-				free(result[i]);
-			free(result);
-			return (NULL);
+			start = str;
+			while (*str && (!ft_strchr(d_chars, *str) || \
+					is_quote(q_chars, *str, &in_quote)))
+				str++;
+			result[i] = ft_strndup(start, str - start);
+			if (!result[i])
+			{
+				while (i-- > 0)
+					free(result[i]);
+				return (free(result), NULL);
+			}
+			i++;
 		}
+		else
+			str++;
 	}
-	result[w_count] = NULL;
+	result[i] = NULL;
 	return (result);
 }

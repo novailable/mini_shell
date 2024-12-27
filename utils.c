@@ -1,33 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndup.c                                       :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/23 07:38:12 by aoo               #+#    #+#             */
-/*   Updated: 2024/12/27 11:05:19 by aoo              ###   ########.fr       */
+/*   Created: 2024/12/23 13:32:19 by aoo               #+#    #+#             */
+/*   Updated: 2024/12/23 13:33:04 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "mini_shell.h"
 
-char	*ft_strndup(const char *src, int len)
-{
-	char	*result;
-	int		i;
-
-	if (!src)
-		return (NULL);
-	i = 0;
-	result = malloc(sizeof(char) * (len + 1));
-	if (!result)
-		return (NULL);
-	while (src[i] && i < len)
-	{
-		result[i] = src[i];
-		i++;
-	}
-	result[i] = '\0';
-	return (result);
-}

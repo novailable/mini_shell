@@ -6,7 +6,7 @@
 #    By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 17:41:52 by aoo               #+#    #+#              #
-#    Updated: 2024/12/22 10:13:28 by aoo              ###   ########.fr        #
+#    Updated: 2024/12/27 11:45:23 by aoo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,18 +19,17 @@ RM = rm -rf
 LIBFT_DIR = ./Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS = mini_shell.c ft_split_2.c built_in/export.c
+SRCS = mini_shell.c ft_split_2.c built_in/export.c built_in/env.c
 
 OBJS = ${SRCS:.c=.o}
 
 all: ${NAME}
+	@echo "${NAME} created."
 
 ${NAME}: ${OBJS} ${LIBFT}
 	@echo "${NAME} compiling..."
 	@${CC} ${CFLAGS} ${HEADER} -lft -L${LIBFT_DIR} ${OBJS} ${LIBFT} -lreadline -o ${NAME}
-	@echo "${NAME} created."
-# cc -g -Wall -Wextra -Werror -I ft_printf -I Libft -I minilibix-linux -lft -L./Libft -L./ft_printf -L./minilibx-linux get_next_line.o get_next_line_utils.o fdf.o read_map.o draw_map.o bresenham.o ./ft_printf/libftprintf.a ./Libft/libft.a ./minilibx-linux/libmlx.a -lXext -lX11 -lm -lz -o fdf
-#gcc -o test test1.c -L./minilibx-linux -I minilibix-linux ./minilibx-linux/libmlx.a -lXext -lX11 -lm -lz
+
 ${LIBFT}:
 	@make -C ${LIBFT_DIR}
 

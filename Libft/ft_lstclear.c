@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndup.c                                       :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/23 07:38:12 by aoo               #+#    #+#             */
-/*   Updated: 2024/12/27 11:05:19 by aoo              ###   ########.fr       */
+/*   Created: 2024/05/27 15:18:26 by aoo               #+#    #+#             */
+/*   Updated: 2024/12/23 13:26:13 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strndup(const char *src, int len)
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	char	*result;
-	int		i;
+	t_list	*cur_lst;
 
-	if (!src)
-		return (NULL);
-	i = 0;
-	result = malloc(sizeof(char) * (len + 1));
-	if (!result)
-		return (NULL);
-	while (src[i] && i < len)
+	while (*lst && del)
 	{
-		result[i] = src[i];
-		i++;
+		cur_lst = (*lst)->next;
+		del((*lst)->data);
+		free(*lst);
+		*lst = cur_lst;
 	}
-	result[i] = '\0';
-	return (result);
+	*lst = NULL;
 }
