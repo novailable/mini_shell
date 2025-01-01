@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 09:58:26 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/01 12:10:06 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/01 14:41:14 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,46 +87,18 @@ char	*ft_strcjoin(char *str, char c)
 	free(str);
 	return (result);
 }
+__pid_t ft_getpid()
+{
+    __pid_t pid;
 
-
-// char	*first_processing(char *str, char **envp)
-// {
-// 	char	*result;
-// 	int		start;
-// 	int		i;
-// 	int		j;
-
-// 	result = NULL;
-// 	// ft_bzero(result, ft_strlen(str));
-// 	i = 0;
-// 	j = 0;
-// 	while (str[i] && str)
-// 	{
-// 		 if (str[i] == '\\' && !in_quote && \
-//		(str[i + 1] == '\\' || str[i + 1] == '\'' \
-//		|| str[i + 1] == '$' || str[i + 1] == '\"'))
-// 		{
-// 			// printf("%c, %c\n", result[j], str[i]);
-// 			// result[j++] = str[++i];
-// 			// i++;
-// 			result = ft_strcjoin(result, str[++i]);
-// 			i++;
-// 		}
-// 		else if (str[i] == '$')
-// 		{
-// 			start = ++i;
-// 			while (str[i] && !ft_strchr("$\0", str[i]))
-// 				i++;
-// 			// result = ft_strjoin(result, ft_getenv(ft_str, envp))
-// 		}
-// 		else
-// 		{
-// 			result = ft_strcjoin(result, str[i++]);
-// 			printf("re : %s\n", result);
-// 		}
-// 	}
-// 	return (result);
-// }
+    pid = fork();
+    if (pid == -1)
+		return (perror("fork failed"), -1);
+	if (pid == 0)
+		exit(0);
+	else
+		return (wait(NULL), pid);
+}
 
 
 char	*first_processing(char *str, char **envp)
@@ -159,10 +131,9 @@ char	*first_processing(char *str, char **envp)
 			start = ++i + str;
 			while (str[i] && !ft_strchr("\\\"$", str[i]))
 				i++;
-			start = ft_strndup(start, (str + i) - start);printf("start : %s\n", start);
+			start = ft_strndup(start, (str + i) - start);
 			if (start && *start)
 			{
-				
 				result = ft_strjoin(result, ft_getenv(start, envp), 1, 0);
 				free(start);
 			}
@@ -199,10 +170,9 @@ char	*first_processing(char *str, char **envp)
 					start = ++i + str;
 					while (str[i] && !ft_strchr("\\\"$", str[i]))
 						i++;
-					start = ft_strndup(start, (str + i) - start);printf("start : %s\n", start);
+					start = ft_strndup(start, (str + i) - start);
 					if (start && *start)
 					{
-						
 						result = ft_strjoin(result, ft_getenv(start, envp), 1, 0);
 						free(start);
 					}
@@ -256,6 +226,42 @@ char	*replace_env(char *str, char **envp)
 		
 }
 
+void	sprint_env(char **envp)
+{
+	char	**temp_env;
+	int		i;
+	int		j;
+	char	*temp;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	temp_env = (char **)malloc(sizeof(char *) * (i + 1));
+	i = -1;
+	while (envp[++i])
+		temp_env[i] = envp[i];
+	temp_env[i] = NULL;
+	i = -1;
+	while (temp_env[++i])
+	{
+		j = i + 1;
+		while (temp_env[j])
+		{
+			if (ft_strcmp(temp_env[i], temp_env[j]) > 0)
+			{
+				temp = temp_env[i];
+				temp_env[i] = temp_env[j];
+				temp_env[j] = temp;
+			}
+			j++;
+		}
+	}
+	i = -1;
+	while (temp_env[++i])
+		if (*(temp_env[i]) != '_')
+			printf("declare -x %s\n", temp_env[i]);
+	free(temp_env);
+}
 
 int	main(int argc, char **argv, char **envpath)
 {
@@ -264,16 +270,17 @@ int	main(int argc, char **argv, char **envpath)
 	// t_list	*envp;
 	char	*save;
 	char	**envp;
+	pid_t	pid;
 	(void)argc;
 	(void)argv;
 	
 	int	i;
-	
-	i = 0;
 	// env(ennvpath);
 	envp = init_env(envpath);
-	if (!envp)
-		return (1);
+	sprint_env(envp);
+
+	// if (!envp)
+	// 	return (1);
 	while (1)
 	{
 		input_str = readline("mini_shell % ");
