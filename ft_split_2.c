@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 13:35:49 by aoo               #+#    #+#             */
-/*   Updated: 2024/12/27 08:23:25 by aoo              ###   ########.fr       */
+/*   Updated: 2024/12/30 09:45:04 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ int	word_count(char *str, char *d_chars, char *q_chars)
 		if (!*str && in_quote)
 			return (0);
 	}
-	printf("word count : %d\n", count);
 	return (count);
 }
 

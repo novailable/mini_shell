@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 21:18:45 by aoo               #+#    #+#             */
-/*   Updated: 2024/12/23 18:19:46 by aoo              ###   ########.fr       */
+/*   Updated: 2024/12/27 18:40:42 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	new_env(char *key_pair, char ***envp)
 	i = 0;
 	while ((*envp)[i])
 		i++;
-	printf("i : %d\n", i);
 	new_envp = (char **)malloc(sizeof(char *) * (i + 2));
 	if (!new_envp)
 		return ;
@@ -68,7 +67,7 @@ char	*ft_getenv(char *key, char **envp)
 
 	env_var = find_env(key, envp);
 	if (env_var)
-		return (ft_strchr(env_var, '='));
+		return (ft_strchr(env_var, '=') + 1);
 	return (NULL);
 }
 
@@ -89,21 +88,26 @@ void	update_env(char *key_pair, char **envp)
 void	export(char **args, char	***envp)
 {
 	int		i;
-	char	*key;
-	char	*value;
-
+	char	*key_pair;
+	char	*save;
+	
 	i = 0;
 	if (!args)
 		while (*(envp[i]))
 			printf("declare -x %s\n", *(envp[i++]));
 	else
 	{
-		while (args[i])
-		{
-			key = ft_strndup(args[i], ft_strchr(args[i], '=') - args[i]);
-			value = ft_strdup(ft_strchr(args[i], '=') + 1);
-			printf("key : %s, value : %s\n", key , value);
-			
-		}
+		// while (args[i])
+		// {
+		// 	key_pair = ft_strdup(args[i]);
+		// 	key = ft_strtokr_c(key_pair, "=", NULL, &save);
+		// 	value = ft_str
+		// 	if (find_env(ft_strtokr_c(key_pair, "=", NULL, &save), *envp))
+				
+		// 	i++;
+		// }		
+		// env(*envp);
+		// printf("\n\n");
+		new_env(args[0], envp);
 	}
 }

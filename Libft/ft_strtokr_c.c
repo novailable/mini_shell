@@ -6,14 +6,16 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/27 10:59:20 by aoo               #+#    #+#             */
-/*   Updated: 2024/12/27 11:07:20 by aoo              ###   ########.fr       */
+/*   Updated: 2024/12/31 12:50:36 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	is_quote(char *q_chars, char c, int *in_quote)
+int	is_quote(char *q_chars, char c, int *in_quote)
 {
+	if (!q_chars)
+		return (0);
 	if (ft_strchr(q_chars, c))
 	{
 		if (!*in_quote)
