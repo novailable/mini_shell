@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 09:58:26 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/01 11:40:07 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/01 12:10:06 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,8 @@ char	*first_processing(char *str, char **envp)
 			}
 			else if (str[i + 1] == '\n')
 				i += 2;
+			else
+				result = ft_strcjoin(result, str[i++]);
 		}
 		else if (str[i] == '$')
 		{
@@ -191,7 +193,6 @@ char	*first_processing(char *str, char **envp)
 						i += 2;
 					else
 						result = ft_strcjoin(result, str[i++]);
-					printf("hjj : %c\n", str[i]);
 				}
 				else if (str[i] == '$')
 				{
@@ -276,7 +277,6 @@ int	main(int argc, char **argv, char **envpath)
 	while (1)
 	{
 		input_str = readline("mini_shell % ");
-		// input_str = "Ok\\\nSon";
 		printf("input : %s\n", input_str);
 		
 		if (input_str)
