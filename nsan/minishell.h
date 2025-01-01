@@ -35,6 +35,15 @@ typedef enum e_token_types
 	T_VAR = 6, //$
 } t_token_types;
 
+typedef struct s_ast{
+	t_token_types type;
+	struct s_ast *left;
+	struct s_ast *right;
+	char **cmd;
+	char *in_file;
+	char *out_file;
+}t_ast;
+
 typedef struct s_tokens
 {
 	char *str;
@@ -46,6 +55,10 @@ void detect_str(char *str, t_tokens tokens);
 t_tokens *create_new_token(char *str);
 void	ft_lstadd_back(t_tokens **lst, t_tokens *new);
 void tokenize_str(t_tokens *new_token, char *str);
-void tokenization(char **dest, int count);
+t_tokens **tokenization(char **dest, int count);
+t_ast *ast(t_tokens **whole_list);
+t_ast *parse_cmd(t_ast *ast_node, t_tokens **whole_list, t_tokens *ref_list);
+void parse_pipe(t_tokens **whole_list);
+void parse_redirect(t_tokens **whole_list, int flag);
 
 #endif

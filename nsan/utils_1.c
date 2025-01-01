@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void tokenization(char **dest, int count)
+t_tokens **tokenization(char **dest, int count)
 {
 	t_tokens *new_token;
 	t_tokens **whole_list = malloc(sizeof(t_tokens *) * count);
@@ -38,4 +38,33 @@ void tokenization(char **dest, int count)
 	// 		current = current->next;
 	// 		j++;
 	// }
+	return (whole_list);
+}
+
+t_ast *ast(t_tokens **whole_list)
+{
+	int i;
+	t_ast *ast_node;
+	t_tokens *current;
+	// int flag;
+	
+	i = 0;
+	// flag = 0;
+	ast_node = NULL;
+	current = *whole_list;
+	if(current == NULL)
+		return NULL;
+	while(current != NULL)
+	{
+		if(ft_strncmp(current->str, "|", 1) == 0)
+			return(parse_pipe(whole_list), ast_node);
+		else if(ft_strncmp(current->str, "<", 1) == 0)
+			return(parse_redirect(whole_list, 0), ast_node);
+		else if (ft_strncmp(current->str, ">", 1) == 0)
+			return(parse_redirect(whole_list, 1), ast_node);
+		// else
+		// 	parse_cmd(ast_node, &whole_list, current);
+		current = current->next;
+	}
+	return (ast_node);
 }
