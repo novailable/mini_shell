@@ -27,7 +27,7 @@ char	**ft_split_2(char *str, char *delimiters, char *ignchars);
 void	export(char **args, char ***envp);
 void	print_env(void *data);
 void	env(char **envp);
-
+char	*ft_getenv(char *key, char **envp);
 
 
 #endif
