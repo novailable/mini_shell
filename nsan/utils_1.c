@@ -46,10 +46,9 @@ t_ast *ast(t_tokens **whole_list)
 	int i;
 	t_ast *ast_node;
 	t_tokens *current;
-	// int flag;
-	
+	int flag = 0;
+
 	i = 0;
-	// flag = 0;
 	ast_node = NULL;
 	current = *whole_list;
 	if(current == NULL)
@@ -57,14 +56,64 @@ t_ast *ast(t_tokens **whole_list)
 	while(current != NULL)
 	{
 		if(ft_strncmp(current->str, "|", 1) == 0)
+		{
+			flag = 1;
 			return(parse_pipe(whole_list), ast_node);
-		else if(ft_strncmp(current->str, "<", 1) == 0)
-			return(parse_redirect(whole_list, 0), ast_node);
-		else if (ft_strncmp(current->str, ">", 1) == 0)
+		}
+		else if (ft_strncmp(current->str, ">>", 2) == 0){
+			flag = 1;
 			return(parse_redirect(whole_list, 1), ast_node);
-		// else
-		// 	parse_cmd(ast_node, &whole_list, current);
+		}
+		else if (ft_strncmp(current->str, "<<", 2) == 0){
+			flag = 1;
+			new_line_input(1, current->next->str);
+		}
+		else if(ft_strncmp(current->str, "<", 1) == 0)
+		{
+			flag = 1;
+			return(parse_redirect(whole_list, 0), ast_node);
+		}
+		else if (ft_strncmp(current->str, ">", 1) == 0){
+			flag = 1;
+			return(parse_redirect(whole_list, 1), ast_node);
+		}
+		else
+			flag = 0;
 		current = current->next;
 	}
+	if(!flag)
+		return(parse_cmd(ast_node, whole_list, NULL));
 	return (ast_node);
+}
+
+int check_grammar_syntax(t_tokens **whole_list)
+{
+    t_tokens *temp;
+	int	flag;
+
+	flag = 0;
+	temp = *whole_list;
+    while (temp)
+    {
+        if (temp->tok_types == T_WORD) {
+			if((temp->next != NULL && temp->next->tok_types == T_WORD) ||
+			(temp->next != NULL && temp->next->tok_types == T_PIPE) ||
+			(temp->next != NULL && temp->next->tok_types == T_REDIRECT_OUT))
+				return (1);
+        }
+		else if(temp->tok_types == T_PIPE)
+		{
+			if((temp->next == NULL) ||
+			(temp->next != NULL && temp->next->tok_types == T_WORD))
+				return (1);
+		}
+		else if(temp->tok_types == T_REDIRECT_IN || temp->tok_types == T_REDIRECT_OUT)
+		{
+			if(temp->next != NULL && temp->next->tok_types == T_WORD)
+				return (1);
+		}
+        temp = temp->next;
+    }
+	return (0);
+    printf("reached end\n");
 }

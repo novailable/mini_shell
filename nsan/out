@@ -1,14 +1,2 @@
-Makefile
-in
-libft
-main.c
-main.o
-minishell
-minishell.h
 out
-parsing.c
-parsing.o
-str_utils.c
-str_utils.o
-utils_1.c
-utils_1.o
+route

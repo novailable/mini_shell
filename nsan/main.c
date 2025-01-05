@@ -22,47 +22,15 @@ void handle_signal(int sig)
 	}
 }
 
-// int main() {
-// 	struct sigaction sa_int;
-// 	char **dest;
-// 	t_tokens tokens;
-
-// 	while(1)
-// 	{
-// 		// signal(SIGINT, handle_signal);
-// 		sa_int.sa_handler = handle_signal;
-// 		if(sigaction(SIGINT, &sa_int, NULL) == -1)
-// 			printf("Sigaction failed\n");
-// 		sigemptyset(&sa_int.sa_mask);
-// 		char *input = readline("minishell> ");
-
-// 		if (input)
-// 		{
-// 			int i;
-
-// 			i = 0;
-// 			dest = ft_split(input, ' ');
-// 			tokens.str = malloc(sizeof(char *) * strlen(input));
-// 			while(dest[i] != NULL)
-// 			{
-// 				detect_str(dest[i], tokens);
-// 				i++;
-// 			}
-// 			add_history(input);
-// 			if(ft_strncmp(input, "clear", 5) == 0)
-// 				rl_clear_history();
-// 			free(input);
-// 		}
-// 		else if(!input)
-// 			break;
-// 		else {
-// 			printf("Error reading input.\n");
-// 		}
-
-// 	}
-// 	return 0;
-// }
-
+void handle_new_print_line(int sig)
+{
+	if(sig == SIGINT)
+	{
+		write(1, ">\n", 3);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
 
 int is_balanced_quotes(const char *input) {
 	int single_quote = 0, double_quote = 0;
@@ -78,7 +46,7 @@ int is_balanced_quotes(const char *input) {
 
 char **custom_split(const char *input) {
 	int i = 0, start = 0, j = 0;
-	char **tokens = malloc(sizeof(char *) * (strlen(input) + 1));
+	char **tokens = malloc(sizeof(char *) * (ft_strlen(input) + 1));
 	int single_quote = 0, double_quote = 0;
 
 	while (input[i]) {
@@ -110,22 +78,41 @@ void free_tokens(char **tokens) {
 
 int main() {
 	struct sigaction sa_int;
+	struct sigaction sa_newline;
 	char **dest;
 	t_tokens tokens;
 	t_tokens **whole_list;
 	int	i;
-
+	// char *word1 = "hello";
+	// char *word2 = "world";
+	// char *new_dest = ft_strjoin(word1, word2);
+	// printf("%s\n", new_dest);
 	while (1)
 	{
-		// sa_int.sa_handler = handle_signal;
+		sa_int.sa_handler = handle_signal;
+		
 		if (sigaction(SIGINT, &sa_int, NULL) == -1)
 			printf("Sigaction failed\n");
 		sigemptyset(&sa_int.sa_mask);
 
+		// sa_newline.sa_handler = handle_new_print_line;
+		// sigemptyset(&sa_newline.sa_mask);
+
 		char *input = readline("minishell> ");
-		if (input) {
-			if (!is_balanced_quotes(input)) {
-				printf("Error: Unmatched quotes\n");
+		if (input && (*input != '|')) {
+			if (!is_balanced_quotes(input))
+			{
+				char *remainder = ft_strrchr(input, '\"');
+				if(ft_strncmp(input, "echo", 4) == 0)
+				{
+					char *new_dest = new_line_input(0, NULL);
+					printf("%s\n%s", remainder, new_dest);
+				}
+				else
+				{
+					char *new_dest = new_line_input(0, NULL);
+					printf("%s\n%s not found\n", remainder, new_dest);
+				}
 				free(input);
 				continue;
 			}
@@ -134,15 +121,13 @@ int main() {
 			while (dest[i])
 				i++;
 			whole_list = tokenization(dest, i);
-			ast(whole_list);
+			if(check_grammar_syntax(whole_list)) 
+				ast(whole_list);
 			add_history(input);
-			if (strncmp(input, "clear", 5) == 0)
-				rl_clear_history();
-		} else if (!input) {
+		} else if (!input)
 			break;
-		} else {
+		else 
 			printf("Error reading input.\n");
-		}
 	}
 	return 0;
 }

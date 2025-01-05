@@ -69,14 +69,14 @@ void tokenize_str(t_tokens *new_token, char *str){
 	}
 	if(!ft_strncmp(str, "|", 1))
 		new_token->tok_types = T_PIPE;
-	else if(!ft_strncmp(str, ">", 1))
-		new_token->tok_types = T_REDIRECT_OUT;
-	else if(!ft_strncmp(str, "<", 1))
-		new_token->tok_types = T_REDIRECT_IN;
 	else if(!ft_strncmp(str, ">>", 2))
 		new_token->tok_types = T_APPEND;
 	else if(!ft_strncmp(str, "<<", 2))
 		new_token->tok_types = T_HERE_DOCS;
+	else if(!ft_strncmp(str, ">", 1))
+		new_token->tok_types = T_REDIRECT_OUT;
+	else if(!ft_strncmp(str, "<", 1))
+		new_token->tok_types = T_REDIRECT_IN;
 	else if(!ft_strncmp(str, "$", 1))
 		new_token->tok_types = T_VAR;
 	// return (token)
@@ -98,4 +98,63 @@ void	ft_lstadd_back(t_tokens **lst, t_tokens *new)
 			current = current->next;
 		current->next = new;
 	}
+}
+
+int quote_check(const char *input_str)
+{	
+	int flag = 0;
+	int i = 0;
+	while(input_str[i])
+	{
+		if(input_str[i] == '\"')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+char *new_line_input(int flag, char *delimeter) //delimeter has "some word"
+{
+	char *output;
+	char *new_line;
+	char *next_input;
+	char *input = readline(">");
+
+	// printf("input%s", input);
+	if(flag == 0)
+	{
+		if (!quote_check(input))
+		{
+			new_line = ft_strjoin(input, "\n");
+			free(input);
+			input = new_line;
+			next_input = new_line_input(0, NULL);
+			output = ft_strjoin(input, next_input);
+		}
+		else
+		{
+			if(ft_strncmp(input, "\"", 1) == 0)
+				input[0] = '\0';
+			output = input;
+		}
+	}
+	else if(flag == 1)
+	{
+		int word_len = ft_strlen(delimeter);
+		if(ft_strncmp(input, delimeter, word_len))
+		{
+			new_line = ft_strjoin(input, "\n");
+			free(input);
+			input = new_line;
+			next_input = new_line_input(1, delimeter);
+			output = ft_strjoin(input, next_input);
+		}
+		else
+		{
+			if(ft_strncmp(input, delimeter, word_len) == 0)
+				input[0] = '\0';
+			output = input;
+		}
+	}
+	return (output);
 }
