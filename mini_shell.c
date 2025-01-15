@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 09:58:26 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/01 14:41:14 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/14 01:12:36 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 #include "mini_shell.h"
 
-t_list	*init_envp_lst(char **envpath)
+t_list	*init_envp(char **envpath)
 {
 	t_list	*envp;
 	t_envp	*env_var;
@@ -40,7 +40,7 @@ t_list	*init_envp_lst(char **envpath)
 	return (envp);
 }
 
-void	*ft_strsncpy(char **dest, char **src, int n)
+void	ft_strsncpy(char **dest, char **src, int n)
 {
 	int	i;
 
@@ -54,45 +54,50 @@ void	*ft_strsncpy(char **dest, char **src, int n)
 	}
 }
 
-char	**init_env(char **envpath)
-{
-	int		i;
-	char	**n_envp;
+// char	**init_env(char **envpath)
+// {
+// 	int		i;
+// 	char	**n_envp;
 
-	i = 0;
-	while (envpath[i])
-		i++;
-	n_envp = malloc(sizeof(char *) * (i + 1));
-	if (!n_envp)
-		return (NULL);
-	ft_strsncpy(n_envp, envpath, i);
-	n_envp[i] = NULL;
-	return (n_envp);
-}
+// 	i = 0;
+// 	while (envpath[i])
+// 		i++;
+// 	n_envp = malloc(sizeof(char *) * (i + 1));
+// 	if (!n_envp)
+// 		return (NULL);
+// 	ft_strsncpy(n_envp, envpath, i);
+// 	n_envp[i] = NULL;
+// 	return (n_envp);
+// }
 
 char	*ft_strcjoin(char *str, char c)
 {
 	char	*result;
+	int		char_len;
 	int		i;
 
-	result = malloc(sizeof(char) * (ft_strlen(str) + 2));
+	char_len = 2;
+	if (c == '\0')
+		char_len = 1;
+	result = malloc(sizeof(char) * (ft_strlen(str) + char_len));
 	i = 0;
 	while (str && str[i])
 	{
 		result[i] = str[i];
 		i++;
 	}
-	result[i++] = c;
+	if (c)
+		result[i++] = c;
 	result[i] = '\0';
 	free(str);
 	return (result);
 }
 __pid_t ft_getpid()
 {
-    __pid_t pid;
+	__pid_t pid;
 
-    pid = fork();
-    if (pid == -1)
+	pid = fork();
+	if (pid == -1)
 		return (perror("fork failed"), -1);
 	if (pid == 0)
 		exit(0);
@@ -101,7 +106,7 @@ __pid_t ft_getpid()
 }
 
 
-char	*first_processing(char *str, char **envp)
+char	*first_processing(char *str, t_list *envp)
 {
 	char	*result;
 	int		i;
@@ -111,7 +116,7 @@ char	*first_processing(char *str, char **envp)
 	i = 0;
 	in_quote = 0;
 	result = NULL;
-	while (str[i])
+	while (str && str[i])
 	{
 		if (str[i] == '\\' && !in_quote)
 		{
@@ -129,7 +134,7 @@ char	*first_processing(char *str, char **envp)
 		else if (str[i] == '$')
 		{
 			start = ++i + str;
-			while (str[i] && !ft_strchr("\\\"$", str[i]))
+			while (str[i] && !ft_strchr("\\\"\'$", str[i]))
 				i++;
 			start = ft_strndup(start, (str + i) - start);
 			if (start && *start)
@@ -141,12 +146,20 @@ char	*first_processing(char *str, char **envp)
 				result = ft_strcjoin(result, str[i - 1]);
 		}
 		else if (str[i] == '\'')
-        {
+		{
 			i++;
-            while (str[i] && str[i] != '\'')
-                result = ft_strcjoin(result, str[i++]);
-			i++;
-        }
+			while (str[i])
+			{
+				if (str[i] == '\'')
+				{
+					result = ft_strcjoin(result, '\0');
+					i++;
+					break;
+				}
+				else
+					result = ft_strcjoin(result, str[i++]);
+			}
+		}
 		else if (str[i] == '\"')
 		{
 			in_quote = str[i++];
@@ -168,7 +181,7 @@ char	*first_processing(char *str, char **envp)
 				else if (str[i] == '$')
 				{
 					start = ++i + str;
-					while (str[i] && !ft_strchr("\\\"$", str[i]))
+					while (str[i] && !ft_strchr("\\\'\"$", str[i]))
 						i++;
 					start = ft_strndup(start, (str + i) - start);
 					if (start && *start)
@@ -179,52 +192,58 @@ char	*first_processing(char *str, char **envp)
 					else
 						result = ft_strcjoin(result, str[i - 1]);
 				}
-				else
-					result = ft_strcjoin(result, str[i++]);
-				if (str[i] == in_quote)
+				else if (str[i] == in_quote)
 				{
 					in_quote = 0;
+					result = ft_strcjoin(result, '\0');
 					i++;
 				}
+				else
+					result = ft_strcjoin(result, str[i++]);
+				// if (str[i] == in_quote)
+				// {
+				// 	in_quote = 0;
+				// 	i++;
+				// }
 			}
 		}
 		else
-            result = ft_strcjoin(result, str[i++]);
+			result = ft_strcjoin(result, str[i++]);
 	}
 	return (result);
 }
 
-char	*replace_env(char *str, char **envp)
-{
-	char	*result;
-	char	*copy;
-	int		i;
+// char	*replace_env(char *str, char **envp)
+// {
+// 	char	*result;
+// 	char	*copy;
+// 	int		i;
 
-	i = 0;
-	if (!str)
-		return (NULL);
+// 	i = 0;
+// 	if (!str)
+// 		return (NULL);
 	
-	// if (*str == '\'')
-	// 	return (ft_strtrim(str, "\'"));
-	// if (*str == '\"')
-	// 	copy = ft_strndup(++str, ft_strlen(str) - 2);
-	// else
-	// 	copy = ft_strdup(str);
+// 	// if (*str == '\'')
+// 	// 	return (ft_strtrim(str, "\'"));
+// 	// if (*str == '\"')
+// 	// 	copy = ft_strndup(++str, ft_strlen(str) - 2);
+// 	// else
+// 	// 	copy = ft_strdup(str);
 
-	// printf("copy : %s, len : %ld\n", copy, ft_strlen(str) - 2);
-	result = first_processing(str, envp);
-	// free(copy);
-	// copy = result;
-	// while (copy[i])
-	// {
-	// 	if (copy[i] == '$')
-	// 		if (copy[i - 1] == '\\')
+// 	// printf("copy : %s, len : %ld\n", copy, ft_strlen(str) - 2);
+// 	result = first_processing(str, envp);
+// 	// free(copy);
+// 	// copy = result;
+// 	// while (copy[i])
+// 	// {
+// 	// 	if (copy[i] == '$')
+// 	// 		if (copy[i - 1] == '\\')
 			
-	// }
-	printf("Result : %s\n", result);
+// 	// }
+// 	printf("Result : %s\n", result);
 	
-		
-}
+// 	return ("hehe\n");	
+// }
 
 void	sprint_env(char **envp)
 {
@@ -266,34 +285,56 @@ void	sprint_env(char **envp)
 int	main(int argc, char **argv, char **envpath)
 {
 	char	*input_str;
-	// char	*input[] = {"\"Hello\"\$TEST$PWD\\\"\"", "A=a", NULL};
-	// t_list	*envp;
-	char	*save;
-	char	**envp;
+	char	**args;
+	char	**envp_arr;
+	// char	*input[] = {"TEST=\"Hello\\\"\\$TEST$PWD\\\"\"", "A=a", NULL};
+	t_list	*envp;
+	t_list	*copy;
 	pid_t	pid;
 	(void)argc;
 	(void)argv;
-	
+	int	status;
 	int	i;
-	// env(ennvpath);
-	envp = init_env(envpath);
-	sprint_env(envp);
-
-	// if (!envp)
-	// 	return (1);
+	
+	envp = init_envp(envpath);
+	if (!envp)
+		return (1);
 	while (1)
 	{
 		input_str = readline("mini_shell % ");
-		printf("input : %s\n", input_str);
-		
-		if (input_str)
+		add_history(input_str);
+		// printf("%s\n", first_processing(input_str, envp));
+		args = ft_split(input_str, " ");
+		if (!ft_strcmp(*args, "env"))
+			env(envp);
+		else if (!ft_strcmp(*args, "export"))
+			export(args, envp);
+		else if (!ft_strcmp(*args, "unset"))
+			unset(args, &envp);
+		else if (!ft_strcmp(*args, "pwd"))
+			pwd();
+		else
 		{
-			add_history(input_str);
-			replace_env(input_str, envp);		
+			envp_arr = envp_toarray(envp);
+			for (int i = 0; envp_arr[i]; i++)
+				printf("%s\n", envp_arr[i]);
 		}
+		// 	pid = fork();
+		// 	if (pid == -1)
+		// 		return (perror("fork failed"), 1);
+		// 	if (pid == 0)
+		// 	{
+		// 		if (exec_cmd(args, envp) == -1)
+		// 		{
+		// 			perror("command not found ");
+		// 			if (errno == EACCES)
+		// 				exit (126);
+		// 			exit (127);
+		// 		}
+		// 		exit (0);
+		// 	}
+		// 	else
+		// 		waitpid(pid, &status, 0);
 	}
-	i = 0;
-	while (envp[i])
-		free(envp[i++]);
-	free(envp);
+	ft_lstclear(&envp, free_envp);
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+         #
+#    By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 17:41:52 by aoo               #+#    #+#              #
-#    Updated: 2024/12/27 11:53:40 by aoo              ###   ########.fr        #
+#    Updated: 2025/01/14 01:12:58 by aoo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ RM = rm -rf
 LIBFT_DIR = ./Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS = mini_shell.c ft_split_2.c built_in/export.c built_in/env.c
+SRCS = mini_shell.c utils.c execution.c \
+		built_in/export.c built_in/env.c built_in/unset.c built_in/pwd.c
 
 OBJS = ${SRCS:.c=.o}
 
