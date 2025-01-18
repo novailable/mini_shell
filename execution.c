@@ -9,7 +9,6 @@ char	*get_p_path(char *cmd, char *envp_path)
 
 	paths = ft_split((envp_path), ":");
 	i = 0;
-	
 	while (paths[i])
 	{
 		s_path = ft_strjoin("/", cmd, 0, 0);
