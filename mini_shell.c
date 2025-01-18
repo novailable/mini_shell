@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 09:58:26 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/14 01:12:36 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/18 20:17:45 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,28 +70,6 @@ void	ft_strsncpy(char **dest, char **src, int n)
 // 	return (n_envp);
 // }
 
-char	*ft_strcjoin(char *str, char c)
-{
-	char	*result;
-	int		char_len;
-	int		i;
-
-	char_len = 2;
-	if (c == '\0')
-		char_len = 1;
-	result = malloc(sizeof(char) * (ft_strlen(str) + char_len));
-	i = 0;
-	while (str && str[i])
-	{
-		result[i] = str[i];
-		i++;
-	}
-	if (c)
-		result[i++] = c;
-	result[i] = '\0';
-	free(str);
-	return (result);
-}
 __pid_t ft_getpid()
 {
 	__pid_t pid;
@@ -105,113 +83,112 @@ __pid_t ft_getpid()
 		return (wait(NULL), pid);
 }
 
+// char	*first_processing(char *str, t_list *envp)
+// {
+// 	char	*result;
+// 	int		i;
+// 	int		in_quote;
+// 	char	*start;
 
-char	*first_processing(char *str, t_list *envp)
-{
-	char	*result;
-	int		i;
-	int		in_quote;
-	char	*start;
-
-	i = 0;
-	in_quote = 0;
-	result = NULL;
-	while (str && str[i])
-	{
-		if (str[i] == '\\' && !in_quote)
-		{
-			if (str[i + 1] == '\\' || str[i + 1] == '\'' \
-			|| str[i + 1] == '$' || str[i + 1] == '\"')
-			{
-				result = ft_strcjoin(result, str[++i]);
-				i++;
-			}
-			else if (str[i + 1] == '\n')
-				i += 2;
-			else
-				result = ft_strcjoin(result, str[i++]);
-		}
-		else if (str[i] == '$')
-		{
-			start = ++i + str;
-			while (str[i] && !ft_strchr("\\\"\'$", str[i]))
-				i++;
-			start = ft_strndup(start, (str + i) - start);
-			if (start && *start)
-			{
-				result = ft_strjoin(result, ft_getenv(start, envp), 1, 0);
-				free(start);
-			}
-			else
-				result = ft_strcjoin(result, str[i - 1]);
-		}
-		else if (str[i] == '\'')
-		{
-			i++;
-			while (str[i])
-			{
-				if (str[i] == '\'')
-				{
-					result = ft_strcjoin(result, '\0');
-					i++;
-					break;
-				}
-				else
-					result = ft_strcjoin(result, str[i++]);
-			}
-		}
-		else if (str[i] == '\"')
-		{
-			in_quote = str[i++];
-			while (str[i] && in_quote)
-			{
-				if (str[i] == '\\')
-				{
-					if (str[i + 1] == '\\' || \
-					str[i + 1] == '$' || str[i + 1] == '\"')
-					{
-						result = ft_strcjoin(result, str[++i]);
-						i++;
-					}
-					else if (str[i + 1] == '\n')
-						i += 2;
-					else
-						result = ft_strcjoin(result, str[i++]);
-				}
-				else if (str[i] == '$')
-				{
-					start = ++i + str;
-					while (str[i] && !ft_strchr("\\\'\"$", str[i]))
-						i++;
-					start = ft_strndup(start, (str + i) - start);
-					if (start && *start)
-					{
-						result = ft_strjoin(result, ft_getenv(start, envp), 1, 0);
-						free(start);
-					}
-					else
-						result = ft_strcjoin(result, str[i - 1]);
-				}
-				else if (str[i] == in_quote)
-				{
-					in_quote = 0;
-					result = ft_strcjoin(result, '\0');
-					i++;
-				}
-				else
-					result = ft_strcjoin(result, str[i++]);
-				// if (str[i] == in_quote)
-				// {
-				// 	in_quote = 0;
-				// 	i++;
-				// }
-			}
-		}
-		else
-			result = ft_strcjoin(result, str[i++]);
-	}
-	return (result);
-}
+// 	i = 0;
+// 	in_quote = 0;
+// 	result = NULL;
+// 	while (str && str[i])
+// 	{
+// 		if (str[i] == '\\' && !in_quote)
+// 		{
+// 			if (str[i] == '\\' || str[i] == '\'' \
+// 			|| str[i] == '$' || str[i] == '\"')
+// 			{
+// 				result = ft_strcjoin(result, str[++i]);
+// 				i++;
+// 			}
+// 			else if (str[i + 1] == '\n')
+// 				i += 2;
+// 			else
+// 				result = ft_strcjoin(result, str[++i]);
+// 		}
+// 		else if (str[i] == '$')
+// 		{
+// 			start = ++i + str;
+// 			while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+// 				i++;
+// 			start = ft_strndup(start, (str + i) - start);
+// 			if (start && *start)
+// 			{
+// 				result = ft_strjoin(result, ft_getenv(start, envp), 1, 0);
+// 				free(start);
+// 			}
+// 			else
+// 				result = ft_strcjoin(result, str[i - 1]);
+// 		}
+// 		else if (str[i] == '\'')
+// 		{
+// 			i++;
+// 			while (str[i])
+// 			{
+// 				if (str[i] == '\'')
+// 				{
+// 					result = ft_strcjoin(result, '\0');
+// 					i++;
+// 					break;
+// 				}
+// 				else
+// 					result = ft_strcjoin(result, str[i++]);
+// 			}
+// 		}
+// 		else if (str[i] == '\"')
+// 		{
+// 			in_quote = str[i++];
+// 			while (str[i] && in_quote)
+// 			{
+// 				if (str[i] == '\\')
+// 				{
+// 					if (str[i + 1] == '\\' || \
+// 					str[i + 1] == '$' || str[i + 1] == '\"')
+// 					{
+// 						result = ft_strcjoin(result, str[++i]);
+// 						i++;
+// 					}
+// 					else if (str[i + 1] == '\n')
+// 						i += 2;
+// 					else
+// 						result = ft_strcjoin(result, str[i++]);
+// 				}
+// 				else if (str[i] == '$')
+// 				{
+// 					start = ++i + str;
+// 					while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+// 						i++;
+// 					start = ft_strndup(start, (str + i) - start);
+// 					if (start && *start)
+// 					{
+// 						result = ft_strjoin(result, ft_getenv(start, envp), 1, 0);
+// 						free(start);
+// 					}
+// 					else
+// 						result = ft_strcjoin(result, str[i - 1]);
+// 				}
+// 				else if (str[i] == in_quote)
+// 				{
+// 					in_quote = 0;
+// 					result = ft_strcjoin(result, '\0');
+// 					i++;
+// 				}
+// 				else
+// 					result = ft_strcjoin(result, str[i++]);
+// 				// if (str[i] == in_quote)
+// 				// {
+// 				// 	in_quote = 0;
+// 				// 	i++;
+// 				// }
+// 			}
+// 		}
+// 		else
+// 			result = ft_strcjoin(result, str[i++]);
+// 	}
+// 	return (result);
+// }
 
 // char	*replace_env(char *str, char **envp)
 // {
@@ -244,6 +221,26 @@ char	*first_processing(char *str, t_list *envp)
 	
 // 	return ("hehe\n");	
 // }
+
+int	is_end_quote(char *str)
+{
+	int	i;
+	int	in_quote;
+
+	i = 0;
+	in_quote = 0;
+	while (str[i])
+	{
+		if (str[i] == '\\' && str[i + 1] && in_quote != '\'')
+		{
+			i += 2;
+			continue;
+		}
+		is_quote("\'\"", str[i], &in_quote);
+		i++;
+	}
+	return (in_quote);
+}
 
 void	sprint_env(char **envp)
 {
@@ -303,22 +300,28 @@ int	main(int argc, char **argv, char **envpath)
 	{
 		input_str = readline("mini_shell % ");
 		add_history(input_str);
-		// printf("%s\n", first_processing(input_str, envp));
-		args = ft_split(input_str, " ");
-		if (!ft_strcmp(*args, "env"))
-			env(envp);
-		else if (!ft_strcmp(*args, "export"))
-			export(args, envp);
-		else if (!ft_strcmp(*args, "unset"))
-			unset(args, &envp);
-		else if (!ft_strcmp(*args, "pwd"))
-			pwd();
-		else
-		{
-			envp_arr = envp_toarray(envp);
-			for (int i = 0; envp_arr[i]; i++)
-				printf("%s\n", envp_arr[i]);
-		}
+		// char *f_p = first_processing(input_str, envp);
+		// printf("%s\n", f_p);
+		char *h_p = heredoc_processing(input_str);
+		printf("%s\n", h_p);
+		free(h_p);
+		free(input_str);
+		// printf("%d\n", is_end_quote(input_str));
+		
+		// args = ft_split(input_str, " ");
+		
+		// else if (!ft_strcmp(*args, "export"))
+		// 	export(args, envp);
+		// else if (!ft_strcmp(*args, "unset"))
+		// 	unset(args, &envp);
+		// else if (!ft_strcmp(*args, "pwd"))
+		// 	pwd();
+		// else
+		// {
+		// 	envp_arr = envp_toarray(envp);
+		// 	for (int i = 0; envp_arr[i]; i++)
+		// 		printf("%s\n", envp_arr[i]);
+		// }
 		// 	pid = fork();
 		// 	if (pid == -1)
 		// 		return (perror("fork failed"), 1);

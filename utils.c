@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:32:19 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/14 02:16:45 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/18 20:26:22 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,54 @@ int	env_key_check(char *key)
 		{
 			temp++;
 			if (*temp == '\0')
-				return (1);	
+				return (1);
 		}
 	}
 	return (printf("export : not a valid identifier : "), 0);
+}
+
+char	*ft_strcjoin(char *str, char c)
+{
+	char	*result;
+	int		char_len;
+	int		i;
+
+	char_len = 2;
+	if (c == '\0')
+		char_len = 1;
+	result = malloc(sizeof(char) * (ft_strlen(str) + char_len));
+	i = 0;
+	while (str && str[i])
+	{
+		result[i] = str[i];
+		i++;
+	}
+	if (c)
+		result[i++] = c;
+	result[i] = '\0';
+	free(str);
+	return (result);
+}
+
+char	*heredoc_processing(char *str)
+{
+	char	*result;
+	int		in_quote;
+
+	result = NULL;
+	in_quote = 0;
+	while (*str)
+	{
+		if (*str == '\\')
+			str = handle_esc(str, &result, in_quote);
+		else if (*str == '\'' || *str == '\"')
+		{
+			if (*str == '\"')
+				is_quote("\"", *str, &in_quote);
+			str++;
+		}
+		else
+			result = ft_strcjoin(result, *str++);
+	}
+	return (result);
 }

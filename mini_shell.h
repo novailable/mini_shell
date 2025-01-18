@@ -23,8 +23,6 @@ typedef struct s_envp
 	char			*value;
 }	t_envp;
 
-char	**ft_split_2(char *str, char *delimiters, char *ignchars);
-char	*first_processing(char *str, t_list *envp);
 
 //built_in
 void	pwd();
@@ -42,8 +40,19 @@ char	**envp_toarray(t_list *envp);
 t_list	*copy_envp(t_list *envp);
 void	sort_envp(t_list *envp);
 void	export_noargs(t_list *envp);
-int	env_key_check(char *key);
+int		env_key_check(char *key);
+char	*ft_strcjoin(char *str, char c);
+char	*heredoc_processing(char *str);
+
 
 //execute
-int	exec_cmd(char **args, t_list *envp);
+int		exec_cmd(char **args, t_list *envp);
+
+//shits
+char	**ft_split_2(char *str, char *delimiters, char *ignchars);
+int		is_quote(char *q_chars, char c, int *in_quote);
+char	*first_processing(char *str, t_list *envp);
+char	*handle_esc(char *str, char **result, int in_quote);
+char	*handle_sq(char *str, char **result);
+
 #endif
