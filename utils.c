@@ -6,20 +6,11 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:32:19 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/18 20:26:22 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/20 12:22:08 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
-
-void	print_env(void *data)
-{
-	t_envp	*env_var;
-
-	env_var = (t_envp *)data;
-	if (env_var->key && env_var->value)
-		printf("%s=%s\n", env_var->key, env_var->value);
-}
+#include "minishell.h"
 
 void	print_export(void *data)
 {
@@ -196,3 +187,41 @@ char	*heredoc_processing(char *str)
 	}
 	return (result);
 }
+
+t_list	*init_envp(char **envpath)
+{
+	t_list	*envp;
+	t_envp	*env_var;
+	char	*value;
+
+	envp = NULL;
+	while (*envpath)
+	{
+		env_var = malloc(sizeof(t_envp));
+		if (!env_var)
+			return (NULL);
+		env_var->key = ft_strndup(*envpath, \
+						ft_strchr(*envpath, '=') - *envpath);
+		value = ft_strchr(*envpath, '=') + 1;
+		env_var->value = ft_strdup(value);
+		ft_lstadd_back(&envp, ft_lstnew(env_var));
+		envpath++;
+	}
+	return (envp);
+}
+
+void	ft_strsncpy(char **dest, char **src, int n)
+{
+	int	i;
+
+	i = 0;
+	while (src[i] && i < n)
+	{
+		dest[i] = ft_strdup(src[i]);
+		if (!dest[i])
+			free_mem(dest, i);
+		i++;
+	}
+}
+
+

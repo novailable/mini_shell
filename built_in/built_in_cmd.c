@@ -1,4 +1,4 @@
-#include "mini_shell.h"
+#include "minishell.h"
 
 // ◦ echo with option -n
 // ◦ cd with only a relative or absolute path

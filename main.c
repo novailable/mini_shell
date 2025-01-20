@@ -1,0 +1,245 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
+/*   Updated: 2025/01/20 12:24:34 by aoo              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+void handle_signal(int sig)
+{
+	if(sig == SIGINT)
+	{
+		write(1, "minishell> \n", 13);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
+void handle_new_print_line(int sig)
+{
+	if(sig == SIGINT)
+	{
+		write(1, ">\n", 3);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+}
+
+int is_balanced_quotes(const char *input) {
+	int single_quote = 0, double_quote = 0;
+	while (*input) {
+		if (*input == '\'' && double_quote == 0)
+			single_quote = !single_quote;
+		else if (*input == '"' && single_quote == 0)
+			double_quote = !double_quote;
+		input++;
+	}
+	return single_quote == 0 && double_quote == 0;
+}
+
+t_tokens	*custom_split(const char *input)
+{
+	int			i = 0, start = 0;
+	int			single_quote = 0, double_quote = 0;
+	t_tokens	*head = NULL;
+
+	while (input[i])
+	{
+		if (input[i] == '\'' && !double_quote)
+			single_quote = !single_quote;
+		else if (input[i] == '"' && !single_quote)
+			double_quote = !double_quote;
+		else if (input[i] == ' ' && !single_quote && !double_quote)
+		{
+			if (i > start)
+			{
+				char *substr = ft_strndup(input + start, i - start);
+				append_token(&head, create_new_token(substr));
+				free(substr);
+			}
+			start = i + 1;
+		}
+		i++;
+	}
+	if (i > start)
+	{
+		char *substr = ft_strndup(input + start, i - start);
+		append_token(&head, create_new_token(substr));
+		free(substr);
+	}
+	return (head);
+}
+
+void	print_tokens(t_tokens *head)
+{
+	t_tokens	*current = head;
+
+	while (current)
+	{
+		printf("Token: %s\n", current->str);
+		current = current->next;
+	}
+}
+
+void	free_tokens(t_tokens *head)
+{
+	t_tokens	*temp;
+
+	while (head)
+	{
+		temp = head;
+		head = head->next;
+		free(temp->str);
+		free(temp);
+	}
+}
+int main(int argc, char **argv, char **envpath)
+{
+	struct sigaction sa_int;
+	struct sigaction sa_newline;
+	t_ast *ast_node;
+	t_tokens	*tokens;
+	t_list	*envp;
+	int	i;
+
+	((void)argc, (void)argv);
+	envp = init_envp(envpath);
+	ast_node = malloc(sizeof(t_ast));
+	while (1)
+	{
+		sa_int.sa_handler = handle_signal;
+
+		if (sigaction(SIGINT, &sa_int, NULL) == -1)
+			printf("Sigaction failed\n");
+		sigemptyset(&sa_int.sa_mask);
+
+		sa_newline.sa_handler = handle_new_print_line;
+		sigemptyset(&sa_newline.sa_mask);
+
+		char *input = readline("minishell> ");
+		if (input && (*input != '|'))
+		{
+			if (!is_balanced_quotes(input))
+			{
+				perror("unclosed quotation");
+				continue;
+				// char *remainder = ft_strrchr(input, '\"');
+				// if(ft_strncmp(input, "echo", 4) == 0)
+				// {
+				// 	char *new_dest = new_line_input(0, NULL);
+				// 	printf("%s\n%s", remainder, new_dest);
+				// }
+				// else
+				// {
+				// 	char *new_dest = new_line_input(0, NULL);
+				// 	printf("%s\n%s not found\n", remainder, new_dest);
+				// }
+				// free(input);
+			}
+
+			tokens = custom_split(input);
+			tokenize_str(tokens);
+			history_output(input);
+			if(check_grammar_syntax(tokens))
+				ast_node = ast(ast_node, tokens);
+			free_tokens(tokens);
+			free(input);
+		}
+	// 	else
+	// 		printf("Error reading input.\n");
+	
+	}
+	ft_lstclear(&envp, free_envp);
+	return 0;
+}
+
+
+/*print out the whole list*/
+// t_tokens *current = *whole_list;
+// 	int j = 0;
+// 	while (current != NULL) {
+// 		printf("Content %d:\n", j);
+// 		printf("String: %s\n", current->str);
+// 		printf("Token: %u\n\n", current->tok_types);
+// 		current = current->next;
+// 		j++;
+// 	}
+
+/*print for the ast_node_cmds*/
+// if(ast_node && (ast_node->right)->cmd)
+			// {
+			// 	printf("right cmd list :\n");
+			// 	char **right_cmd = (ast_node->right)->cmd;
+			// 	while (*right_cmd) {
+			// 		printf("%s\n", *right_cmd);
+			// 		right_cmd++;
+			// 	}
+			// }
+			// if (ast_node && (ast_node->left)->cmd)
+			// {
+			// 	printf("left cmd list :\n");
+			// 	char **left_cmd = (ast_node->left)->cmd;
+			// 	while (*left_cmd) {
+			// 		printf("%s\n", *left_cmd);
+			// 		left_cmd++;
+			// 	}
+			// }
+
+	/*debug printing*/
+			// print_rightmost_command(ast_node);
+			// if (ast_node && ast_node->right) {
+			// 	printf("The right-cmd-node branch exists\n");
+
+			// 	t_ast *right_node = ast_node->right;
+			// 	t_ast *cmd_node = right_node->left;
+
+			// 	// Ensure right_node and cmd_node exist
+			// 	if (cmd_node && cmd_node->right) {
+			// 		char **temp_str = cmd_node->right->cmd;
+
+			// 		if (temp_str) {
+			// 			printf("temp_str exists\n");
+			// 			while (*temp_str) {
+			// 				printf("cmd of the right node of the left-cmd-node branch: %s\n", *temp_str);
+			// 				temp_str++;
+			// 			}
+			// 		} else {
+			// 			printf("temp_str is NULL (no commands in this branch)\n");
+			// 		}
+			// 	} else {
+			// 		printf("cmd_node or cmd_node->right is NULL\n");
+			// 	}
+			// } else {
+			// 	printf("The right-cmd-node branch does not exist\n");
+			// }
+
+				// if(right_node->right)
+				// {
+				// 	temp_str = right_node->right->cmd;
+					// while(*temp_str)
+					// {
+					// 	printf("cmd of the right node of the left-cmd-node branch: %s\n", *temp_str);
+					// 	temp_str++;
+					// }
+
+				// }
+
+			// }
+			// if (ast_node && (ast_node->left)->cmd)
+			// {
+			// 	printf("left cmd list :\n");
+			// 	char **left_cmd = (ast_node->left)->cmd;
+			// 	while (*left_cmd) {
+			// 		printf("%s\n", *left_cmd);
+			// 		left_cmd++;
+			// 	}
+			// }
+
+			/*<<<---->>>>*/
