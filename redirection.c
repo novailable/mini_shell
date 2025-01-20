@@ -1,9 +1,10 @@
 #include "mini_shell.h"
 
-int	re_input(char *file)
+int	re_input(char *file, t_list *envp)
 {
 	int	fd_in;
 
+	file = first_processing(file, envp);
 	if (file && access(file, F_OK | R_OK | X_OK))
 	{
 		fd_in = open(file, O_RDONLY);
@@ -14,13 +15,15 @@ int	re_input(char *file)
 			return (-1);
 		}
 	}
+	free(file);
 	return (fd_in);
 }
 
-void	re_output(char *file, int append)
+void	re_output(char *file, t_list *envp, int append)
 {
 	int	fd_out;
 
+	file = first_processing(file, envp);
 	if (append)
 		fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
@@ -32,14 +35,16 @@ void	re_output(char *file, int append)
 		return ;
 	}
 	dup2(fd_out, STDOUT_FILENO);
+	free(file);
 	close(fd_out);
 }
 
 int	app_heredoc(char *eof)
 {
-	char *line;
-	int fd_pipe[2];
+	char	*line;
+	int		fd_pipe[2];
 
+	eof = heredoc_processing(eof);
 	if (pipe(fd_pipe) == -1)
 	{
 		perror("pipe error");
@@ -51,17 +56,45 @@ int	app_heredoc(char *eof)
 		if (!line || strcmp(line, eof) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
 		write(fd_pipe[1], line, strlen(line));
 		write(fd_pipe[1], "\n", 1);
 		free(line);
 	}
-	
-	close(fd_pipe[1]); 
+	close(fd_pipe[1]);
+	free(eof);
 	return (fd_pipe[0]);
 }
 
+void	redirection(char **args, t_list	*envp)
+{
+	int		in_fd;
+
+	in_fd = -1;
+	while (*args)
+	{
+		if (in_fd > 0)
+		{
+			close(in_fd);
+			in_fd = -1;
+		}
+		if (!ft_strcmp(*args, "<") && *(++args))
+			in_fd = re_input(*args, envp);
+		else if (!ft_strcmp(*args, "<<") && *(++args))
+			in_fd = app_heredoc(*args);
+		else if (!ft_strcmp(*args, ">") && *(++args))
+			re_output(*args, envp, 0);
+		else if (!ft_strcmp(*args, ">>") && *(++args))
+			re_output(*args, envp, 1);
+		args++;
+	}
+	if (in_fd > 0)
+	{
+		dup2(in_fd, STDIN_FILENO);
+		close(in_fd);
+	}
+}
 
 // int	main(int argc, char **argv, char **envp)
 // {

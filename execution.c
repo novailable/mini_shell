@@ -1,4 +1,4 @@
-#include "mini_shell.h"
+#include "minishell.h"
 
 char	*get_p_path(char *cmd, char *envp_path)
 {

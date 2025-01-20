@@ -6,11 +6,11 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 18:03:02 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/18 19:55:35 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/20 12:24:48 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mini_shell.h"
+#include "minishell.h"
 
 char	*handle_esc(char *str, char **result, int in_quote)
 {

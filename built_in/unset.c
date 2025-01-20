@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 18:15:06 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/14 01:07:51 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/20 12:22:20 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../mini_shell.h"
+#include "../minishell.h"
 
 void	unset(char **args, t_list **envp)
 {

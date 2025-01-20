@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 21:18:45 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/14 02:16:29 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/20 12:21:16 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../mini_shell.h"
+#include "../minishell.h"
 
 void	new_env(char *key, char *value, t_list *envp)
 {
@@ -82,7 +82,7 @@ void	get_keypair(char *arg, char *result[2], t_list *envp)
 	}
 }
 
-int	export(char **args, t_list *envp)
+void	export(char **args, t_list *envp)
 {
 	int		i;
 	char	*keypair[2];
@@ -93,7 +93,7 @@ int	export(char **args, t_list *envp)
 	status = 0;
 	save = NULL;
 	if (!args[1])
-		return (export_noargs(envp), status);
+		export_noargs(envp);
 	while (args[++i])
 	{
 		get_keypair(args[i], keypair, envp);
@@ -108,5 +108,4 @@ int	export(char **args, t_list *envp)
 			status = (printf("%s\n", args[i]) * 0) + 1;
 		(free(keypair[0]), free(keypair[1]));
 	}
-	return (status);
 }

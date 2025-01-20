@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 09:58:26 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/18 20:17:45 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/20 11:59:18 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,58 +17,6 @@
 //&& cat error.log && rm -rf /tmp/test_dir && exit
 
 #include "mini_shell.h"
-
-t_list	*init_envp(char **envpath)
-{
-	t_list	*envp;
-	t_envp	*env_var;
-	char	*value;
-
-	envp = NULL;
-	while (*envpath)
-	{
-		env_var = malloc(sizeof(t_envp));
-		if (!env_var)
-			return (NULL);
-		env_var->key = ft_strndup(*envpath, \
-						ft_strchr(*envpath, '=') - *envpath);
-		value = ft_strchr(*envpath, '=') + 1;
-		env_var->value = ft_strdup(value);
-		ft_lstadd_back(&envp, ft_lstnew(env_var));
-		envpath++;
-	}
-	return (envp);
-}
-
-void	ft_strsncpy(char **dest, char **src, int n)
-{
-	int	i;
-
-	i = 0;
-	while (src[i] && i < n)
-	{
-		dest[i] = ft_strdup(src[i]);
-		if (!dest[i])
-			free_mem(dest, i);
-		i++;
-	}
-}
-
-// char	**init_env(char **envpath)
-// {
-// 	int		i;
-// 	char	**n_envp;
-
-// 	i = 0;
-// 	while (envpath[i])
-// 		i++;
-// 	n_envp = malloc(sizeof(char *) * (i + 1));
-// 	if (!n_envp)
-// 		return (NULL);
-// 	ft_strsncpy(n_envp, envpath, i);
-// 	n_envp[i] = NULL;
-// 	return (n_envp);
-// }
 
 __pid_t ft_getpid()
 {
@@ -89,7 +37,6 @@ __pid_t ft_getpid()
 // 	int		i;
 // 	int		in_quote;
 // 	char	*start;
-
 // 	i = 0;
 // 	in_quote = 0;
 // 	result = NULL;
@@ -190,38 +137,6 @@ __pid_t ft_getpid()
 // 	return (result);
 // }
 
-// char	*replace_env(char *str, char **envp)
-// {
-// 	char	*result;
-// 	char	*copy;
-// 	int		i;
-
-// 	i = 0;
-// 	if (!str)
-// 		return (NULL);
-	
-// 	// if (*str == '\'')
-// 	// 	return (ft_strtrim(str, "\'"));
-// 	// if (*str == '\"')
-// 	// 	copy = ft_strndup(++str, ft_strlen(str) - 2);
-// 	// else
-// 	// 	copy = ft_strdup(str);
-
-// 	// printf("copy : %s, len : %ld\n", copy, ft_strlen(str) - 2);
-// 	result = first_processing(str, envp);
-// 	// free(copy);
-// 	// copy = result;
-// 	// while (copy[i])
-// 	// {
-// 	// 	if (copy[i] == '$')
-// 	// 		if (copy[i - 1] == '\\')
-			
-// 	// }
-// 	printf("Result : %s\n", result);
-	
-// 	return ("hehe\n");	
-// }
-
 int	is_end_quote(char *str)
 {
 	int	i;
@@ -300,10 +215,10 @@ int	main(int argc, char **argv, char **envpath)
 	{
 		input_str = readline("mini_shell % ");
 		add_history(input_str);
-		// char *f_p = first_processing(input_str, envp);
-		// printf("%s\n", f_p);
+		printf("%d\n", is_end_quote(input_str));
+		char *f_p = first_processing(input_str, envp);
 		char *h_p = heredoc_processing(input_str);
-		printf("%s\n", h_p);
+		printf("f_p %s, h_p %s\n", f_p, h_p);
 		free(h_p);
 		free(input_str);
 		// printf("%d\n", is_end_quote(input_str));
