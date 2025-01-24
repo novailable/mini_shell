@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/20 12:24:34 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/24 05:36:13 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,11 @@ int is_balanced_quotes(const char *input) {
 
 t_tokens	*custom_split(const char *input)
 {
-	int			i = 0, start = 0;
-	int			single_quote = 0, double_quote = 0;
+	int			i = 0;
+	int			start = 0;
+	int			single_quote = 0;
+	int 		double_quote = 0;
+	int			append = 0;
 	t_tokens	*head = NULL;
 
 	while (input[i])
@@ -56,6 +59,48 @@ t_tokens	*custom_split(const char *input)
 			single_quote = !single_quote;
 		else if (input[i] == '"' && !single_quote)
 			double_quote = !double_quote;
+		else if(input[i] == '>' && input[i+1] == '>' && !single_quote && !double_quote)
+		{
+			if (i > start)
+			{
+				char *substr = ft_strndup(input + start, i - start);
+				append_token(&head, create_new_token(substr));
+				free(substr);
+			}
+			char *operator_token = ft_strndup(input + i, 2);
+			append = 1;
+			append_token(&head, create_new_token(operator_token));
+			free(operator_token);
+			start = i + 2; // Move the start to the next character
+		}
+		else if ((input[i] == '|' || input[i] == '>' || input[i] == '<' ) && !single_quote && !double_quote && !append && input[i+1] != ' ')
+		{
+			if (i > start)
+			{
+				char *substr = ft_strndup(input + start, i - start);
+				append_token(&head, create_new_token(substr));
+				free(substr);
+			}
+			char *operator_token = ft_strndup(input + i, 1);
+			append_token(&head, create_new_token(operator_token));
+			free(operator_token);
+
+			start = i + 1;
+		}
+		else if ((input[i] == '|' || input[i] == '>' || input[i] == '<' ) && !single_quote && !double_quote && !append && input[i+1] == ' ')
+		{
+			if (i > start)
+			{
+				char *substr = ft_strndup(input + start, i - start);
+				append_token(&head, create_new_token(substr));
+				free(substr);
+			}
+			char *operator_token = ft_strndup(input + i, 1);
+			append_token(&head, create_new_token(operator_token));
+			free(operator_token);
+
+			start = i + 1;
+		}
 		else if (input[i] == ' ' && !single_quote && !double_quote)
 		{
 			if (i > start)
@@ -100,6 +145,7 @@ void	free_tokens(t_tokens *head)
 		free(temp);
 	}
 }
+
 int main(int argc, char **argv, char **envpath)
 {
 	struct sigaction sa_int;
@@ -111,25 +157,26 @@ int main(int argc, char **argv, char **envpath)
 
 	((void)argc, (void)argv);
 	envp = init_envp(envpath);
-	ast_node = malloc(sizeof(t_ast));
-	while (1)
-	{
-		sa_int.sa_handler = handle_signal;
+	// while (1)
+	// {
+		// sa_int.sa_handler = handle_signal;
 
-		if (sigaction(SIGINT, &sa_int, NULL) == -1)
-			printf("Sigaction failed\n");
-		sigemptyset(&sa_int.sa_mask);
+		// if (sigaction(SIGINT, &sa_int, NULL) == -1)
+		// 	printf("Sigaction failed\n");
+		// sigemptyset(&sa_int.sa_mask);
 
-		sa_newline.sa_handler = handle_new_print_line;
-		sigemptyset(&sa_newline.sa_mask);
+		// sa_newline.sa_handler = handle_new_print_line;
+		// sigemptyset(&sa_newline.sa_mask);
 
-		char *input = readline("minishell> ");
+		char *input = readline("minishell % ");
 		if (input && (*input != '|'))
 		{
-			if (!is_balanced_quotes(input))
-			{
-				perror("unclosed quotation");
-				continue;
+			history_output(input);
+
+			// if (!is_balanced_quotes(input))
+			// {
+			// 	perror("unclosed quotation");
+			// 	continue;
 				// char *remainder = ft_strrchr(input, '\"');
 				// if(ft_strncmp(input, "echo", 4) == 0)
 				// {
@@ -142,19 +189,37 @@ int main(int argc, char **argv, char **envpath)
 				// 	printf("%s\n%s not found\n", remainder, new_dest);
 				// }
 				// free(input);
-			}
-
+			// }
 			tokens = custom_split(input);
 			tokenize_str(tokens);
-			history_output(input);
+			t_tokens *current = tokens;
+				int j = 0;
+				while (current != NULL) 
+				{
+					printf("String: %s\n", current->str);
+					printf("string type: %d\n", current->tok_types);
+					current = current->next;
+					j++;
+				}
+			
 			if(check_grammar_syntax(tokens))
-				ast_node = ast(ast_node, tokens);
+			{
+				ast_node = malloc(sizeof(t_ast));
+				if (!ast_node)
+					printf("Error in main_ast malloc\n");
+				ast(ast_node, tokens);
+			}
+			// printf("%s\n", ast_node->right->left->args[0]);
+			
+			if(ast_node)
+				print_ast(ast_node);
+			free_ast(ast_node);
+			free(ast_node);
 			free_tokens(tokens);
 			free(input);
-		}
 	// 	else
 	// 		printf("Error reading input.\n");
-	
+		// }
 	}
 	ft_lstclear(&envp, free_envp);
 	return 0;

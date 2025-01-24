@@ -12,13 +12,13 @@
 
 #include "minishell.h"
 
-void	args_list_len_alloc(t_tokens **whole_list, char ***args_list)
+void	args_list_len_alloc(t_tokens *whole_list, char ***args_list)
 {
 	t_tokens	*current;
 	int			args_len;
 
 	args_len = 0;
-	current = *whole_list;
+	current = whole_list;
 	while (current && current->tok_types != T_PIPE)
 	{
 		if (current->tok_types == T_WORD)
@@ -33,19 +33,11 @@ void	args_list_len_alloc(t_tokens **whole_list, char ***args_list)
 		current = current->next;
 	}
 	if (args_len == 0)
+	{
 		*args_list = NULL;
-	if (args_len > 0)
-		*args_list = malloc(sizeof(char *) * (args_len + 1));
+		return ;
+	}
+	*args_list = malloc(sizeof(char *) * (args_len + 1));
+	printf("size : %d\n", args_len);
 }
 
-t_ast	*args_list(t_ast *node, t_tokens **whole_list)
-{
-	char	**args_list;
-
-	args_list_len_alloc(whole_list, &args_list);
-	if (args_list)
-		node->cmd = parse_cmd(&args_list, whole_list, 1);
-	else
-		node->cmd = NULL;
-	return (node);
-}

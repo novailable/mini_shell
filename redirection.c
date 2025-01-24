@@ -1,4 +1,4 @@
-#include "mini_shell.h"
+#include "minishell.h"
 
 int	re_input(char *file, t_list *envp)
 {
@@ -53,12 +53,12 @@ int	app_heredoc(char *eof)
 	while (1)
 	{
 		line = readline("> ");
-		if (!line || strcmp(line, eof) == 0)
+		if (!line || ft_strcmp(line, eof) == 0)
 		{
 			free(line);
 			break ;
 		}
-		write(fd_pipe[1], line, strlen(line));
+		write(fd_pipe[1], line, ft_strlen(line));
 		write(fd_pipe[1], "\n", 1);
 		free(line);
 	}
