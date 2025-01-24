@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:40:05 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/20 12:41:56 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/24 04:17:57 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,10 @@ typedef struct s_tokens
 }	t_tokens;
 
 typedef struct s_ast{
-	t_token_types type;
 	struct s_ast *left;
 	struct s_ast *right;
-	char **cmd;
-	char *out_file;
+	char **args;
+	char **redirect;
 }t_ast;
 
 //envp
@@ -63,22 +62,26 @@ typedef struct s_envp
 
 t_tokens *create_new_token(char *str);
 void tokenize_str(t_tokens *head);
-t_ast *ast(t_ast *ast_node, t_tokens *whole_list);
+void 	ast(t_ast *ast_node, t_tokens *whole_list);
 int	check_grammar_syntax(t_tokens *head);
 void ft_built_ins(char **list_of_cmd);
-char *new_line_input(int flag, char *delimeter);
+// char *new_line_input(int flag, char *delimeter);
 int quote_check(const char *input_str);
 void handle_newline(char *buf, int sz);
-t_ast *cmd_node_branch(t_tokens *current);
-char **parse_cmd(char ***args_list, t_tokens **whole_list, int flag);
+// t_ast *cmd_node_branch(t_tokens *current);
+t_tokens 	*parse_cmd(t_ast *left_node, t_tokens *whole_list);
 t_ast *redirection_list(t_ast *node, t_tokens **whole_list);
-void redirect_list_len_alloc(t_tokens **whole_list, char ***redirect_list);
+void redirect_list_len_alloc(t_tokens *whole_list, char ***redirect_list);
 t_ast *args_list(t_ast *node, t_tokens **whole_list) ;
-void args_list_len_alloc(t_tokens **whole_list, char ***args_list);
+void args_list_len_alloc(t_tokens *whole_list, char ***args_list);
 void history_output(char *input);
 int history_write(char *input);
 void	append_token(t_tokens **head, t_tokens *new_node);
 // void cd_built_in();
+t_tokens	*args_redirection_list(t_ast *left_node, t_tokens *whole_list);
+
+void print_ast(t_ast *ast_node);
+void free_ast(t_ast *ast_node);
 
 //built_in
 void	pwd();
@@ -102,6 +105,10 @@ char	*heredoc_processing(char *str);
 
 //execute
 int		exec_cmd(char **args, t_list *envp);
+char	*get_p_path(char *cmd, char *envp_path);
+
+// redirection
+void	redirection(char **args, t_list	*envp);
 
 //shits
 char	**ft_split_2(char *str, char *delimiters, char *ignchars);

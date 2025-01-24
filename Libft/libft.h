@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 16:33:34 by aoo               #+#    #+#             */
-/*   Updated: 2024/12/31 12:51:39 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/24 05:27:38 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int		count_word(char const *s, const char *delimiters);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	free_mem(char **result, int i);
+void	free_strs(char **strs);
 bool	ft_atoi_base(char *str, char *base, int *value);
 int		ft_atoi(const char *nptr);
 bool	ft_atoi_vali(const char *nptr, int *result);

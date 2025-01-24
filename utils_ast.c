@@ -3,35 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   utils_ast.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 02:28:23 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/16 11:34:51 by marvin           ###   ########.fr       */
+/*   Updated: 2025/01/24 05:15:55 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*ast(t_ast *ast_node, t_tokens *whole_list)
+void 	ast(t_ast *ast_node, t_tokens *whole_list)
 {
 	t_tokens	*ptr;
 
-	if (!whole_list)
-		return (ast_node);
-	if (!ast_node)
-		printf("Error in main_ast malloc\n");
+	ast_node->left = malloc(sizeof(t_ast));
 	ptr = whole_list;
-	while (ptr)
+	ptr = args_redirection_list(ast_node->left, ptr);	
+	
+	if (ptr && ft_strcmp(ptr->str, "|") == 0)
 	{
-		if (ft_strncmp(ptr->str, "|", 1) == 0)
-		{
-			ast_node->left = cmd_node_branch(whole_list);
-			ast_node->right = ast (ast_node, ptr->next);
-			return (ast_node);
-		}
-		ptr = ptr->next;
+		printf("%s\n", ptr->next->str);
+		ast_node->right = malloc(sizeof(t_ast));
+		ast (ast_node->right, ptr->next);
 	}
-	if (ptr == NULL)
-		ast_node->right = cmd_node_branch(whole_list);
-	return (ast_node);
+	else
+		ast_node->right = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:32:19 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/20 12:22:08 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/24 05:33:37 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	free_envp(void *data)
 	env_var = (t_envp *)data;
 	free(env_var->key);
 	free(env_var->value);
+	free(env_var);
 }
 
 int	envp_arrsize(t_list *envp)
@@ -176,10 +177,18 @@ char	*heredoc_processing(char *str)
 	{
 		if (*str == '\\')
 			str = handle_esc(str, &result, in_quote);
-		else if (*str == '\'' || *str == '\"')
+		else if (*str == '\'')
+			str = handle_sq(str, &result);
+		else if (*str++ == '\"')
 		{
-			if (*str == '\"')
-				is_quote("\"", *str, &in_quote);
+			while (*str && *str != '\"')
+			{
+				if (*str == '\\')
+					str = handle_esc(str, &result, 1);
+				else
+					result = ft_strcjoin(result, *str++);
+			}
+			result = ft_strcjoin(result, '\0');
 			str++;
 		}
 		else

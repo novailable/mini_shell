@@ -1,0 +1,6 @@
+--track-fds=yes
+--leak-check=full
+--track-origins=yes
+--trace-children=yes
+--suppressions=rl.supp
+--show-leak-kinds=all
