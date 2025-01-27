@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirection.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/27 19:08:12 by aoo               #+#    #+#             */
+/*   Updated: 2025/01/27 20:31:30 by aoo              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	re_input(char *file, t_list *envp)
@@ -5,12 +17,12 @@ int	re_input(char *file, t_list *envp)
 	int	fd_in;
 
 	file = first_processing(file, envp);
-	if (file && access(file, F_OK | R_OK | X_OK))
+	if (file && !access(file, F_OK | R_OK | X_OK))
 	{
 		fd_in = open(file, O_RDONLY);
 		if (fd_in < 0)
 		{
-			printf("%s", file);
+			write (2, file, ft_strlen(file));
 			perror("error opening");
 			return (-1);
 		}
@@ -30,8 +42,9 @@ void	re_output(char *file, t_list *envp, int append)
 		fd_out = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_out < 0)
 	{
-		printf("%s", file);
+		write(2, file, ft_strlen(file));
 		perror("error opening");
+		free(file);
 		return ;
 	}
 	dup2(fd_out, STDOUT_FILENO);
@@ -39,16 +52,17 @@ void	re_output(char *file, t_list *envp, int append)
 	close(fd_out);
 }
 
-int	app_heredoc(char *eof)
+int	app_heredoc(char *args)
 {
 	char	*line;
 	int		fd_pipe[2];
+	char	*eof;
 
-	eof = heredoc_processing(eof);
+	eof = heredoc_processing(args);
 	if (pipe(fd_pipe) == -1)
 	{
 		perror("pipe error");
-		exit(1);
+		return (free(eof), -1);
 	}
 	while (1)
 	{
@@ -67,27 +81,27 @@ int	app_heredoc(char *eof)
 	return (fd_pipe[0]);
 }
 
-void	redirection(char **args, t_list	*envp)
+void	redirection(char **redirect, t_list	*envp)
 {
 	int		in_fd;
 
 	in_fd = -1;
-	while (*args)
+	while (*redirect)
 	{
 		if (in_fd > 0)
 		{
 			close(in_fd);
 			in_fd = -1;
 		}
-		if (!ft_strcmp(*args, "<") && *(++args))
-			in_fd = re_input(*args, envp);
-		else if (!ft_strcmp(*args, "<<") && *(++args))
-			in_fd = app_heredoc(*args);
-		else if (!ft_strcmp(*args, ">") && *(++args))
-			re_output(*args, envp, 0);
-		else if (!ft_strcmp(*args, ">>") && *(++args))
-			re_output(*args, envp, 1);
-		args++;
+		if (!ft_strcmp(*redirect, "<") && *(++redirect))
+			in_fd = re_input(*redirect, envp);
+		else if (!ft_strcmp(*redirect, "<<") && *(++redirect))
+			in_fd = app_heredoc(*redirect);
+		else if (!ft_strcmp(*redirect, ">") && *(++redirect))
+			re_output(*redirect, envp, 0);
+		else if (!ft_strcmp(*redirect, ">>") && *(++redirect))
+			re_output(*redirect, envp, 1);
+		redirect++;
 	}
 	if (in_fd > 0)
 	{

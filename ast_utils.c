@@ -37,6 +37,7 @@ void	print_ast(t_ast *ast_node)
 	}  
 }
 
+
 void	free_ast(t_ast *ast_node)
 {
 	t_ast   *node;
