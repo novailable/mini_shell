@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:40:05 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/24 04:17:57 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/27 21:28:53 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,13 @@ typedef struct s_tokens
 	struct s_tokens	*next;
 }	t_tokens;
 
-typedef struct s_ast{
-	struct s_ast *left;
-	struct s_ast *right;
-	char **args;
-	char **redirect;
-}t_ast;
+typedef struct s_ast
+{
+	struct s_ast	*left;
+	struct s_ast	*right;
+	char			**args;
+	char			**redirect;
+}	t_ast;
 
 //envp
 typedef struct s_envp
@@ -85,11 +86,11 @@ void free_ast(t_ast *ast_node);
 
 //built_in
 void	pwd();
-void	env(t_list *envp);
-void	export(char **args, t_list *envp);
+int		env(t_list *envp);
+int		export(char **args, t_list *envp);
 t_list	*find_env(char *key, t_list *envp);
 char	*ft_getenv(char *key, t_list *envp);
-void	unset(char **args, t_list **envp);
+int		unset(char **args, t_list **envp);
 
 //utils
 void	print_env(void *data);
@@ -106,9 +107,10 @@ char	*heredoc_processing(char *str);
 //execute
 int		exec_cmd(char **args, t_list *envp);
 char	*get_p_path(char *cmd, char *envp_path);
+int		execute_ast(t_ast *ast_node, t_list *envp);
 
 // redirection
-void	redirection(char **args, t_list	*envp);
+void	redirection(char **redirect, t_list	*envp);
 
 //shits
 char	**ft_split_2(char *str, char *delimiters, char *ignchars);

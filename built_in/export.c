@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 21:18:45 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/20 12:21:16 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/27 14:38:42 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	get_keypair(char *arg, char *result[2], t_list *envp)
 	}
 }
 
-void	export(char **args, t_list *envp)
+int	export(char **args, t_list *envp)
 {
 	int		i;
 	char	*keypair[2];
@@ -97,7 +97,7 @@ void	export(char **args, t_list *envp)
 	while (args[++i])
 	{
 		get_keypair(args[i], keypair, envp);
-		if (env_key_check(keypair[0]))
+		if (!env_key_check(keypair[0]))
 		{
 			if (find_env(keypair[0], envp))
 				update_env(keypair[1], find_env(keypair[0], envp));
@@ -105,7 +105,8 @@ void	export(char **args, t_list *envp)
 				new_env(keypair[0], keypair[1], envp);
 		}
 		else
-			status = (printf("%s\n", args[i]) * 0) + 1;
+			status = 1;
 		(free(keypair[0]), free(keypair[1]));
 	}
+	return (status);
 }

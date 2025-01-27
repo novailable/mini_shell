@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/24 05:36:13 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/27 11:21:00 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,14 +194,11 @@ int main(int argc, char **argv, char **envpath)
 			tokenize_str(tokens);
 			t_tokens *current = tokens;
 				int j = 0;
-				while (current != NULL) 
-				{
-					printf("String: %s\n", current->str);
-					printf("string type: %d\n", current->tok_types);
-					current = current->next;
-					j++;
-				}
-			
+			while (current != NULL) 
+			{
+				current = current->next;
+				j++;
+			}
 			if(check_grammar_syntax(tokens))
 			{
 				ast_node = malloc(sizeof(t_ast));

@@ -38,6 +38,6 @@ void	args_list_len_alloc(t_tokens *whole_list, char ***args_list)
 		return ;
 	}
 	*args_list = malloc(sizeof(char *) * (args_len + 1));
-	printf("size : %d\n", args_len);
+	// printf("size : %d\n", args_len);
 }
 

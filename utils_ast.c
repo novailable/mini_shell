@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 02:28:23 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/24 05:15:55 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/27 11:23:01 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void 	ast(t_ast *ast_node, t_tokens *whole_list)
 	
 	if (ptr && ft_strcmp(ptr->str, "|") == 0)
 	{
-		printf("%s\n", ptr->next->str);
 		ast_node->right = malloc(sizeof(t_ast));
 		ast (ast_node->right, ptr->next);
 	}
