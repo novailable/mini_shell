@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/27 11:21:00 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/28 12:35:36 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ t_tokens	*custom_split(const char *input)
 		append_token(&head, create_new_token(substr));
 		free(substr);
 	}
+	
 	return (head);
 }
 
@@ -157,8 +158,8 @@ int main(int argc, char **argv, char **envpath)
 
 	((void)argc, (void)argv);
 	envp = init_envp(envpath);
-	// while (1)
-	// {
+	while (1)
+	{
 		// sa_int.sa_handler = handle_signal;
 
 		// if (sigaction(SIGINT, &sa_int, NULL) == -1)
@@ -210,13 +211,14 @@ int main(int argc, char **argv, char **envpath)
 			
 			if(ast_node)
 				print_ast(ast_node);
+			execute_ast(ast_node, envp);
 			free_ast(ast_node);
 			free(ast_node);
 			free_tokens(tokens);
 			free(input);
 	// 	else
 	// 		printf("Error reading input.\n");
-		// }
+		}
 	}
 	ft_lstclear(&envp, free_envp);
 	return 0;

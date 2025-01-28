@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 21:18:45 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/27 14:38:42 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/28 10:34:45 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	export(char **args, t_list *envp)
 	while (args[++i])
 	{
 		get_keypair(args[i], keypair, envp);
+		printf("%s %s\n", keypair[0], keypair[1]);
 		if (!env_key_check(keypair[0]))
 		{
 			if (find_env(keypair[0], envp))

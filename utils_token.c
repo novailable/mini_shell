@@ -34,11 +34,11 @@ t_tokens *create_new_token(char *str)
 
 	token_malloc = malloc(sizeof(t_tokens));
 	token_malloc->str = ft_strdup(str);
-	token_malloc->next = NULL;
+	token_malloc->next = NULL;	
 	return (token_malloc);
 }
 
-void tokenize_str(t_tokens *head)
+void	tokenize_str(t_tokens *head)
 {
 	int i;
 	int word;
