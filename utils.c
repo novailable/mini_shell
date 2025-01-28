@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:32:19 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/27 14:38:26 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/28 10:36:04 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int	env_key_check(char *key)
 		{
 			temp++;
 			if (*temp == '\0')
-				return (1);
+				return (0);
 		}
 	}
 	return (printf("export : not a valid identifier : %s\n", key), 1);

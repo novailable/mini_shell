@@ -79,21 +79,21 @@ int	external(char **args, t_list *envp)
 	free(envp_array);
 	*/
 
-int	execution(t_ast *node, t_list **envp)
+int	execution(t_ast *node, t_list *envp)
 {
 	char	**args;
 
 	args = node->args;
 	if (node->redirect)
-		redirection(node->redirect, *envp);
+		redirection(node->redirect, envp);
 	if (!ft_strcmp(*args, "env"))
-		return (env(*envp));
+		return (env(envp));
 	else if (!ft_strcmp(*args, "export"))
-		return (export(args, *envp));
+		return (export(args, envp));
 	else if (!ft_strcmp(*args, "unset"))
-		return (unset(args, envp));
+		return (unset(args, &envp));
 	else
-		return (external(args, *envp));
+		return (external(args, envp));
 }
 
 int	execute_ast(t_ast *ast_node, t_list *envp)
@@ -108,6 +108,7 @@ int	execute_ast(t_ast *ast_node, t_list *envp)
 	org_fd[1] = dup(STDOUT_FILENO);
 	if (ast_node->right)
 	{
+		printf("ast right\n");
 		pipe(pipe_fd);
 		pid = fork();
 		if (pid == -1)
@@ -115,7 +116,7 @@ int	execute_ast(t_ast *ast_node, t_list *envp)
 		if (pid == 0)
 		{
 			dup2(pipe_fd[1], STDOUT_FILENO);
-			execution(ast_node->left, &envp);
+			execution(ast_node->left, envp);
 			(close(pipe_fd[0]), close(pipe_fd[1]));
 		}
 		waitpid(pid, &status, 0);
@@ -126,9 +127,10 @@ int	execute_ast(t_ast *ast_node, t_list *envp)
 	}
 	else
 	{
-		status = execution(ast_node->left, &envp);
-		dup2(STDIN_FILENO, org_fd[0]);
-		dup2(STDOUT_FILENO, org_fd[1]);
+		printf("ast left\n");
+		status = execution(ast_node->left, envp);
+		// dup2(STDIN_FILENO, org_fd[0]);
+		// dup2(STDOUT_FILENO, org_fd[1]);
 		if (pipe_fd)
 			(close(pipe_fd[0]), close(pipe_fd[1]));
 		return (status);
