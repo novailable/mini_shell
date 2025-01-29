@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 19:08:12 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/27 20:31:30 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/28 14:01:47 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	re_input(char *file, t_list *envp)
 	int	fd_in;
 
 	file = first_processing(file, envp);
-	if (file && !access(file, F_OK | R_OK | X_OK))
+	if (file && !access(file, F_OK | R_OK))
 	{
 		fd_in = open(file, O_RDONLY);
 		if (fd_in < 0)
@@ -107,6 +107,7 @@ void	redirection(char **redirect, t_list	*envp)
 	{
 		dup2(in_fd, STDIN_FILENO);
 		close(in_fd);
+		in_fd = -1;
 	}
 }
 

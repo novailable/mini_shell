@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/28 12:35:36 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/28 21:22:03 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ t_tokens	*custom_split(const char *input)
 	int			start = 0;
 	int			single_quote = 0;
 	int 		double_quote = 0;
+	int			heredoc = 0;
 	int			append = 0;
 	t_tokens	*head = NULL;
 
@@ -59,6 +60,20 @@ t_tokens	*custom_split(const char *input)
 			single_quote = !single_quote;
 		else if (input[i] == '"' && !single_quote)
 			double_quote = !double_quote;
+		else if(input[i] == '<' && input[i+1] == '<' && !single_quote && !double_quote)
+		{
+			if (i > start)
+			{
+				char *substr = ft_strndup(input + start, i - start);
+				append_token(&head, create_new_token(substr));
+				free(substr);
+			}
+			char *operator_token = ft_strndup(input + i, 2);
+			heredoc = 1;
+			append_token(&head, create_new_token(operator_token));
+			free(operator_token);
+			start = i + 2; // Move the start to the next character
+		}
 		else if(input[i] == '>' && input[i+1] == '>' && !single_quote && !double_quote)
 		{
 			if (i > start)
@@ -73,7 +88,7 @@ t_tokens	*custom_split(const char *input)
 			free(operator_token);
 			start = i + 2; // Move the start to the next character
 		}
-		else if ((input[i] == '|' || input[i] == '>' || input[i] == '<' ) && !single_quote && !double_quote && !append && input[i+1] != ' ')
+		else if ((input[i] == '|' || input[i] == '>' || input[i] == '<' ) && !single_quote && !double_quote && !heredoc && !append && input[i+1] != ' ')
 		{
 			if (i > start)
 			{
@@ -87,7 +102,7 @@ t_tokens	*custom_split(const char *input)
 
 			start = i + 1;
 		}
-		else if ((input[i] == '|' || input[i] == '>' || input[i] == '<' ) && !single_quote && !double_quote && !append && input[i+1] == ' ')
+		else if ((input[i] == '|' || input[i] == '>' || input[i] == '<' ) && !single_quote && !double_quote && !heredoc && !append && input[i+1] == ' ')
 		{
 			if (i > start)
 			{
@@ -119,7 +134,6 @@ t_tokens	*custom_split(const char *input)
 		append_token(&head, create_new_token(substr));
 		free(substr);
 	}
-	
 	return (head);
 }
 
@@ -192,6 +206,14 @@ int main(int argc, char **argv, char **envpath)
 				// free(input);
 			// }
 			tokens = custom_split(input);
+
+			// t_tokens *current = tokens;
+			// int j = 0;
+			// while (current != NULL) {
+			// 	printf("String: %s\n", current->str);
+			// 	current = current->next;
+			// 	j++;
+			// }
 			tokenize_str(tokens);
 			t_tokens *current = tokens;
 				int j = 0;
@@ -206,21 +228,23 @@ int main(int argc, char **argv, char **envpath)
 				if (!ast_node)
 					printf("Error in main_ast malloc\n");
 				ast(ast_node, tokens);
+				if(ast_node)
+					print_ast(ast_node);
+				free_ast(ast_node);
+				free(ast_node);
+				free_tokens(tokens);
+				free(input);
 			}
-			// printf("%s\n", ast_node->right->left->args[0]);
+			else
+				free_tokens(tokens);
 			
-			if(ast_node)
-				print_ast(ast_node);
-			execute_ast(ast_node, envp);
-			free_ast(ast_node);
-			free(ast_node);
-			free_tokens(tokens);
-			free(input);
+			// execute_ast(ast_node, &envp);
+			
 	// 	else
 	// 		printf("Error reading input.\n");
 		}
 	}
-	ft_lstclear(&envp, free_envp);
+	// ft_lstclear(&envp, free_envp);
 	return 0;
 }
 
@@ -238,14 +262,7 @@ int main(int argc, char **argv, char **envpath)
 
 /*print for the ast_node_cmds*/
 // if(ast_node && (ast_node->right)->cmd)
-			// {
-			// 	printf("right cmd list :\n");
-			// 	char **right_cmd = (ast_node->right)->cmd;
-			// 	while (*right_cmd) {
-			// 		printf("%s\n", *right_cmd);
-			// 		right_cmd++;
-			// 	}
-			// }
+			// {custom_split
 			// if (ast_node && (ast_node->left)->cmd)
 			// {
 			// 	printf("left cmd list :\n");
