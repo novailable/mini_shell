@@ -6,7 +6,7 @@
 #    By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 17:41:52 by aoo               #+#    #+#              #
-#    Updated: 2025/01/24 03:59:55 by aoo              ###   ########.fr        #
+#    Updated: 2025/01/28 19:17:45 by aoo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,9 +20,9 @@ LIBFT_DIR = ./Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SRCS = main.c utils_str.c utils_ast.c utils_extras.c utils_syntax_check.c built_ins.c \
-		utils_token.c ast_args.c node_branch.c ast_redirection.c\
-		utils.c redirection.c execution.c first_processing.c built_in/export.c built_in/env.c built_in/unset.c built_in/pwd.c \
-		ast_branch.c ast_utils.c
+		utils_token.c ast_args.c node_branch.c ast_redirection.c ast_branch.c ast_utils.c \
+		utils.c redirection.c execution.c first_processing.c \
+		built_in/export.c built_in/env.c built_in/unset.c built_in/pwd.c built_in/echo.c\
 
 OBJS = ${SRCS:.c=.o}
 

@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:40:05 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/28 10:20:22 by aoo              ###   ########.fr       */
+/*   Updated: 2025/01/28 20:03:12 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ int		export(char **args, t_list *envp);
 t_list	*find_env(char *key, t_list *envp);
 char	*ft_getenv(char *key, t_list *envp);
 int		unset(char **args, t_list **envp);
+int		echo_n(char **args, t_list *envp, int status);
 
 //utils
 void	print_env(void *data);
@@ -107,7 +108,7 @@ char	*heredoc_processing(char *str);
 //execute
 int		exec_cmd(char **args, t_list *envp);
 char	*get_p_path(char *cmd, char *envp_path);
-int		execute_ast(t_ast *ast_node, t_list *envp);
+int		execute_ast(t_ast *ast_node, t_list *envp, int status);
 
 // redirection
 void	redirection(char **redirect, t_list	*envp);
