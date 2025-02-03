@@ -91,7 +91,7 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 	if (!ft_strcmp(*args, "env"))
 		return (env(envp));
 	else if (!ft_strcmp(*args, "export"))
-		return (export(args, envp));
+		return (export(args, envp, status));
 	else if (!ft_strcmp(*args, "unset"))
 		return (unset(args, &envp));
 	else if (!ft_strcmp(*args, "echo"))

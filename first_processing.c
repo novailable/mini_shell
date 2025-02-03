@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 18:03:02 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/03 08:59:12 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/03 09:12:45 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*handle_sq(char *str, char **result)
 	return (str);
 }
 
-char	*handle_dq(char *str, char **result, t_list *envp)
+char	*handle_dq(char *str, char **result, t_list *envp, int status)
 {
 	str++;
 	while (*str && *str != '\"')
@@ -70,7 +70,7 @@ char	*handle_dq(char *str, char **result, t_list *envp)
 		if (*str == '\\')
 			str = handle_esc(str, result, 1);
 		else if (*str == '$')
-			str = handle_env(str, result, envp);
+			str = handle_env(str, result, envp, status);
 		else
 			*result = ft_strcjoin(*result, *str++);
 	}
@@ -93,7 +93,7 @@ char	*first_processing(char *str, t_list *envp, int status)
 		else if (*str == '\'')
 			str = handle_sq(str, &result);
 		else if (*str == '\"')
-			str = handle_dq(str, &result, envp);
+			str = handle_dq(str, &result, envp, status);
 		else
 			result = ft_strcjoin(result, *str++);
 	}
