@@ -28,7 +28,10 @@ t_tokens 	*parse_cmd(t_ast *left_node, t_tokens *whole_list)
 			(left_node->args)[i] = ft_strdup(current->str);
 			i++;
 		}
-		else if(left_node->redirect && (current->tok_types == T_REDIRECT_OUT || current->tok_types == T_REDIRECT_IN || current->tok_types == T_APPEND))
+		else if(left_node->redirect && (current->tok_types == T_REDIRECT_OUT \
+		|| current->tok_types == T_REDIRECT_IN \
+		|| current->tok_types == T_APPEND\
+		|| current->tok_types == T_HERE_DOCS))
 		{
 			(left_node->redirect)[j] = ft_strdup(current->str);
 			if(current->next->tok_types == T_WORD)
