@@ -59,7 +59,7 @@ int	external(t_ast *l_node, t_list *envp)
 			if (exec_cmd(l_node->args, envp) == -1)
 			{
 				ft_putstr_fd(l_node->args[0], 2);
-				perror("command not found ");
+				perror(" ");
 				if (errno == EACCES)
 					exit (126);
 				exit(127);
@@ -96,46 +96,45 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 		return (unset(args, &envp));
 	else if (!ft_strcmp(*args, "echo"))
 		return (echo_n(args, envp, status));
+	else if (!ft_strcmp(*args, "pwd"))
+		return (pwd());
 	else
 		return (external(l_node, envp));
+	// else if (!ft_strcmp(*args, "cd"))
+	// 	return (cd(args, envp));
 }
 
 int	execute_ast(t_ast *ast_node, t_list *envp, int status)
 {
 	pid_t	pid;
-	int		pipe_fd[2];
+	int		pipe_fds[2];
 	int		org_fd[2];
 
 	org_fd[0] = dup(STDIN_FILENO);
 	org_fd[1] = dup(STDOUT_FILENO);
 	if (ast_node->right)
 	{
-		printf("ast right\n");
-		pipe(pipe_fd);
+		if (pipe(pipe_fds) == -1)
+			return (perror("minishell : pipe failed"), 1);
 		pid = fork();
 		if (pid == -1)
-			return (perror("fork operation failed!"), 1);
+			return (perror("minishell : fork failed"), 1);
 		if (pid == 0)
 		{
-			dup2(pipe_fd[1], STDOUT_FILENO);
-			execution(ast_node->left, envp, status);
-			(close(pipe_fd[0]), close(pipe_fd[1]));
+			dup2(pipe_fds[1], STDOUT_FILENO);
+			(close (pipe_fds[0]), close (pipe_fds[1]));
+			exit(execution(ast_node->left, envp, status));
 		}
-		waitpid(pid, &status, 0);
-		dup2(pipe_fd[0], STDIN_FILENO);
-		(close(pipe_fd[0]), close(pipe_fd[1]));
-		status = WEXITSTATUS(status);
+		close(pipe_fds[1]);
+		dup2(pipe_fds[0], STDIN_FILENO);
+		close(pipe_fds[0]);
+		waitpid(pid, NULL, 0);
 		execute_ast(ast_node->right, envp, status);
 	}
 	else if (ast_node->left)
-	{
-		printf("ast left\n");
 		status = execution(ast_node->left, envp, status);
-		dup2(org_fd[0], STDIN_FILENO);
-		dup2(org_fd[1], STDOUT_FILENO);
-		if (pipe_fd)
-			(close(pipe_fd[0]), close(pipe_fd[1]));
-		return (status);
-	}
+	dup2(org_fd[0], STDIN_FILENO);
+	dup2(org_fd[1], STDOUT_FILENO);
+	return (close(org_fd[0]), close(org_fd[1]), status);
 }
 

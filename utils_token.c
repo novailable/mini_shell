@@ -53,15 +53,15 @@ void	tokenize_str(t_tokens *head)
 	{
 		temp = current->str;
 		i = 0;
-		while(temp[i] != '\0')
-		{
-			if ((temp[i] >= 'a' && temp[i] <= 'z') && temp[i+1] == '\0' || (temp[i+1] == '\"'))
-			{
-				current->tok_types = T_WORD;
-				word++;
-			}
-			i++;
-		}
+		// while(temp[i] != '\0')
+		// {
+		// 	if ((temp[i] >= 'a' && temp[i] <= 'z') && temp[i+1] == '\0' || (temp[i+1] == '\"'))
+		// 	{
+		// 		current->tok_types = T_WORD;
+		// 		word++;
+		// 	}
+		// 	i++;
+		// }
 		if (!ft_strncmp(current->str, "|", 1))
 			current->tok_types = T_PIPE;
 		else if (!ft_strncmp(current->str, ">>", 2))
@@ -72,8 +72,10 @@ void	tokenize_str(t_tokens *head)
 			current->tok_types = T_REDIRECT_OUT;
 		else if (!ft_strncmp(current->str, "<", 1))
 			current->tok_types = T_REDIRECT_IN;
-		else if (!ft_strncmp(current->str, "$", 1))
-			current->tok_types = T_VAR;
+		else
+			current->tok_types = T_WORD;
+		// else if (!ft_strncmp(current->str, "$", 1))
+		// 	current->tok_types = T_VAR;
 		current = current->next;
 	}
 }

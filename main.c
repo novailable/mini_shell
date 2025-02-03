@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/28 21:22:03 by nsan             ###   ########.fr       */
+/*   Updated: 2025/02/03 07:18:08 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,7 @@ int main(int argc, char **argv, char **envpath)
 	t_ast *ast_node;
 	t_tokens	*tokens;
 	t_list	*envp;
+	int		status;
 	int	i;
 
 	((void)argc, (void)argv);
@@ -219,27 +220,23 @@ int main(int argc, char **argv, char **envpath)
 				int j = 0;
 			while (current != NULL) 
 			{
+				printf("%s, %d\n", current->str, current->tok_types);
 				current = current->next;
 				j++;
 			}
-			if(check_grammar_syntax(tokens))
-			{
+			// if(check_grammar_syntax(tokens))
+			// {
 				ast_node = malloc(sizeof(t_ast));
 				if (!ast_node)
 					printf("Error in main_ast malloc\n");
 				ast(ast_node, tokens);
 				if(ast_node)
-					print_ast(ast_node);
+					print_ast(ast_node), printf("%d\n", execute_ast(ast_node, envp, status));	
 				free_ast(ast_node);
 				free(ast_node);
-				free_tokens(tokens);
 				free(input);
-			}
-			else
-				free_tokens(tokens);
-			
-			// execute_ast(ast_node, &envp);
-			
+			// }
+			free_tokens(tokens);
 	// 	else
 	// 		printf("Error reading input.\n");
 		}

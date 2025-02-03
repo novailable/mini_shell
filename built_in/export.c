@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 21:18:45 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/28 10:34:45 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/03 09:07:53 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	update_env(char *value, t_list *envp)
 	}
 }
 
-void	get_keypair(char *arg, char *result[2], t_list *envp)
+void	get_keypair(char *arg, char *result[2], t_list *envp, int status)
 {
 	char	*value;
 
@@ -73,7 +73,7 @@ void	get_keypair(char *arg, char *result[2], t_list *envp)
 		if (ft_strcmp(value, "=") == 0)
 			result[1] = ft_strdup("");
 		else
-			result[1] = first_processing(++value, envp);
+			result[1] = first_processing(++value, envp, status);
 	}
 	else
 	{
@@ -82,21 +82,20 @@ void	get_keypair(char *arg, char *result[2], t_list *envp)
 	}
 }
 
-int	export(char **args, t_list *envp)
+int	export(char **args, t_list *envp, int status)
 {
 	int		i;
 	char	*keypair[2];
 	char	*save;
-	int		status;
 
 	i = 0;
-	status = 0;
 	save = NULL;
+	status = 0;
 	if (!args[1])
 		export_noargs(envp);
 	while (args[++i])
 	{
-		get_keypair(args[i], keypair, envp);
+		get_keypair(args[i], keypair, envp, status);
 		printf("%s %s\n", keypair[0], keypair[1]);
 		if (!env_key_check(keypair[0]))
 		{
