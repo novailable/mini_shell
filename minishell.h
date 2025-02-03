@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:40:05 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/28 20:03:12 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/03 09:04:43 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,15 @@ void print_ast(t_ast *ast_node);
 void free_ast(t_ast *ast_node);
 
 //built_in
-void	pwd();
+int	pwd();
+int		cd(char **args, t_list *envp);
 int		env(t_list *envp);
-int		export(char **args, t_list *envp);
+int		export(char **args, t_list *envp, int status);
 t_list	*find_env(char *key, t_list *envp);
 char	*ft_getenv(char *key, t_list *envp);
 int		unset(char **args, t_list **envp);
 int		echo_n(char **args, t_list *envp, int status);
+
 
 //utils
 void	print_env(void *data);
@@ -116,7 +118,7 @@ void	redirection(char **redirect, t_list	*envp);
 //shits
 char	**ft_split_2(char *str, char *delimiters, char *ignchars);
 int		is_quote(char *q_chars, char c, int *in_quote);
-char	*first_processing(char *str, t_list *envp);
+char	*first_processing(char *str, t_list *envp, int status);
 char	*handle_esc(char *str, char **result, int in_quote);
 char	*handle_sq(char *str, char **result);
 void	ft_strsncpy(char **dest, char **src, int n);

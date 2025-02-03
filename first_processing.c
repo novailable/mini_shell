@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 18:03:02 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/20 12:24:48 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/03 08:59:12 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,18 @@ char	*handle_esc(char *str, char **result, int in_quote)
 	return (str);
 }
 
-char	*handle_env(char *str, char **result, t_list *envp)
+char	*handle_env(char *str, char **result, t_list *envp, int status)
 {
 	char	*start;
+	char	*s_value;
 
 	start = ++str;
+	if (*start == '?')
+	{
+		s_value = ft_itoa(status);
+		*result = ft_strjoin(*result, s_value, 1, 1);
+		return (str);
+	}
 	while (*str && (ft_isalnum(*str) || *str == '_'))
 		str++;
 	start = ft_strndup(start, str - start);
@@ -72,7 +79,7 @@ char	*handle_dq(char *str, char **result, t_list *envp)
 	return (str);
 }
 
-char	*first_processing(char *str, t_list *envp)
+char	*first_processing(char *str, t_list *envp, int status)
 {
 	char	*result;
 
@@ -82,7 +89,7 @@ char	*first_processing(char *str, t_list *envp)
 		if (*str == '\\')
 			str = handle_esc(str, &result, 0);
 		else if (*str == '$')
-			str = handle_env(str, &result, envp);
+			str = handle_env(str, &result, envp, status);
 		else if (*str == '\'')
 			str = handle_sq(str, &result);
 		else if (*str == '\"')

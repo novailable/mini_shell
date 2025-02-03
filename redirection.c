@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 19:08:12 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/28 14:01:47 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/03 09:01:40 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	re_input(char *file, t_list *envp)
 {
 	int	fd_in;
 
-	file = first_processing(file, envp);
+	// file = first_processing(file, envp);
 	if (file && !access(file, F_OK | R_OK))
 	{
 		fd_in = open(file, O_RDONLY);
@@ -27,7 +27,7 @@ int	re_input(char *file, t_list *envp)
 			return (-1);
 		}
 	}
-	free(file);
+	// free(file);
 	return (fd_in);
 }
 
@@ -35,7 +35,7 @@ void	re_output(char *file, t_list *envp, int append)
 {
 	int	fd_out;
 
-	file = first_processing(file, envp);
+	// file = first_processing(file, envp);
 	if (append)
 		fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
@@ -48,7 +48,7 @@ void	re_output(char *file, t_list *envp, int append)
 		return ;
 	}
 	dup2(fd_out, STDOUT_FILENO);
-	free(file);
+	// free(file);
 	close(fd_out);
 }
 
