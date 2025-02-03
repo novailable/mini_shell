@@ -3,34 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/03 07:18:08 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/03 18:10:53 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void handle_signal(int sig)
-{
-	if(sig == SIGINT)
-	{
-		write(1, "minishell> \n", 13);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-}
 
-void handle_new_print_line(int sig)
-{
-	if(sig == SIGINT)
-	{
-		write(1, ">\n", 3);
-		rl_on_new_line();
-		rl_redisplay();
-	}
-}
 
 int is_balanced_quotes(const char *input) {
 	int single_quote = 0, double_quote = 0;
@@ -126,6 +108,10 @@ t_tokens	*custom_split(const char *input)
 			}
 			start = i + 1;
 		}
+		// else if(input[i]) handle the operator when being followed after the letter/ word
+		{
+			
+		}
 		i++;
 	}
 	if (i > start)
@@ -175,37 +161,11 @@ int main(int argc, char **argv, char **envpath)
 	envp = init_envp(envpath);
 	while (1)
 	{
-		// sa_int.sa_handler = handle_signal;
-
-		// if (sigaction(SIGINT, &sa_int, NULL) == -1)
-		// 	printf("Sigaction failed\n");
-		// sigemptyset(&sa_int.sa_mask);
-
-		// sa_newline.sa_handler = handle_new_print_line;
-		// sigemptyset(&sa_newline.sa_mask);
-
+		signal_handling();
 		char *input = readline("minishell % ");
 		if (input && (*input != '|'))
 		{
 			history_output(input);
-
-			// if (!is_balanced_quotes(input))
-			// {
-			// 	perror("unclosed quotation");
-			// 	continue;
-				// char *remainder = ft_strrchr(input, '\"');
-				// if(ft_strncmp(input, "echo", 4) == 0)
-				// {
-				// 	char *new_dest = new_line_input(0, NULL);
-				// 	printf("%s\n%s", remainder, new_dest);
-				// }
-				// else
-				// {
-				// 	char *new_dest = new_line_input(0, NULL);
-				// 	printf("%s\n%s not found\n", remainder, new_dest);
-				// }
-				// free(input);
-			// }
 			tokens = custom_split(input);
 
 			// t_tokens *current = tokens;
@@ -224,27 +184,52 @@ int main(int argc, char **argv, char **envpath)
 				current = current->next;
 				j++;
 			}
-			// if(check_grammar_syntax(tokens))
-			// {
+			if(check_grammar_syntax(tokens))
+			{
 				ast_node = malloc(sizeof(t_ast));
 				if (!ast_node)
 					printf("Error in main_ast malloc\n");
 				ast(ast_node, tokens);
 				if(ast_node)
-					print_ast(ast_node), printf("%d\n", execute_ast(ast_node, envp, status));	
+					print_ast(ast_node);
+					// printf("%d\n", execute_ast(ast_node, envp, status));	
 				free_ast(ast_node);
 				free(ast_node);
 				free(input);
-			// }
+			}
 			free_tokens(tokens);
 	// 	else
 	// 		printf("Error reading input.\n");
+		}
+		else if(input == NULL)
+		{
+			printf("<<minishell has exited >>");
+			return (0);
 		}
 	}
 	// ft_lstclear(&envp, free_envp);
 	return 0;
 }
 
+
+
+			// if (!is_balanced_quotes(input))
+			// {
+			// 	perror("unclosed quotation");
+			// 	continue;
+				// char *remainder = ft_strrchr(input, '\"');
+				// if(ft_strncmp(input, "echo", 4) == 0)
+				// {
+				// 	char *new_dest = new_line_input(0, NULL);
+				// 	printf("%s\n%s", remainder, new_dest);
+				// }
+				// else
+				// {
+				// 	char *new_dest = new_line_input(0, NULL);
+				// 	printf("%s\n%s not found\n", remainder, new_dest);
+				// }
+				// free(input);
+			// }
 
 /*print out the whole list*/
 // t_tokens *current = *whole_list;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:40:05 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/03 09:04:43 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/03 17:36:21 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,5 +123,10 @@ char	*handle_esc(char *str, char **result, int in_quote);
 char	*handle_sq(char *str, char **result);
 void	ft_strsncpy(char **dest, char **src, int n);
 t_list	*init_envp(char **envpath);
+
+
+//signals
+void signal_handling();
+void control_c(int sigint);
 
 #endif

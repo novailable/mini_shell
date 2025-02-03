@@ -23,6 +23,7 @@ void	redirect_list_len_alloc(t_tokens *whole_list, char ***redirect_list)
 	{
 		if (current->tok_types == T_REDIRECT_OUT \
 		|| current->tok_types == T_REDIRECT_IN \
+		|| current->tok_types == T_HERE_DOCS \
 		|| current->tok_types == T_APPEND)
 		{
 			if (current->next->tok_types == T_WORD)

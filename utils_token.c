@@ -74,8 +74,6 @@ void	tokenize_str(t_tokens *head)
 			current->tok_types = T_REDIRECT_IN;
 		else
 			current->tok_types = T_WORD;
-		// else if (!ft_strncmp(current->str, "$", 1))
-		// 	current->tok_types = T_VAR;
 		current = current->next;
 	}
 }
