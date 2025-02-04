@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_syntax_check.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:54:08 by nsan              #+#    #+#             */
-/*   Updated: 2025/01/28 21:00:13 by nsan             ###   ########.fr       */
+/*   Updated: 2025/02/04 19:40:28 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	syntax_redirect_error(t_tokens *temp)
 	return (1);
 }
 
-int	check_grammar_syntax(t_tokens *head)
+int	check_grammar_syntax(t_tokens *head, char *input)
 {
 	t_tokens	*temp;
 
