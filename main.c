@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/03 18:10:53 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/04 17:28:36 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,32 @@ int is_balanced_quotes(const char *input) {
 		input++;
 	}
 	return single_quote == 0 && double_quote == 0;
+}
+
+
+
+void	print_tokens(t_tokens *head)
+{
+	t_tokens	*current = head;
+
+	while (current)
+	{
+		printf("Token: %s\n", current->str);
+		current = current->next;
+	}
+}
+
+void	free_tokens(t_tokens *head)
+{
+	t_tokens	*temp;
+
+	while (head)
+	{
+		temp = head;
+		head = head->next;
+		free(temp->str);
+		free(temp);
+	}
 }
 
 t_tokens	*custom_split(const char *input)
@@ -123,30 +149,6 @@ t_tokens	*custom_split(const char *input)
 	return (head);
 }
 
-void	print_tokens(t_tokens *head)
-{
-	t_tokens	*current = head;
-
-	while (current)
-	{
-		printf("Token: %s\n", current->str);
-		current = current->next;
-	}
-}
-
-void	free_tokens(t_tokens *head)
-{
-	t_tokens	*temp;
-
-	while (head)
-	{
-		temp = head;
-		head = head->next;
-		free(temp->str);
-		free(temp);
-	}
-}
-
 int main(int argc, char **argv, char **envpath)
 {
 	struct sigaction sa_int;
@@ -158,16 +160,16 @@ int main(int argc, char **argv, char **envpath)
 	int	i;
 
 	((void)argc, (void)argv);
-	envp = init_envp(envpath);
+	// envp = init_envp(envpath);
 	while (1)
 	{
-		signal_handling();
+		// signal_handling();
 		char *input = readline("minishell % ");
 		if (input && (*input != '|'))
 		{
 			history_output(input);
-			tokens = custom_split(input);
-
+			tokens = string_split(input);
+			
 			// t_tokens *current = tokens;
 			// int j = 0;
 			// while (current != NULL) {
@@ -176,16 +178,16 @@ int main(int argc, char **argv, char **envpath)
 			// 	j++;
 			// }
 			tokenize_str(tokens);
-			t_tokens *current = tokens;
-				int j = 0;
-			while (current != NULL) 
-			{
-				printf("%s, %d\n", current->str, current->tok_types);
-				current = current->next;
-				j++;
-			}
-			if(check_grammar_syntax(tokens))
-			{
+			// t_tokens *current = tokens;
+			// 	int j = 0;
+			// while (current != NULL) 
+			// {
+			// 	printf("%s, %d\n", current->str, current->tok_types);
+			// 	current = current->next;
+			// 	j++;
+			// }
+			// if(check_grammar_syntax(tokens))
+			// {
 				ast_node = malloc(sizeof(t_ast));
 				if (!ast_node)
 					printf("Error in main_ast malloc\n");
@@ -196,10 +198,10 @@ int main(int argc, char **argv, char **envpath)
 				free_ast(ast_node);
 				free(ast_node);
 				free(input);
-			}
+	// 		}
 			free_tokens(tokens);
-	// 	else
-	// 		printf("Error reading input.\n");
+		// else
+		// 	printf("Error reading input.\n");
 		}
 		else if(input == NULL)
 		{
@@ -207,102 +209,11 @@ int main(int argc, char **argv, char **envpath)
 			return (0);
 		}
 	}
-	// ft_lstclear(&envp, free_envp);
+	ft_lstclear(&envp, free_envp);
 	return 0;
 }
 
 
 
-			// if (!is_balanced_quotes(input))
-			// {
-			// 	perror("unclosed quotation");
-			// 	continue;
-				// char *remainder = ft_strrchr(input, '\"');
-				// if(ft_strncmp(input, "echo", 4) == 0)
-				// {
-				// 	char *new_dest = new_line_input(0, NULL);
-				// 	printf("%s\n%s", remainder, new_dest);
-				// }
-				// else
-				// {
-				// 	char *new_dest = new_line_input(0, NULL);
-				// 	printf("%s\n%s not found\n", remainder, new_dest);
-				// }
-				// free(input);
-			// }
 
-/*print out the whole list*/
-// t_tokens *current = *whole_list;
-// 	int j = 0;
-// 	while (current != NULL) {
-// 		printf("Content %d:\n", j);
-// 		printf("String: %s\n", current->str);
-// 		printf("Token: %u\n\n", current->tok_types);
-// 		current = current->next;
-// 		j++;
-// 	}
-
-/*print for the ast_node_cmds*/
-// if(ast_node && (ast_node->right)->cmd)
-			// {custom_split
-			// if (ast_node && (ast_node->left)->cmd)
-			// {
-			// 	printf("left cmd list :\n");
-			// 	char **left_cmd = (ast_node->left)->cmd;
-			// 	while (*left_cmd) {
-			// 		printf("%s\n", *left_cmd);
-			// 		left_cmd++;
-			// 	}
-			// }
-
-	/*debug printing*/
-			// print_rightmost_command(ast_node);
-			// if (ast_node && ast_node->right) {
-			// 	printf("The right-cmd-node branch exists\n");
-
-			// 	t_ast *right_node = ast_node->right;
-			// 	t_ast *cmd_node = right_node->left;
-
-			// 	// Ensure right_node and cmd_node exist
-			// 	if (cmd_node && cmd_node->right) {
-			// 		char **temp_str = cmd_node->right->cmd;
-
-			// 		if (temp_str) {
-			// 			printf("temp_str exists\n");
-			// 			while (*temp_str) {
-			// 				printf("cmd of the right node of the left-cmd-node branch: %s\n", *temp_str);
-			// 				temp_str++;
-			// 			}
-			// 		} else {
-			// 			printf("temp_str is NULL (no commands in this branch)\n");
-			// 		}
-			// 	} else {
-			// 		printf("cmd_node or cmd_node->right is NULL\n");
-			// 	}
-			// } else {
-			// 	printf("The right-cmd-node branch does not exist\n");
-			// }
-
-				// if(right_node->right)
-				// {
-				// 	temp_str = right_node->right->cmd;
-					// while(*temp_str)
-					// {
-					// 	printf("cmd of the right node of the left-cmd-node branch: %s\n", *temp_str);
-					// 	temp_str++;
-					// }
-
-				// }
-
-			// }
-			// if (ast_node && (ast_node->left)->cmd)
-			// {
-			// 	printf("left cmd list :\n");
-			// 	char **left_cmd = (ast_node->left)->cmd;
-			// 	while (*left_cmd) {
-			// 		printf("%s\n", *left_cmd);
-			// 		left_cmd++;
-			// 	}
-			// }
-
-			/*<<<---->>>>*/
+//splitting

@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:40:05 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/03 17:36:21 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/04 17:19:19 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void	export_noargs(t_list *envp);
 int		env_key_check(char *key);
 char	*ft_strcjoin(char *str, char c);
 char	*heredoc_processing(char *str);
+t_tokens	*string_split(char *input);
 
 //execute
 int		exec_cmd(char **args, t_list *envp);
@@ -128,5 +129,9 @@ t_list	*init_envp(char **envpath);
 //signals
 void signal_handling();
 void control_c(int sigint);
+
+//helpers
+void create_add_token(t_tokens **head, char **str);
+int special_char_check(char curr_c, char next_c, char **str, t_tokens **head);
 
 #endif
