@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:40:05 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/04 17:19:19 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/04 18:07:37 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef struct s_envp
 t_tokens *create_new_token(char *str);
 void tokenize_str(t_tokens *head);
 void 	ast(t_ast *ast_node, t_tokens *whole_list);
-int	check_grammar_syntax(t_tokens *head);
+int	check_grammar_syntax(t_tokens *head, char *input);
 void ft_built_ins(char **list_of_cmd);
 // char *new_line_input(int flag, char *delimeter);
 int quote_check(const char *input_str);
@@ -131,6 +131,7 @@ void signal_handling();
 void control_c(int sigint);
 
 //helpers
+int is_balanced_quotes(char *input);
 void create_add_token(t_tokens **head, char **str);
 int special_char_check(char curr_c, char next_c, char **str, t_tokens **head);
 

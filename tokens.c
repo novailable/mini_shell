@@ -45,21 +45,45 @@ t_tokens *string_split(char *input)
     int i;
     t_tokens *head;
     char *str;
+    int start_quote;
+    int len;
+    int flag;
 
     i = 0;
     head = NULL;
+    flag = 0;
+    len = 0;
     str = ft_strdup("");
     while (input[i] != '\0')
     {    
-        if (input[i] == '<' || input[i] == '>' || input[i] == '|') 
+        //take out the substring for the "a > b"
+        if(input[i] == '\"' || input[i] == '\'')
+        {
+            if(flag == 0)
+            {
+                start_quote = i;
+                flag = 1;
+            }
+            else
+                len = i + 1;   
+        }
+        else if ((input[i] == '<' || input[i] == '>' || input[i] == '|') && flag == 0) 
         {
             if (special_char_check(input[i], input[i+1], &str, &head))
                 i++;
         }
-        else if (input[i] != ' ') 
+        else if (input[i] != ' ' && flag == 0) 
             str = ft_strcjoin(str, input[i]);
         else if (*str != '\0') 
             create_add_token(&head, &str);
+
+        if(flag == 1 && len > 0)
+        {
+            str = ft_substr(input, start_quote, len);
+            create_add_token(&head, &str);
+            str = ft_strdup("");
+            flag = 0;
+        }    
         i++;
     }
     if (*str != '\0')
@@ -68,12 +92,4 @@ t_tokens *string_split(char *input)
     return (head);
 }
 
-
-// Print tokens
-//     t_tokens *current = head;
-//     while (current) 
-//     {
-//         printf("string: %s\n", current->str);
-//         current = current->next;
-//     }
 //check whether the single and double quotation has pairs in the check_grammar_syntax
