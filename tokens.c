@@ -46,44 +46,33 @@ t_tokens *string_split(char *input)
     t_tokens *head;
     char *str;
     int start_quote;
-    int len;
     int flag;
 
     i = 0;
     head = NULL;
     flag = 0;
-    len = 0;
     str = ft_strdup("");
     while (input[i] != '\0')
     {    
-        //take out the substring for the "a > b"
-        if(input[i] == '\"' || input[i] == '\'')
+        if((input[i] == '\"' || input[i] == '\'') && flag == 0)
         {
-            if(flag == 0)
-            {
-                start_quote = i;
-                flag = 1;
-            }
-            else
-                len = i + 1;   
+            start_quote = i;
+            flag = 1;
         }
-        else if ((input[i] == '<' || input[i] == '>' || input[i] == '|') && flag == 0) 
+        else if((input[i] == '\"' || input[i] == '\'') && flag == 1)
         {
-            if (special_char_check(input[i], input[i+1], &str, &head))
-                i++;
+            str = ft_substr(input, start_quote, i + 1);
+            create_add_token(&head, &str);
+            str = ft_strdup("");
+            flag = 0;
         }
+        else if ((input[i] == '<' || input[i] == '>' || \
+        input[i] == '|') && flag == 0)
+           i += special_char_check(input[i], input[i+1], &str, &head);
         else if (input[i] != ' ' && flag == 0) 
             str = ft_strcjoin(str, input[i]);
         else if (*str != '\0') 
             create_add_token(&head, &str);
-
-        if(flag == 1 && len > 0)
-        {
-            str = ft_substr(input, start_quote, len);
-            create_add_token(&head, &str);
-            str = ft_strdup("");
-            flag = 0;
-        }    
         i++;
     }
     if (*str != '\0')
