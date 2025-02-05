@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/04 20:51:27 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/05 16:45:17 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int main(int argc, char **argv, char **envpath)
 	envp = init_envp(envpath);
 	while (1)
 	{
-		signal_handling();
+		// signal_handling();
 		char *input = readline("minishell % ");
 		if (input && (*input != '|'))
 		{
@@ -80,27 +80,22 @@ int main(int argc, char **argv, char **envpath)
 			if(is_balanced_quotes(input))
 			{
 				tokens = string_split(input);
-				t_tokens *current = tokens;
-				while(current)
+				tokenize_str(tokens);
+				// print_tokens(tokens);
+				if(check_grammar_syntax(tokens, input))
 				{
-					printf("str: %s\n", current->str);
-					current = current->next;
+					ast_node = malloc(sizeof(t_ast));
+					if (!ast_node)
+						printf("Error in main_ast malloc\n");
+					ast(ast_node, tokens);
+					if(ast_node)
+						print_ast(ast_node);
+						printf("%d\n", execute_ast(ast_node, envp, status));	
+					free_ast(ast_node);
+					free(ast_node);
+					free(input);
 				}
-				// tokenize_str(tokens);
-				// if((tokens, input))
-				// {check_grammar_syntax
-				// 	ast_node = malloc(sizeof(t_ast));
-				// 	if (!ast_node)
-				// 		printf("Error in main_ast malloc\n");
-				// 	ast(ast_node, tokens);
-				// 	if(ast_node)
-				// 		print_ast(ast_node);
-				// 		// printf("%d\n", execute_ast(ast_node, envp, status));	
-				// 	free_ast(ast_node);
-				// 	free(ast_node);
-				// 	free(input);
-				// }
-				// free_tokens(tokens);
+				free_tokens(tokens);
 			}
 			else
 			{
@@ -121,6 +116,3 @@ int main(int argc, char **argv, char **envpath)
 }
 
 
-
-
-//splitting
