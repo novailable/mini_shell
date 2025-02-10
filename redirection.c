@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 19:08:12 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/03 09:01:40 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/10 06:09:34 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,13 @@ int	app_heredoc(char *args)
 {
 	char	*line;
 	int		fd_pipe[2];
-	char	*eof;
 
-	eof = heredoc_processing(args);
 	if (pipe(fd_pipe) == -1)
-	{
-		perror("pipe error");
-		return (free(eof), -1);
-	}
+		return (perror("pipe error"), -1);
 	while (1)
 	{
 		line = readline("> ");
-		if (!line || ft_strcmp(line, eof) == 0)
+		if (!line || ft_strcmp(line, args) == 0)
 		{
 			free(line);
 			break ;
@@ -77,7 +72,6 @@ int	app_heredoc(char *args)
 		free(line);
 	}
 	close(fd_pipe[1]);
-	free(eof);
 	return (fd_pipe[0]);
 }
 

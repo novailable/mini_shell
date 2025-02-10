@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:32:19 by aoo               #+#    #+#             */
-/*   Updated: 2025/01/28 10:36:04 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/10 11:46:53 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,38 +162,8 @@ char	*ft_strcjoin(char *str, char c)
 	if (c)
 		result[i++] = c;
 	result[i] = '\0';
-	free(str);
-	return (result);
-}
-
-char	*heredoc_processing(char *str)
-{
-	char	*result;
-	int		in_quote;
-
-	result = NULL;
-	in_quote = 0;
-	while (*str)
-	{
-		if (*str == '\\')
-			str = handle_esc(str, &result, in_quote);
-		else if (*str == '\'')
-			str = handle_sq(str, &result);
-		else if (*str++ == '\"')
-		{
-			while (*str && *str != '\"')
-			{
-				if (*str == '\\')
-					str = handle_esc(str, &result, 1);
-				else
-					result = ft_strcjoin(result, *str++);
-			}
-			result = ft_strcjoin(result, '\0');
-			str++;
-		}
-		else
-			result = ft_strcjoin(result, *str++);
-	}
+	if (str)
+		free(str);
 	return (result);
 }
 
@@ -233,4 +203,22 @@ void	ft_strsncpy(char **dest, char **src, int n)
 	}
 }
 
+int	is_in_quote(char *str)
+{
+	int	i;
+	int	in_quote;
 
+	i = 0;
+	in_quote = 0;
+	while (str[i])
+	{
+		if (str[i] == '\\' && str[i + 1] && in_quote != '\'')
+		{
+			i += 2;
+			continue ;
+		}
+		is_quote("\'\"", str[i], &in_quote);
+		i++;
+	}
+	return (in_quote);
+}

@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 void	append_token(t_tokens **head, t_tokens *new_node)
 {
 	t_tokens	*current;
@@ -20,7 +19,7 @@ void	append_token(t_tokens **head, t_tokens *new_node)
 	if (!*head)
 	{
 		*head = new_node;
-		return;
+		return ;
 	}
 	current = *head;
 	while (current->next)
@@ -28,43 +27,39 @@ void	append_token(t_tokens **head, t_tokens *new_node)
 	current->next = new_node;
 }
 
-t_tokens *create_new_token(char *str)
+t_tokens	*create_new_token(char *str)
 {
-	t_tokens *token_malloc;
+	t_tokens	*token_malloc;
 
 	token_malloc = malloc(sizeof(t_tokens));
 	token_malloc->str = ft_strdup(str);
-	token_malloc->next = NULL;	
+	token_malloc->next = NULL;
 	return (token_malloc);
 }
 
 void	tokenize_str(t_tokens *head)
 {
-	int i;
-	int word;
-	char *temp;
-	t_tokens *current;
-	current = head;
-	
-	word = 0;
-	i = 0;
+	t_tokens	*current;
+	char		*temp;
 
-	while(current)
+	current = head;
+	while (current)
 	{
-		temp = current->str;
-		i = 0;
-		if (!ft_strncmp(current->str, "|", 1))
+		if (!ft_strcmp(current->str, "|"))
 			current->tok_types = T_PIPE;
-		else if (!ft_strncmp(current->str, ">>", 2))
+		else if (!ft_strcmp(current->str, ">>"))
 			current->tok_types = T_APPEND;
-		else if (!ft_strncmp(current->str, "<<", 2))
+		else if (!ft_strcmp(current->str, "<<"))
 			current->tok_types = T_HERE_DOCS;
-		else if (!ft_strncmp(current->str, ">", 1))
+		else if (!ft_strcmp(current->str, ">"))
 			current->tok_types = T_REDIRECT_OUT;
-		else if (!ft_strncmp(current->str, "<", 1))
+		else if (!ft_strcmp(current->str, "<"))
 			current->tok_types = T_REDIRECT_IN;
 		else
 			current->tok_types = T_WORD;
+		temp = current->str;
+		current->str = handle_quotes(temp);
+		free(temp);
 		current = current->next;
 	}
 }
