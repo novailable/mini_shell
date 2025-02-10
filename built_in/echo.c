@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 21:18:39 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/03 09:03:06 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/08 20:13:50 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	echo_n(char **args, t_list *envp, int status)
 		args++;
 	while (*(++args))
 	{
-		text = first_processing(*args, envp, status);
+		// text = first_processing(*args, envp, status);
 		printf("%s", text);
 		if (n_line)
 			printf("\n");
