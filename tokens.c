@@ -6,20 +6,18 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 19:47:28 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/10 12:59:00 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/10 13:19:32 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
 void	create_add_token(t_tokens **head, char *str)
 {
 	if (str && *str && *str != ' ')
-	{
 		append_token(head, create_new_token(str));
+	if (str)
 		free(str);
-	}
 }
 
 // int special_char_check(char curr_c, char next_c, char **str, t_tokens **head)
