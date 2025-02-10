@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/10 11:47:15 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/10 13:20:30 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ int is_balanced_quotes(char *input)
 	return (single_quote == 0 && double_quote == 0);
 }
 
-
-
 void	print_tokens(t_tokens *head)
 {
 	t_tokens	*current = head;
@@ -41,8 +39,7 @@ void	print_tokens(t_tokens *head)
 	printf("Token: ");
 	while (current)
 	{
-		printf("%s, %d\n", current->str, current->tok_types);
-	
+		printf("{%s, %d} ", current->str, current->tok_types);
 		current = current->next;
 	}
 	printf("\n");
@@ -85,8 +82,8 @@ int main(int argc, char **argv, char **envpath)
 				tokens = string_split(handle_env(input, envp, status));
 				(tokenize_str(tokens), free(input));
 				print_tokens(tokens);
-			// 	// if(check_grammar_syntax(tokens, input))
-			// 	// {
+				// if(check_grammar_syntax(tokens, input))
+				// {
 			// 	// 	ast_node = malloc(sizeof(t_ast));
 			// 	// 	if (!ast_node)
 			// 	// 		printf("Error in main_ast malloc\n");
@@ -98,7 +95,6 @@ int main(int argc, char **argv, char **envpath)
 			// 	// 	free(ast_node);
 			// 	// 	free(input);
 			// 	// }
-				
 				free_tokens(tokens);
 			}
 			// else
