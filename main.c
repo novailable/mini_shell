@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/05 16:45:17 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/11 19:27:17 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,17 @@ int is_balanced_quotes(char *input)
 	return (single_quote == 0 && double_quote == 0);
 }
 
-
-
 void	print_tokens(t_tokens *head)
 {
 	t_tokens	*current = head;
 
+	printf("Token: ");
 	while (current)
 	{
-		printf("Token: %s\n", current->str);
+		printf("{%s, %d} ", current->str, current->tok_types);
 		current = current->next;
 	}
+	printf("\n");
 }
 
 void	free_tokens(t_tokens *head)
@@ -66,10 +66,10 @@ int main(int argc, char **argv, char **envpath)
 	t_tokens	*tokens;
 	t_list	*envp;
 	int		status;
-	int	i;
 
 	((void)argc, (void)argv);
 	envp = init_envp(envpath);
+	status = 0;
 	while (1)
 	{
 		// signal_handling();
@@ -77,11 +77,12 @@ int main(int argc, char **argv, char **envpath)
 		if (input && (*input != '|'))
 		{
 			history_output(input);
-			if(is_balanced_quotes(input))
+			if (!is_in_quote(input))
 			{
-				tokens = string_split(input);
+				tokens = string_split(handle_env(input, envp, status));
 				tokenize_str(tokens);
-				// print_tokens(tokens);
+				free(input);
+				print_tokens(tokens);
 				if(check_grammar_syntax(tokens, input))
 				{
 					ast_node = malloc(sizeof(t_ast));
@@ -90,18 +91,17 @@ int main(int argc, char **argv, char **envpath)
 					ast(ast_node, tokens);
 					if(ast_node)
 						print_ast(ast_node);
-						printf("%d\n", execute_ast(ast_node, envp, status));	
+					// 	printf("%d\n", execute_ast(ast_node, envp, status));	
 					free_ast(ast_node);
 					free(ast_node);
-					free(input);
 				}
 				free_tokens(tokens);
 			}
-			else
-			{
-				printf("quotes not balanced\n");
-				return (0);
-			}
+			// else
+			// {
+			// 	printf("quotes not balanced\n");
+			// 	return (0);
+			// }
 		}
 		else if(input == NULL)
 		{
