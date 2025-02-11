@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:40:05 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/04 18:07:37 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/10 12:43:58 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct s_envp
 	char			*value;
 }	t_envp;
 
-
+t_tokens	*string_split(char *input);
 t_tokens *create_new_token(char *str);
 void tokenize_str(t_tokens *head);
 void 	ast(t_ast *ast_node, t_tokens *whole_list);
@@ -105,8 +105,7 @@ void	sort_envp(t_list *envp);
 void	export_noargs(t_list *envp);
 int		env_key_check(char *key);
 char	*ft_strcjoin(char *str, char c);
-char	*heredoc_processing(char *str);
-t_tokens	*string_split(char *input);
+int		is_in_quote(char *str);
 
 //execute
 int		exec_cmd(char **args, t_list *envp);
@@ -119,12 +118,12 @@ void	redirection(char **redirect, t_list	*envp);
 //shits
 char	**ft_split_2(char *str, char *delimiters, char *ignchars);
 int		is_quote(char *q_chars, char c, int *in_quote);
-char	*first_processing(char *str, t_list *envp, int status);
-char	*handle_esc(char *str, char **result, int in_quote);
-char	*handle_sq(char *str, char **result);
+// char	*first_processing(char *str, t_list *envp, int status);
 void	ft_strsncpy(char **dest, char **src, int n);
 t_list	*init_envp(char **envpath);
 
+char	*handle_env(char *str, t_list *envp, int status);
+char	*handle_quotes(char *str);
 
 //signals
 void signal_handling();
@@ -132,7 +131,6 @@ void control_c(int sigint);
 
 //helpers
 int is_balanced_quotes(char *input);
-void create_add_token(t_tokens **head, char **str);
-int special_char_check(char curr_c, char next_c, char **str, t_tokens **head);
-
+void create_add_token(t_tokens **head, char *str);
+int special_char_check(char curr_c, char next_c, char *str, t_tokens **head);
 #endif

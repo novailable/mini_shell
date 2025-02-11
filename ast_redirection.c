@@ -12,12 +12,10 @@
 
 #include "minishell.h"
 
-void	redirect_list_len_alloc(t_tokens *whole_list, char ***redirect_list)
+void	iterate_list(t_tokens *whole_list, int *redirect_len)
 {
 	t_tokens	*current;
-	int			redirect_len;
 
-	redirect_len = 0;
 	current = whole_list;
 	while (current && current->tok_types != T_PIPE)
 	{
@@ -28,12 +26,21 @@ void	redirect_list_len_alloc(t_tokens *whole_list, char ***redirect_list)
 		{
 			if (current->next->tok_types == T_WORD)
 			{
-				redirect_len += 2;
+				*redirect_len += 2;
 				current = current->next;
 			}
 		}
 		current = current->next;
 	}
+}
+
+void	redirect_list_len_alloc(t_tokens *whole_list, char ***redirect_list)
+{
+	t_tokens	*current;
+	int			redirect_len;
+
+	redirect_len = 0;
+	iterate_list(whole_list, &redirect_len);
 	if (redirect_len == 0)
 	{
 		*redirect_list = NULL;
@@ -41,15 +48,3 @@ void	redirect_list_len_alloc(t_tokens *whole_list, char ***redirect_list)
 	}
 	*redirect_list = malloc(sizeof(char *) * (redirect_len + 1));
 }
-
-// t_ast	*redirection_list(t_ast *node, t_tokens **whole_list)
-// {
-// 	char	**redirect_list;
-
-// 	redirect_list_len_alloc(whole_list, &redirect_list);
-// 	if (redirect_list != NULL)
-// 		node->cmd = parse_cmd(&redirect_list, whole_list, 0);
-// 	else
-// 		node->cmd = NULL;
-// 	return (node);
-// }
