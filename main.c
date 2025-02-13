@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/13 16:51:28 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/13 17:02:42 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,19 +93,6 @@ int main(int argc, char **argv, char **envpath)
 					free_ast(ast_node);
 					free(ast_node);
 				}
-				if(check_grammar_syntax(tokens, input))
-				{
-					ast_node = malloc(sizeof(t_ast));
-					if (!ast_node)
-						printf("Error in main_ast malloc\n");
-					ast(ast_node, tokens);
-					if(ast_node)
-						print_ast(ast_node);
-					// 	printf("%d\n", execute_ast(ast_node, envp, status));	
-					free_ast(ast_node);
-					free(ast_node);
-				}
-				free_tokens(tokens);
 			}
 			// else
 			// {

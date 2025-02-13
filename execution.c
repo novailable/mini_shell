@@ -101,7 +101,7 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 	else if (!ft_strcmp(*args, "cd"))
 		return (cd(args, envp));
 	else if (!ft_strcmp(*args, "history"))
-		return (history_output(args));
+		return (history_output());
 	else
 		return (external(l_node, envp));
 }
