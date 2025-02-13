@@ -85,7 +85,7 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 
 	args = l_node->args;
 	if (l_node->redirect)
-		redirection(l_node->redirect, envp);
+		redirection(l_node->redirect, envp, status);
 	if (!args)
 		return (0);
 	if (!ft_strcmp(*args, "env"))
@@ -98,10 +98,12 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 		return (echo_n(args, envp, status));
 	else if (!ft_strcmp(*args, "pwd"))
 		return (pwd());
+	else if (!ft_strcmp(*args, "cd"))
+		return (cd(args, envp));
+	else if (!ft_strcmp(*args, "history"))
+		return (history_output(args));
 	else
 		return (external(l_node, envp));
-	// else if (!ft_strcmp(*args, "cd"))
-	// 	return (cd(args, envp));
 }
 
 int	execute_ast(t_ast *ast_node, t_list *envp, int status)
@@ -112,7 +114,7 @@ int	execute_ast(t_ast *ast_node, t_list *envp, int status)
 
 	org_fd[0] = dup(STDIN_FILENO);
 	org_fd[1] = dup(STDOUT_FILENO);
-	if (ast_node->right)
+	if (ast_node && ast_node->right)
 	{
 		if (pipe(pipe_fds) == -1)
 			return (perror("minishell : pipe failed"), 1);
@@ -128,13 +130,12 @@ int	execute_ast(t_ast *ast_node, t_list *envp, int status)
 		close(pipe_fds[1]);
 		dup2(pipe_fds[0], STDIN_FILENO);
 		close(pipe_fds[0]);
-		waitpid(pid, NULL, 0);
 		execute_ast(ast_node->right, envp, status);
+		waitpid(-1, NULL, 0);
 	}
-	else if (ast_node->left)
+	else if (ast_node && ast_node->left)
 		status = execution(ast_node->left, envp, status);
 	dup2(org_fd[0], STDIN_FILENO);
 	dup2(org_fd[1], STDOUT_FILENO);
 	return (close(org_fd[0]), close(org_fd[1]), status);
 }
-

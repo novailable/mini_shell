@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 21:18:45 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/08 20:14:07 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/13 12:03:40 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ void	get_keypair(char *arg, char *result[2], t_list *envp, int status)
 		result[0] = ft_strndup(arg, value - arg);
 		if (ft_strcmp(value, "=") == 0)
 			result[1] = ft_strdup("");
-		// else
-		// 	result[1] = first_processing(++value, envp, status);
+		else
+			result[1] = ft_strdup(++value);
 	}
 	else
 	{
@@ -95,8 +95,9 @@ int	export(char **args, t_list *envp, int status)
 		export_noargs(envp);
 	while (args[++i])
 	{
+		printf("key pair : %s\n", args[i]);
 		get_keypair(args[i], keypair, envp, status);
-		printf("%s %s\n", keypair[0], keypair[1]);
+		
 		if (!env_key_check(keypair[0]))
 		{
 			if (find_env(keypair[0], envp))

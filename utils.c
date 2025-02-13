@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:32:19 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/10 11:46:53 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/13 12:01:41 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ int	env_key_check(char *key)
 	char	*temp;
 
 	temp = key;
+	printf("key : %s\n", key);
 	if (temp && *temp && !ft_isdigit(*temp))
 	{
 		while (*temp && (ft_isalnum(*temp) || *temp == '_'))
