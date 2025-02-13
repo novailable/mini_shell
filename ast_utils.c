@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/23 12:51:10 by marvin            #+#    #+#             */
-/*   Updated: 2025/01/23 12:51:10 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/11 19:28:50 by nsan              #+#    #+#             */
+/*   Updated: 2025/02/11 19:28:50 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,25 +37,24 @@ void	print_ast(t_ast *ast_node)
 	}  
 }
 
-
 void	free_ast(t_ast *ast_node)
 {
-	t_ast   *node;
-	int     i;
+	t_ast	*node;
+	int		i;
 
-	if(ast_node->left)
+	if (ast_node->left)
 	{
 		node = ast_node->left;
 		i = 0;
-		if(node->args)
+		if (node->args)
 			free_strs(node->args);
-		if(node->redirect)
+		if (node->redirect)
 			free_strs(node->redirect);
 		free(node);
 	}
-	if(ast_node->right)
+	if (ast_node->right)
 	{
-		free_ast(ast_node->right);
+		free_ast (ast_node->right);
 		free(ast_node->right);
 	}
 }

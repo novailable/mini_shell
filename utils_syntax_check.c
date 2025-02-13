@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_syntax_check.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:54:08 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/04 19:40:28 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/11 19:25:40 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,8 @@ int	check_grammar_syntax(t_tokens *head, char *input)
 		if (syntax_word_error(temp) == 0 || \
 		syntax_pipe_error(temp) == 0 || \
 		syntax_redirect_error(temp) == 0)
-			return (0); //on error
+			return (0);
 		temp = temp->next;
 	}
 	return (1);
 }
-
-// if (!whole_list || !*whole_list)
-//     {
-//         printf("Invalid input: whole_list is NULL\n");
-//         return (0);
-//     }

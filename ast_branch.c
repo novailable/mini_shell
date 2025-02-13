@@ -3,19 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ast_branch.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/23 10:29:48 by marvin            #+#    #+#             */
-/*   Updated: 2025/01/23 10:29:48 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/11 19:22:55 by nsan              #+#    #+#             */
+/*   Updated: 2025/02/11 19:22:55 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_tokens    *args_redirection_list(t_ast *left_node, t_tokens *whole_list)
+t_tokens	*args_redirection_list(t_ast *left_node, t_tokens *whole_list)
 {
-	args_list_len_alloc(whole_list, &(left_node->args));
-	redirect_list_len_alloc(whole_list,  &(left_node->redirect));
-    t_tokens *temp = parse_cmd(left_node, whole_list);
-    return (temp);
+	t_tokens	*temp;
+
+	args_list_len_alloc (whole_list, &(left_node->args));
+	redirect_list_len_alloc (whole_list, &(left_node->redirect));
+	temp = parse_cmd (left_node, whole_list);
+	return (temp);
 }
