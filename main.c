@@ -6,13 +6,11 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/10 13:20:30 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/13 15:36:41 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 int is_balanced_quotes(char *input)
 {
@@ -39,7 +37,7 @@ void	print_tokens(t_tokens *head)
 	printf("Token: ");
 	while (current)
 	{
-		printf("{%s, %d} ", current->str, current->tok_types);
+		printf("{%s} ", current->str);
 		current = current->next;
 	}
 	printf("\n");
@@ -73,28 +71,27 @@ int main(int argc, char **argv, char **envpath)
 	while (1)
 	{
 		// signal_handling();
-		char *input = readline("minishell % ");
+		char *input = readline(PROMPT);
 		if (input && (*input != '|'))
 		{
-			history_output(input);
+			history_write(input);
 			if (!is_in_quote(input))
 			{
 				tokens = string_split(handle_env(input, envp, status));
 				(tokenize_str(tokens), free(input));
 				print_tokens(tokens);
-				// if(check_grammar_syntax(tokens, input))
-				// {
-			// 	// 	ast_node = malloc(sizeof(t_ast));
-			// 	// 	if (!ast_node)
-			// 	// 		printf("Error in main_ast malloc\n");
-			// 	// 	ast(ast_node, tokens);
-			// 	// 	if(ast_node)
-			// 	// 		print_ast(ast_node);
-			// 	// 		printf("%d\n", execute_ast(ast_node, envp, status));	
-			// 	// 	free_ast(ast_node);
-			// 	// 	free(ast_node);
-			// 	// 	free(input);
-			// 	// }
+				if(check_grammar_syntax(tokens, input))
+				{
+					ast_node = malloc(sizeof(t_ast));
+					if (!ast_node)
+						printf("Error in main_ast malloc\n");
+					ast(ast_node, tokens);
+					if(ast_node)
+						print_ast(ast_node);
+					status = execute_ast(ast_node, envp, status);	
+					free_ast(ast_node);
+					free(ast_node);
+				}
 				free_tokens(tokens);
 			}
 			// else
@@ -103,11 +100,11 @@ int main(int argc, char **argv, char **envpath)
 			// 	return (0);
 			// }
 		}
-		else if(input == NULL)
-		{
-			printf("<< minishell has exited >>\n");
-			return (0);
-		}
+		// else if(input == NULL)
+		// {
+		// 	printf("<< minishell has exited >>\n");
+		// 	return (0);
+		// }
 		else
 			printf("| cannot be at the beginning of cmd\n");
 	}

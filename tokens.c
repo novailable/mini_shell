@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 19:47:28 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/10 13:19:32 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/11 08:02:22 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int special_char_check(char curr_c, char next_c, char *str, t_tokens **head)
 // 		else if ((input[i] == '\"' || input[i] == '\'') && flag == 1)
 // 		{
 // 			str = ft_substr(input, start_quote, i + 1);
-// 			create_add_token(&head, str);
+// 			create_add_tokeexportn(&head, str);
 // 			str = ft_strdup("");
 // 			flag = 0;
 // 		}

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   first_processing_2.c                               :+:      :+:    :+:   */
+/*   first_processing.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 19:33:28 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/08 22:00:31 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/11 14:01:04 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*replace_env(char *str, char **result, t_list *envp, int status)
 	{
 		s_value = ft_itoa(status);
 		*result = ft_strjoin(*result, s_value, 1, 1);
-		return (str);
+		return (++str);
 	}
 	while (*str && (ft_isalnum(*str) || *str == '_'))
 		str++;
