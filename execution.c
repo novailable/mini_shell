@@ -70,15 +70,6 @@ int	external(t_ast *l_node, t_list *envp)
 	return (waitpid(pid, &status, 0), WEXITSTATUS(status));
 }
 
-	/*
-	int i;
-	
-	i = 0;
-	while (envp_array[i])
-		free(envp_array[i++]);
-	free(envp_array);
-	*/
-
 int	execution(t_ast *l_node, t_list *envp, int status)
 {
 	char	**args;
@@ -105,15 +96,11 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 	else
 		return (external(l_node, envp));
 }
-
-int	execute_ast(t_ast *ast_node, t_list *envp, int status)
+pid_t	execute_right(t_ast *ast_node, t_list *envp, int status)
 {
 	pid_t	pid;
 	int		pipe_fds[2];
-	int		org_fd[2];
 
-	org_fd[0] = dup(STDIN_FILENO);
-	org_fd[1] = dup(STDOUT_FILENO);
 	if (ast_node && ast_node->right)
 	{
 		if (pipe(pipe_fds) == -1)
@@ -124,18 +111,135 @@ int	execute_ast(t_ast *ast_node, t_list *envp, int status)
 		if (pid == 0)
 		{
 			dup2(pipe_fds[1], STDOUT_FILENO);
-			(close (pipe_fds[0]), close (pipe_fds[1]));
+			(close(pipe_fds[0]), close(pipe_fds[1]));
 			exit(execution(ast_node->left, envp, status));
 		}
-		close(pipe_fds[1]);
 		dup2(pipe_fds[0], STDIN_FILENO);
-		close(pipe_fds[0]);
-		execute_ast(ast_node->right, envp, status);
-		waitpid(-1, NULL, 0);
+		(close(pipe_fds[1]), close(pipe_fds[0]));
+		return (execute_right(ast_node->right, envp, status));
+	}
+	else if (ast_node && ast_node->left)
+	{
+		pid = fork();
+		if (pid == -1)
+			return (perror("minishell : fork failed"), 1);
+		if (pid == 0)
+			exit(execution(ast_node->left, envp, status));
+		return (pid);
+	}
+}
+
+int	execute_ast(t_ast *ast_node, t_list *envp, int status)
+{
+	int	org_fd[2];
+	int	last_pid;
+	
+    org_fd[0] = dup(STDIN_FILENO);
+    org_fd[1] = dup(STDOUT_FILENO);
+	if (ast_node && ast_node->right)
+	{
+		last_pid = execute_right(ast_node, envp, status);
+		if (last_pid != -1)
+			waitpid(last_pid, &status, 0);
 	}
 	else if (ast_node && ast_node->left)
 		status = execution(ast_node->left, envp, status);
-	dup2(org_fd[0], STDIN_FILENO);
-	dup2(org_fd[1], STDOUT_FILENO);
-	return (close(org_fd[0]), close(org_fd[1]), status);
+    dup2(org_fd[0], STDIN_FILENO);
+    dup2(org_fd[1], STDOUT_FILENO);
+    (close(org_fd[0]), close(org_fd[1]));
+	return (status);
 }
+
+// int	execute_ast(t_ast *ast_node, t_list *envp, int status)
+// {
+// 	pid_t	pid;
+// 	int		pipe_fds[2];
+// 	int		org_fd[2];
+// 	int		last_pid = -1;
+
+// 	// Save original stdin/stdout
+// 	org_fd[0] = dup(STDIN_FILENO);
+// 	org_fd[1] = dup(STDOUT_FILENO);
+
+// 	if (ast_node && ast_node->right)
+// 	{
+// 		if (pipe(pipe_fds) == -1)
+// 			return (perror("minishell: pipe failed"), 1);
+
+// 		pid = fork();
+// 		if (pid == -1)
+// 			return (perror("minishell: fork failed"), 1);
+
+// 		if (pid == 0) // Child process (left command)
+// 		{
+// 			dup2(pipe_fds[1], STDOUT_FILENO);
+// 			close(pipe_fds[0]); // Close unused read end
+// 			close(pipe_fds[1]);
+// 			exit(execution(ast_node->left, envp, status));
+// 		}
+
+// 		close(pipe_fds[1]); // Parent closes write end
+// 		dup2(pipe_fds[0], STDIN_FILENO); // Set input for next process
+// 		close(pipe_fds[0]);
+
+// 		// Continue with right part of AST (next command in pipeline)
+// 		last_pid = execute_ast(ast_node->right, envp, status);
+// 	}
+// 	else if (ast_node && ast_node->left)
+// 	{
+// 		pid = fork();
+// 		if (pid == 0)
+// 			exit(execution(ast_node->left, envp, status));
+// 		last_pid = pid;
+// 	}
+
+// 	// Restore original stdin/stdout after pipeline execution
+// 	dup2(org_fd[0], STDIN_FILENO);
+// 	dup2(org_fd[1], STDOUT_FILENO);
+// 	close(org_fd[0]);
+// 	close(org_fd[1]);
+
+// 	// Parent waits for all child processes after execution
+// 	if (last_pid != -1)
+// 	{
+// 		int wstatus;
+// 		while (waitpid(-1, &wstatus, 0) > 0)
+// 			;
+// 		return (WEXITSTATUS(wstatus));
+// 	}
+// 	return status;
+// }
+
+// int	execute_ast(t_ast *ast_node, t_list *envp, int status)
+// {
+// 	pid_t	pid;
+// 	int		pipe_fds[2];
+// 	int		org_fd[2];
+
+// 	org_fd[0] = dup(STDIN_FILENO);
+// 	org_fd[1] = dup(STDOUT_FILENO);
+// 	if (ast_node && ast_node->right)
+// 	{
+// 		if (pipe(pipe_fds) == -1)
+// 			return (perror("minishell : pipe failed"), 1);
+// 		pid = fork();
+// 		if (pid == -1)
+// 			return (perror("minishell : fork failed"), 1);
+// 		if (pid == 0)
+// 		{
+// 			dup2(pipe_fds[1], STDOUT_FILENO);
+// 			(close (pipe_fds[0]), close (pipe_fds[1]));
+// 			exit(execution(ast_node->left, envp, status));
+// 		}
+// 		close(pipe_fds[1]);
+// 		dup2(pipe_fds[0], STDIN_FILENO);
+// 		close(pipe_fds[0]);
+// 		execute_ast(ast_node->right, envp, status);
+// 		waitpid(-1, NULL, 0);
+// 	}
+// 	else if (ast_node && ast_node->left)
+// 		status = execution(ast_node->left, envp, status);
+// 	dup2(org_fd[0], STDIN_FILENO);
+// 	dup2(org_fd[1], STDOUT_FILENO);
+// 	return (close(org_fd[0]), close(org_fd[1]), status);
+// }
