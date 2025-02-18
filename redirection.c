@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 19:08:12 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/11 13:22:20 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/18 16:44:37 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ void	redirection(char **redirect, t_list	*envp, int status)
 			close(in_fd);
 			in_fd = -1;
 		}
+		printf("item : %s\n", *redirect);
 		if (!ft_strcmp(*redirect, "<") && *(++redirect))
 			in_fd = re_input(*redirect, envp);
 		else if (!ft_strcmp(*redirect, "<<") && *(++redirect))
@@ -97,7 +98,7 @@ void	redirection(char **redirect, t_list	*envp, int status)
 	}
 	if (in_fd > 0)
 	{
-		dup2((in_fd, STDIN_FILENO), close(in_fd));
+		(dup2(in_fd, STDIN_FILENO), close(in_fd));
 		in_fd = -1;
 	}
 }
