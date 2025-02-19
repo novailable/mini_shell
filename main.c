@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/19 18:16:05 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/19 18:23:33 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int main(int argc, char **argv, char **envpath)
 	{
 		// signal_handling();
 		char *input = readline(PROMPT);
-		if (input && (*input != '|'))
+		if (input && *input != '|' && *input != '\0')
 		{
 			history_write(input);
 			if (!is_in_quote(input))
@@ -90,23 +90,25 @@ int main(int argc, char **argv, char **envpath)
 					if(ast_node)
 						print_ast(ast_node);
 					status = execute_ast(ast_node, envp, status);	
+					free_tokens(tokens);
 					free_ast(ast_node);
 					free(ast_node);
 				}
 			}
-			// else
-			// {
-			// 	printf("quotes not balanced\n");
-			// 	return (0);
-			// }
+			else
+			{
+				write(2, "minishell: unclosed quote\n", 28);
+				status = 1;
+				continue;
+			}
 		}
-		else if(input == NULL)
-		{
-			printf("<< minishell has exited >>\n");
-			return (0);
-		}
-		else
-			printf("| cannot be at the beginning of cmd\n");
+		// else if(input == NULL)
+		// {
+		// 	printf("<< minishell has exited >>\n");
+		// 	return (0);
+		// }
+		// else
+		// 	printf("| cannot be at the beginning of cmd\n");
 	}
 	ft_lstclear(&envp, free_envp);
 	return (0);
