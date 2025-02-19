@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/13 17:02:42 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/19 18:16:05 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,11 @@ int main(int argc, char **argv, char **envpath)
 			// 	return (0);
 			// }
 		}
-		// else if(input == NULL)
-		// {
-		// 	printf("<< minishell has exited >>\n");
-		// 	return (0);
-		// }
+		else if(input == NULL)
+		{
+			printf("<< minishell has exited >>\n");
+			return (0);
+		}
 		else
 			printf("| cannot be at the beginning of cmd\n");
 	}

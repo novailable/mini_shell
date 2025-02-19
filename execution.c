@@ -96,7 +96,7 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 	else
 		return (external(l_node, envp));
 }
-pid_t	execute_right(t_ast *ast_node, t_list *envp, int status)
+int	execute_right(t_ast *ast_node, t_list *envp, int status)
 {
 	pid_t	pid;
 	int		pipe_fds[2];
@@ -116,7 +116,9 @@ pid_t	execute_right(t_ast *ast_node, t_list *envp, int status)
 		}
 		dup2(pipe_fds[0], STDIN_FILENO);
 		(close(pipe_fds[1]), close(pipe_fds[0]));
-		return (execute_right(ast_node->right, envp, status));
+		execute_right(ast_node->right, envp, status);
+		waitpid(pid, &status, 0);
+		return (status);
 	}
 	else if (ast_node && ast_node->left)
 	{
@@ -138,9 +140,7 @@ int	execute_ast(t_ast *ast_node, t_list *envp, int status)
     org_fd[1] = dup(STDOUT_FILENO);
 	if (ast_node && ast_node->right)
 	{
-		last_pid = execute_right(ast_node, envp, status);
-		if (last_pid != -1)
-			waitpid(last_pid, &status, 0);
+		status = execute_right(ast_node, envp, status);
 	}
 	else if (ast_node && ast_node->left)
 		status = execution(ast_node->left, envp, status);
