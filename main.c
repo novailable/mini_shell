@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/11 19:27:17 by nsan             ###   ########.fr       */
+/*   Updated: 2025/02/19 18:23:33 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 int is_balanced_quotes(char *input)
 {
@@ -39,7 +37,7 @@ void	print_tokens(t_tokens *head)
 	printf("Token: ");
 	while (current)
 	{
-		printf("{%s, %d} ", current->str, current->tok_types);
+		printf("{%s} ", current->str);
 		current = current->next;
 	}
 	printf("\n");
@@ -73,10 +71,10 @@ int main(int argc, char **argv, char **envpath)
 	while (1)
 	{
 		// signal_handling();
-		char *input = readline("minishell % ");
-		if (input && (*input != '|'))
+		char *input = readline(PROMPT);
+		if (input && *input != '|' && *input != '\0')
 		{
-			history_output(input);
+			history_write(input);
 			if (!is_in_quote(input))
 			{
 				tokens = string_split(handle_env(input, envp, status));
@@ -91,25 +89,26 @@ int main(int argc, char **argv, char **envpath)
 					ast(ast_node, tokens);
 					if(ast_node)
 						print_ast(ast_node);
-					// 	printf("%d\n", execute_ast(ast_node, envp, status));	
+					status = execute_ast(ast_node, envp, status);	
+					free_tokens(tokens);
 					free_ast(ast_node);
 					free(ast_node);
 				}
-				free_tokens(tokens);
 			}
-			// else
-			// {
-			// 	printf("quotes not balanced\n");
-			// 	return (0);
-			// }
+			else
+			{
+				write(2, "minishell: unclosed quote\n", 28);
+				status = 1;
+				continue;
+			}
 		}
-		else if(input == NULL)
-		{
-			printf("<< minishell has exited >>\n");
-			return (0);
-		}
-		else
-			printf("| cannot be at the beginning of cmd\n");
+		// else if(input == NULL)
+		// {
+		// 	printf("<< minishell has exited >>\n");
+		// 	return (0);
+		// }
+		// else
+		// 	printf("| cannot be at the beginning of cmd\n");
 	}
 	ft_lstclear(&envp, free_envp);
 	return (0);

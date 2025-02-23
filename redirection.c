@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 19:08:12 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/10 06:09:34 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/18 16:44:37 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int	re_input(char *file, t_list *envp)
 {
 	int	fd_in;
 
-	// file = first_processing(file, envp);
 	if (file && !access(file, F_OK | R_OK))
 	{
 		fd_in = open(file, O_RDONLY);
@@ -27,7 +26,6 @@ int	re_input(char *file, t_list *envp)
 			return (-1);
 		}
 	}
-	// free(file);
 	return (fd_in);
 }
 
@@ -35,7 +33,6 @@ void	re_output(char *file, t_list *envp, int append)
 {
 	int	fd_out;
 
-	// file = first_processing(file, envp);
 	if (append)
 		fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
@@ -44,18 +41,17 @@ void	re_output(char *file, t_list *envp, int append)
 	{
 		write(2, file, ft_strlen(file));
 		perror("error opening");
-		free(file);
 		return ;
 	}
 	dup2(fd_out, STDOUT_FILENO);
-	// free(file);
 	close(fd_out);
 }
 
-int	app_heredoc(char *args)
+int	app_heredoc(char *args, t_list *envp, int status)
 {
 	char	*line;
 	int		fd_pipe[2];
+	char	*temp;
 
 	if (pipe(fd_pipe) == -1)
 		return (perror("pipe error"), -1);
@@ -67,15 +63,17 @@ int	app_heredoc(char *args)
 			free(line);
 			break ;
 		}
-		write(fd_pipe[1], line, ft_strlen(line));
+		temp = handle_env(line, envp, status);
+		write(fd_pipe[1], temp, ft_strlen(temp));
 		write(fd_pipe[1], "\n", 1);
 		free(line);
+		free(temp);
 	}
 	close(fd_pipe[1]);
 	return (fd_pipe[0]);
 }
 
-void	redirection(char **redirect, t_list	*envp)
+void	redirection(char **redirect, t_list	*envp, int status)
 {
 	int		in_fd;
 
@@ -87,10 +85,11 @@ void	redirection(char **redirect, t_list	*envp)
 			close(in_fd);
 			in_fd = -1;
 		}
+		printf("item : %s\n", *redirect);
 		if (!ft_strcmp(*redirect, "<") && *(++redirect))
 			in_fd = re_input(*redirect, envp);
 		else if (!ft_strcmp(*redirect, "<<") && *(++redirect))
-			in_fd = app_heredoc(*redirect);
+			in_fd = app_heredoc(*redirect, envp, status);
 		else if (!ft_strcmp(*redirect, ">") && *(++redirect))
 			re_output(*redirect, envp, 0);
 		else if (!ft_strcmp(*redirect, ">>") && *(++redirect))
@@ -99,8 +98,7 @@ void	redirection(char **redirect, t_list	*envp)
 	}
 	if (in_fd > 0)
 	{
-		dup2(in_fd, STDIN_FILENO);
-		close(in_fd);
+		(dup2(in_fd, STDIN_FILENO), close(in_fd));
 		in_fd = -1;
 	}
 }

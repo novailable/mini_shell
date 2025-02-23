@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:40:05 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/10 12:43:58 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/13 16:41:13 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include <fcntl.h>
 # include <errno.h>
 
+# define PROMPT "\033[38;2;131;255;212mminishell % \001\033[0m\002"
+
 //enum for tokenization
 typedef enum e_token_types
 {
@@ -35,7 +37,6 @@ typedef enum e_token_types
 	T_REDIRECT_OUT = 3, // >
 	T_APPEND = 4, // >>
 	T_HERE_DOCS = 5, //<<
-	T_VAR = 6, //$
 }	t_token_types;
 
 typedef struct s_tokens
@@ -75,8 +76,8 @@ t_ast *redirection_list(t_ast *node, t_tokens **whole_list);
 void redirect_list_len_alloc(t_tokens *whole_list, char ***redirect_list);
 t_ast *args_list(t_ast *node, t_tokens **whole_list) ;
 void args_list_len_alloc(t_tokens *whole_list, char ***args_list);
-void history_output(char *input);
-int history_write(char *input);
+int		history_output(void);
+int		history_write(char *input);
 void	append_token(t_tokens **head, t_tokens *new_node);
 // void cd_built_in();
 t_tokens	*args_redirection_list(t_ast *left_node, t_tokens *whole_list);
@@ -113,7 +114,7 @@ char	*get_p_path(char *cmd, char *envp_path);
 int		execute_ast(t_ast *ast_node, t_list *envp, int status);
 
 // redirection
-void	redirection(char **redirect, t_list	*envp);
+void	redirection(char **redirect, t_list	*envp, int status);
 
 //shits
 char	**ft_split_2(char *str, char *delimiters, char *ignchars);

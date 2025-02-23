@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_syntax_check.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:54:08 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/11 19:25:40 by nsan             ###   ########.fr       */
+/*   Updated: 2025/02/23 12:54:02 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ int	syntax_pipe_error(t_tokens *temp)
 	if (temp->tok_types == T_PIPE)
 	{
 		if (temp->next == NULL || \
-		temp->next->tok_types != T_WORD)
+		temp->next->tok_types != T_WORD && \
+		temp->next->tok_types != T_REDIRECT_IN)
 		{
 			printf("Invalid syntax after T_PIPE\n");
 			return (0);
