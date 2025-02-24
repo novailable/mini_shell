@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 19:08:12 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/24 17:19:22 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/24 17:39:53 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,24 @@ int	redirection(char **redirect, t_list *envp, int status)
 	while (redirect[i])
 	{
 		if (!ft_strcmp(redirect[i], "<<") && redirect[++i])
+		{
+			if (here_fd > 0)
+				close (here_fd);
 			here_fd = re_heredoc(redirect[i], envp, status);
+		}
 		i++;
 	}
 	i = 0;
 	while (redirect[i])
 	{
 		if (!ft_strcmp(redirect[i], "<") && redirect[++i])
+		{
+			if (in_fd > 0)
+				close(in_fd);
 			in_fd = re_input(redirect[i]);
+			if (in_fd == -1)
+				return (-1);
+		}
 		else if (!ft_strcmp(redirect[i], "<<") && redirect[++i])
 			in_fd = here_fd;
 		i++;
@@ -102,9 +112,15 @@ int	redirection(char **redirect, t_list *envp, int status)
 	while (redirect[i])
 	{
 		if (!ft_strcmp(redirect[i], ">>") && redirect[++i])
-			re_output(redirect[i], 1);
+		{
+			if (re_output(redirect[i], 1) == -1)
+				return (-1);
+		}
 		else if (!ft_strcmp(redirect[i], ">") && redirect[++i])
-			re_output(redirect[i], 0);
+		{
+			if (re_output(redirect[i], 0) == -1)
+				return (-1);
+		}
 		i++;
 	}
 	if (in_fd > 0)

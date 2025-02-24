@@ -74,13 +74,14 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 {
 	char	**args;
 
+	args = NULL;
 	args = l_node->args;
 	if (l_node->redirect)
 	{
 		if (redirection(l_node->redirect, envp, status) == -1)
 			return (1);
 	}
-	if (!args)
+	if (!args || !*args)
 		return (0);
 	if (!ft_strcmp(*args, "env"))
 		return (env(envp));
@@ -99,6 +100,7 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 	else
 		return (external(l_node, envp));
 }
+
 int	execute_right(t_ast *ast_node, t_list *envp, int status)
 {
 	pid_t	pid;
@@ -155,7 +157,6 @@ int	execute_ast(t_ast *ast_node, t_list *envp, int status)
 
 // int	execute_ast(t_ast *ast_node, t_list *envp, int status)
 // {
-// 	printf("shit\n");
 // 	int org_fds[2];
 
 // 	org_fds[0] = dup(STDIN_FILENO);
