@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:40:05 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/13 16:41:13 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/24 10:34:26 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ char	*get_p_path(char *cmd, char *envp_path);
 int		execute_ast(t_ast *ast_node, t_list *envp, int status);
 
 // redirection
-void	redirection(char **redirect, t_list	*envp, int status);
+int	redirection(char **redirect, t_list	*envp, int status);
 
 //shits
 char	**ft_split_2(char *str, char *delimiters, char *ignchars);

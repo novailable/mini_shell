@@ -76,7 +76,10 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 
 	args = l_node->args;
 	if (l_node->redirect)
-		redirection(l_node->redirect, envp, status);
+	{
+		if (redirection(l_node->redirect, envp, status) == -1)
+			return (1);
+	}
 	if (!args)
 		return (0);
 	if (!ft_strcmp(*args, "env"))
@@ -149,6 +152,24 @@ int	execute_ast(t_ast *ast_node, t_list *envp, int status)
     (close(org_fd[0]), close(org_fd[1]));
 	return (status);
 }
+
+// int	execute_ast(t_ast *ast_node, t_list *envp, int status)
+// {
+// 	printf("shit\n");
+// 	int org_fds[2];
+
+// 	org_fds[0] = dup(STDIN_FILENO);
+// 	org_fds[1] = dup(STDOUT_FILENO);
+// 	// printf("%d , %d\n", org_fds[0], org_fds[1]);
+// 	status = execution(ast_node->left, envp, status);
+// 	dup2(org_fds[0], STDIN_FILENO);
+// 	dup2(org_fds[1], STDOUT_FILENO);
+// 	// printf("%d %d\n", STDIN_FILENO, STDOUT_FILENO);
+// 	// printf("%d %d\n", org_fds[0], org_fds[1]);
+// 	close (org_fds[0]);
+// 	close (org_fds[1]);
+// 	return (status);
+// }
 
 // int	execute_ast(t_ast *ast_node, t_list *envp, int status)
 // {
