@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 19:08:12 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/18 16:44:37 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/25 19:47:20 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,19 @@ int	app_heredoc(char *args, t_list *envp, int status)
 
 	if (pipe(fd_pipe) == -1)
 		return (perror("pipe error"), -1);
+	signal(SIGINT, handle_sigint_heredoc);
+	// signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		line = readline("> ");
+		if(g_sig_interruption)
+		{
+			close(fd_pipe[1]);
+			return (-1);
+		}
 		if (!line || ft_strcmp(line, args) == 0)
 		{
-			free(line);
+			free(line); 
 			break ;
 		}
 		temp = handle_env(line, envp, status);

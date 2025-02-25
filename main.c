@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/19 18:23:33 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/24 21:45:10 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,12 @@ int main(int argc, char **argv, char **envpath)
 	int		status;
 
 	((void)argc, (void)argv);
+	handle_signals();
 	envp = init_envp(envpath);
 	status = 0;
 	while (1)
 	{
-		// signal_handling();
+		signal(SIGINT, handle_sigint);
 		char *input = readline(PROMPT);
 		if (input && *input != '|' && *input != '\0')
 		{
@@ -97,18 +98,18 @@ int main(int argc, char **argv, char **envpath)
 			}
 			else
 			{
-				write(2, "minishell: unclosed quote\n", 28);
+				write(2, "minishell: unclosed quote\n", 27);
 				status = 1;
 				continue;
 			}
 		}
-		// else if(input == NULL)
-		// {
-		// 	printf("<< minishell has exited >>\n");
-		// 	return (0);
-		// }
-		// else
-		// 	printf("| cannot be at the beginning of cmd\n");
+		else if(input == NULL)
+		{
+			printf("<< minishell has exited >>\n");
+			return (0);
+		}
+		else if(*input == '|')
+			printf("| cannot be at the beginning of cmd\n");
 	}
 	ft_lstclear(&envp, free_envp);
 	return (0);
