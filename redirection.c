@@ -6,48 +6,51 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 19:08:12 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/25 19:47:20 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/24 17:39:53 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	re_input(char *file, t_list *envp)
+int	re_input(char *file)
 {
 	int	fd_in;
 
 	if (file && !access(file, F_OK | R_OK))
 	{
 		fd_in = open(file, O_RDONLY);
-		if (fd_in < 0)
-		{
-			write (2, file, ft_strlen(file));
-			perror("error opening");
-			return (-1);
-		}
+		dprintf(2, "re_input, in : %d\n", fd_in);
+		if (fd_in > 0)
+			return (fd_in);
 	}
-	return (fd_in);
+	write(2, "minishell: ", 12);
+	write(2, file, ft_strlen(file));
+	perror(" ");
+	return (-1);
 }
 
-void	re_output(char *file, t_list *envp, int append)
+int	re_output(char *file, int append)
 {
 	int	fd_out;
-
+	
 	if (append)
 		fd_out = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
 		fd_out = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	printf("out : %d\n",fd_out);
 	if (fd_out < 0)
 	{
+		write(2, "minishell: ", 12);
 		write(2, file, ft_strlen(file));
-		perror("error opening");
-		return ;
+		perror(" ");
+		return (-1);
 	}
 	dup2(fd_out, STDOUT_FILENO);
 	close(fd_out);
+	return (0);
 }
 
-int	app_heredoc(char *args, t_list *envp, int status)
+int	re_heredoc(char *args, t_list *envp, int status)
 {
 	char	*line;
 	int		fd_pipe[2];
@@ -71,111 +74,63 @@ int	app_heredoc(char *args, t_list *envp, int status)
 			break ;
 		}
 		temp = handle_env(line, envp, status);
-		write(fd_pipe[1], temp, ft_strlen(temp));
-		write(fd_pipe[1], "\n", 1);
-		free(line);
-		free(temp);
+		(write(fd_pipe[1], temp, ft_strlen(temp)), write(fd_pipe[1], "\n", 1));
+		(free(line), free(temp));
 	}
-	close(fd_pipe[1]);
-	return (fd_pipe[0]);
+	return (close(fd_pipe[1]), fd_pipe[0]);
 }
-
-void	redirection(char **redirect, t_list	*envp, int status)
+int	redirection(char **redirect, t_list *envp, int status)
 {
-	int		in_fd;
+	int	i;
+	int here_fd;
+	int	in_fd;
+	int out_fd;
 
+	i = 0;
+	here_fd = -1;
 	in_fd = -1;
-	while (*redirect)
+	out_fd = -1;
+	while (redirect[i])
 	{
-		if (in_fd > 0)
+		if (!ft_strcmp(redirect[i], "<<") && redirect[++i])
 		{
-			close(in_fd);
-			in_fd = -1;
+			if (here_fd > 0)
+				close (here_fd);
+			here_fd = re_heredoc(redirect[i], envp, status);
 		}
-		printf("item : %s\n", *redirect);
-		if (!ft_strcmp(*redirect, "<") && *(++redirect))
-			in_fd = re_input(*redirect, envp);
-		else if (!ft_strcmp(*redirect, "<<") && *(++redirect))
-			in_fd = app_heredoc(*redirect, envp, status);
-		else if (!ft_strcmp(*redirect, ">") && *(++redirect))
-			re_output(*redirect, envp, 0);
-		else if (!ft_strcmp(*redirect, ">>") && *(++redirect))
-			re_output(*redirect, envp, 1);
-		redirect++;
+		i++;
+	}
+	i = 0;
+	while (redirect[i])
+	{
+		if (!ft_strcmp(redirect[i], "<") && redirect[++i])
+		{
+			if (in_fd > 0)
+				close(in_fd);
+			in_fd = re_input(redirect[i]);
+			if (in_fd == -1)
+				return (-1);
+		}
+		else if (!ft_strcmp(redirect[i], "<<") && redirect[++i])
+			in_fd = here_fd;
+		i++;
+	}
+	i=0;
+	while (redirect[i])
+	{
+		if (!ft_strcmp(redirect[i], ">>") && redirect[++i])
+		{
+			if (re_output(redirect[i], 1) == -1)
+				return (-1);
+		}
+		else if (!ft_strcmp(redirect[i], ">") && redirect[++i])
+		{
+			if (re_output(redirect[i], 0) == -1)
+				return (-1);
+		}
+		i++;
 	}
 	if (in_fd > 0)
-	{
 		(dup2(in_fd, STDIN_FILENO), close(in_fd));
-		in_fd = -1;
-	}
+	return (0);
 }
-
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	char *input = readline("%% ");
-// 	char *in;
-// 	int		fd;
-// 	char *file;
-// 	pid_t pid;
-// 	int		heredoc_fd[2];
-// 	int     org_fd[2];
-
-// 	org_fd[0] = dup(STDIN_FILENO);
-// 	org_fd[1] = dup(STDOUT_FILENO);
-
-// 	if (!input)
-// 		return 0;
-
-// 	fd = -1;
-// 	in = strtok(input, " ");
-// 	while (in)
-// 	{
-// 		if (fd > 0)
-// 		{
-// 			close(fd);
-// 			fd = -1;
-// 		}
-// 		if (strcmp(in, "<") == 0)
-// 		{
-// 			file = strtok(NULL, " ");
-// 			if (file)
-// 			{
-// 				printf("file: %s\n", file);
-// 				fd = re_input(file);
-// 			}
-// 		}
-// 		else if (strcmp(in, "<<") == 0)  // Check for heredoc operator
-// 		{
-// 			file = strtok(NULL, " ");
-// 			if (file)
-// 			{
-// 				printf("heredoc EOF: %s\n", file);
-// 				fd = app_heredoc (file);
-// 			}
-// 		}
-// 		else if (strcmp(in, ">") == 0)
-// 		{
-// 			file = strtok(NULL, " ");
-// 			if (file)
-// 			{
-// 				printf("out file : %s\n", file);
-// 				re_output(file, 0);
-// 			}
-// 		}
-
-// 		in = strtok(NULL, " ");
-// 	}
-// 	char buffer[2000];
-// 	if (fd > 0)
-// 	{
-// 		dup2(fd, STDIN_FILENO);
-// 		close(fd);
-// 		fd = -1;
-// 	}
-// 	size_t n = read(STDIN_FILENO, buffer, sizeof(buffer) + 1);
-// 	buffer[n] = '\0';
-// 	re_output("ok", 0);
-// 	re_output("ok2", 0);
-//    	printf("buffer: %s\n", buffer);
-// 	return 0;
-// }

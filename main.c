@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:39:37 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/24 21:45:10 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/19 18:23:33 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,15 +81,15 @@ int main(int argc, char **argv, char **envpath)
 				tokens = string_split(handle_env(input, envp, status));
 				tokenize_str(tokens);
 				free(input);
-				print_tokens(tokens);
+				// print_tokens(tokens);
 				if(check_grammar_syntax(tokens, input))
 				{
 					ast_node = malloc(sizeof(t_ast));
 					if (!ast_node)
 						printf("Error in main_ast malloc\n");
 					ast(ast_node, tokens);
-					if(ast_node)
-						print_ast(ast_node);
+					// if(ast_node)
+					// 	print_ast(ast_node);
 					status = execute_ast(ast_node, envp, status);	
 					free_tokens(tokens);
 					free_ast(ast_node);
