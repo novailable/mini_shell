@@ -12,26 +12,54 @@
 
 #include "minishell.h"
 
-//need to kill the child if control+z is hit
-//recall new readline if control+c is hit
 
-void control_c(int sigint)
+int g_sig_interruption = 0;
+void handle_sigint_heredoc(int sigint)
+{
+    (void)sigint;
+    printf("\n");
+    close(STDIN_FILENO);
+    g_sig_interruption = 1;
+    
+}
+
+void handle_sigint(int sigint) //handling for the control C
 {
     (void)sigint;
     printf("\n");
 	rl_on_new_line();
-	rl_replace_line(" ", 0);
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
-void signal_handling()
+void handle_sigint_process(int sigint)
 {
-    struct sigaction sa;
-
-    sa.sa_handler = &control_c;
-    sa.sa_flags = SA_RESTART;
-    sigaction(SIGINT, &sa, NULL);
-
-    signal(SIGQUIT, SIG_IGN);
-
+    (void)sigint;
+    write(STDOUT_FILENO, "\nSIGINT received\n", 17);
+    printf("\n");
 }
+
+void handle_sigquit_process(int sigint)
+{
+    (void)sigint;
+    write(1, "Quit in sigquit process", 23);
+    printf("Quit: %d \n", sigint);
+}
+
+
+
+void handle_signals()
+{
+    signal(SIGINT, handle_sigint);
+    signal(SIGQUIT, SIG_IGN);
+}
+
+// void handle_signals()
+// {
+//     struct sigaction sa;
+
+//     sa.sa_handler = &handle_sigint;
+//     sa.sa_flags = SA_RESTART;
+//     sigaction(SIGINT, &handle_sigint, NULL);
+//     signal(SIGQUIT, SIG_IGN);
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:40:05 by nsan              #+#    #+#             */
-/*   Updated: 2025/02/13 16:41:13 by aoo              ###   ########.fr       */
+/*   Updated: 2025/02/25 00:34:43 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 
 # define PROMPT "\033[38;2;131;255;212mminishell % \001\033[0m\002"
 
+extern int g_sig_interruption;
 //enum for tokenization
 typedef enum e_token_types
 {
@@ -128,7 +129,12 @@ char	*handle_quotes(char *str);
 
 //signals
 void signal_handling();
-void control_c(int sigint);
+// void control_c(int sigint);
+void handle_signals();
+void handle_sigint(int sigint);
+void handle_sigint_process(int sigint);
+void handle_sigquit_process(int sigint);
+void handle_sigint_heredoc(int sigint);
 
 //helpers
 int is_balanced_quotes(char *input);

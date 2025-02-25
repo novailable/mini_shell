@@ -67,6 +67,7 @@ int	external(t_ast *l_node, t_list *envp)
 			exit (0);
 		}
 	}
+	
 	return (waitpid(pid, &status, 0), WEXITSTATUS(status));
 }
 
@@ -77,6 +78,11 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 	args = l_node->args;
 	if (l_node->redirect)
 		redirection(l_node->redirect, envp, status);
+	if(g_sig_interruption)
+	{
+		g_sig_interruption = 0;
+		return (0);
+	}
 	if (!args)
 		return (0);
 	if (!ft_strcmp(*args, "env"))
@@ -96,15 +102,19 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 	else
 		return (external(l_node, envp));
 }
+
 int	execute_right(t_ast *ast_node, t_list *envp, int status)
 {
 	pid_t	pid;
 	int		pipe_fds[2];
+	// sig_t org_signals[2];
 
 	if (ast_node && ast_node->right)
 	{
 		if (pipe(pipe_fds) == -1)
 			return (perror("minishell : pipe failed"), 1);
+		// org_signals[0] = signal(SIGINT, handle_sigint_process);
+		// org_signals[1] = signal(SIGQUIT, handle_sigquit_process);
 		pid = fork();
 		if (pid == -1)
 			return (perror("minishell : fork failed"), 1);
@@ -112,12 +122,17 @@ int	execute_right(t_ast *ast_node, t_list *envp, int status)
 		{
 			dup2(pipe_fds[1], STDOUT_FILENO);
 			(close(pipe_fds[0]), close(pipe_fds[1]));
+			// signal(SIGINT, SIG_DFL);
+			// signal(SIGQUIT, SIG_DFL);
 			exit(execution(ast_node->left, envp, status));
+			// exit(e_status);
 		}
 		dup2(pipe_fds[0], STDIN_FILENO);
 		(close(pipe_fds[1]), close(pipe_fds[0]));
 		execute_right(ast_node->right, envp, status);
 		waitpid(pid, &status, 0);
+		// signal(SIGINT, org_signals[0]);
+		// signal(SIGQUIT, org_signals[1]);
 		return (status);
 	}
 	else if (ast_node && ast_node->left)
