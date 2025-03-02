@@ -53,8 +53,6 @@ typedef struct s_ast
 	struct s_ast	*right;
 	char			**args;
 	char			**redirect;
-	int *heredoc_fds;      // Array of heredoc file descriptors
-    int heredoc_count;     // Count of heredoc redirections
 }	t_ast;
 
 //envp
