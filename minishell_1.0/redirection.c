@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 19:08:12 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/24 17:39:53 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/02 14:37:07 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,19 +58,12 @@ int	re_heredoc(char *args, t_list *envp, int status)
 
 	if (pipe(fd_pipe) == -1)
 		return (perror("pipe error"), -1);
-	signal(SIGINT, handle_sigint_heredoc);
-	// signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		line = readline("> ");
-		if(g_sig_interruption)
-		{
-			close(fd_pipe[1]);
-			return (-1);
-		}
 		if (!line || ft_strcmp(line, args) == 0)
 		{
-			free(line); 
+			free(line);
 			break ;
 		}
 		temp = handle_env(line, envp, status);
@@ -79,6 +72,28 @@ int	re_heredoc(char *args, t_list *envp, int status)
 	}
 	return (close(fd_pipe[1]), fd_pipe[0]);
 }
+
+char	*get_heredoc(char *eof, t_list *envp, int status)
+{
+	char	*line;
+	char	*temp;
+
+	temp = NULL;
+	while (1)
+	{
+		line = readline("> ");
+		if (!line || ft_strcmp(line, eof) == 0)
+		{
+			free(line);
+			break ;
+		}
+		temp = ft_strjoin(temp, handle_env(line, envp, status), 1, 1);
+		temp = ft_strcjoin(temp, '\n');
+		free(line);
+	}
+	return (temp);
+}
+
 int	redirection(char **redirect, t_list *envp, int status)
 {
 	int	i;
