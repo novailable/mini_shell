@@ -3,10 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   first_processing.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< HEAD
 /*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 19:33:28 by aoo               #+#    #+#             */
 /*   Updated: 2025/03/03 17:36:31 by nsan             ###   ########.fr       */
+=======
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/08 19:33:28 by aoo               #+#    #+#             */
+/*   Updated: 2025/02/11 14:01:04 by aoo              ###   ########.fr       */
+>>>>>>> 4cdeb0f6219f9fcf8d9941a671c90a0876c7291f
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +92,16 @@ char	*handle_dq(char *str, char **result)
 {
 	str++;
 	while (*str && *str != '\"')
+<<<<<<< HEAD
 		*result = ft_strcjoin(*result, *str++);
+=======
+	{
+		if (*str == '\\')
+			str = handle_esc(str, result, 1);
+		else
+			*result = ft_strcjoin(*result, *str++);
+	}
+>>>>>>> 4cdeb0f6219f9fcf8d9941a671c90a0876c7291f
 	*result = ft_strcjoin(*result, '\0');
 	str++;
 	return (str);
@@ -98,7 +114,13 @@ char	*handle_quotes(char *str)
 	result = NULL;
 	while (*str)
 	{
+<<<<<<< HEAD
 		if (*str == '\'')
+=======
+		if (*str == '\\')
+			str = handle_esc(str, &result, 0);
+		else if (*str == '\'')
+>>>>>>> 4cdeb0f6219f9fcf8d9941a671c90a0876c7291f
 		{
 			++str;
 			while (*str && *str != '\'')

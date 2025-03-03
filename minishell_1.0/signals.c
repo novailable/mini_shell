@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 18:37:37 by marvin            #+#    #+#             */
-/*   Updated: 2025/01/29 18:37:37 by marvin           ###   ########.fr       */
+/*   Updated: 2025/03/03 19:55:31 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,4 @@ void signal_handling()
     sigaction(SIGINT, &sa, NULL);
 
     signal(SIGQUIT, SIG_IGN);
-
 }
