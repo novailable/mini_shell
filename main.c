@@ -108,6 +108,7 @@ int main(int argc, char **argv, char **envpath)
 			}
 			else
 			{
+				free(input);
 				write(2, "minishell: unclosed quote\n", 27);
 				status = 1;
 				continue;

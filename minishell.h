@@ -97,6 +97,7 @@ int		pwd();
 int		cd(char **args, t_list *envp);
 int		env(t_list *envp);
 int		export(char **args, t_list *envp, int status);
+void	new_env(char *key, char *value, t_list **envp);
 t_list	*find_env(char *key, t_list *envp);
 char	*ft_getenv(char *key, t_list *envp);
 int		unset(char **args, t_list **envp);

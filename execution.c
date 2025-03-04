@@ -7,7 +7,7 @@ char	*get_p_path(char *cmd, char *envp_path)
 	char	*path;
 	int		i;
 
-	if (!envp_path)
+	if (!envp_path || !ft_strncmp(cmd, ".", 1))
 		return (cmd);
 	paths = ft_split((envp_path), ":");
 	i = 0;
@@ -21,7 +21,6 @@ char	*get_p_path(char *cmd, char *envp_path)
 		path = NULL;
 		i++;
 	}
-	i = 0;
 	free_strs(paths);
 	if (!path)
 		return (cmd);
@@ -55,7 +54,6 @@ int	external(t_ast *l_node, int	*org_fd, t_list *envp)
 		return (perror("fork operation failed!"), 1);
 	if (pid == 0)
 	{
-		default_signal();
 		(close(org_fd[0]), close(org_fd[1]));
 		default_signal();
 		if (l_node->args)
