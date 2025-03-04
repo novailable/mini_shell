@@ -54,6 +54,7 @@ int	external(t_ast *l_node, t_list *envp)
 		return (perror("fork operation failed!"), 1);
 	if (pid == 0)
 	{
+		default_signal();
 		if (l_node->args)
 		{
 			if (exec_cmd(l_node->args, envp) == -1)
@@ -68,7 +69,7 @@ int	external(t_ast *l_node, t_list *envp)
 		}
 	}
 	waitpid(pid, &status, 0);
-	return (WEXITSTATUS(status));
+	return (wait_signal_status(status));
 }
 
 int	execution(t_ast *l_node, t_list *envp, int status)
@@ -105,32 +106,35 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 		return (external(l_node, envp));
 }
 
+
+
 int	execute_pipe(t_ast *ast_node, int *org_fd, t_list *envp, int status)
 {
 	pid_t	pid;
 	int		pipe_fds[2];
 
-	if (ast_node && ast_node->left)
+	if (!ast_node || !ast_node->left)
+		return (status);
+	if (pipe(pipe_fds) == -1)
+		return (perror("minishell : pipe failed"), 1);
+	pid = fork();
+	if (pid == -1)
+		return (perror("minishell : fork failed"), 1);
+	if (pid == 0)
 	{
-		if (pipe(pipe_fds) == -1)
-			return (perror("minishell : pipe failed"), 1);
-		pid = fork();
-		if (pid == -1)
-			return (perror("minishell : fork failed"), 1);
-		if (pid == 0)
-		{
-			if (ast_node->right)
-				(dup2(pipe_fds[1], STDOUT_FILENO), \
-				close(pipe_fds[1]), close(pipe_fds[0]));
-			(close(org_fd[0]), close(org_fd[1]));
-			exit(execution(ast_node->left, envp, status));
-		}
+		default_signal();
 		if (ast_node->right)
-			(dup2(pipe_fds[0], STDIN_FILENO), \
+			(dup2(pipe_fds[1], STDOUT_FILENO), \
 			close(pipe_fds[1]), close(pipe_fds[0]));
-		execute_pipe(ast_node->right, org_fd, envp, status);
-		waitpid(pid, &status, 0);
+		(close(org_fd[0]), close(org_fd[1]));
+		exit(execution(ast_node->left, envp, status));
 	}
+	if (ast_node->right)
+		(dup2(pipe_fds[0], STDIN_FILENO);
+	close(pipe_fds[1]), close(pipe_fds[0]));
+	if (ast_node->right)
+		execute_pipe(ast_node->right, org_fd, envp, status);
+	waitpid(pid, &status, 0);
 	return (status);
 }
 
@@ -138,12 +142,14 @@ int	execute_ast(t_ast *ast_node, t_list *envp, int status)
 {
 	int	org_fd[2];
 
+	stop_signal();
 	org_fd[0] = dup(STDIN_FILENO);
 	org_fd[1] = dup(STDOUT_FILENO);
 	if (ast_node && ast_node->right)
 		status = execute_pipe(ast_node, org_fd, envp, status);
 	else if (ast_node && ast_node->left)
 		status = execution(ast_node->left, envp, status);
+	dprintf(2, "exe ast : %d\n", status);
 	dup2(org_fd[0], STDIN_FILENO);
 	dup2(org_fd[1], STDOUT_FILENO);
 	(close(org_fd[0]), close(org_fd[1]));

@@ -66,12 +66,12 @@ int main(int argc, char **argv, char **envpath)
 	int		status;
 
 	((void)argc, (void)argv);
-	handle_signals();
+	
 	envp = init_envp(envpath);
 	status = 0;
 	while (1)
 	{
-		signal(SIGINT, handle_sigint);
+		set_signal();
 		char *input = readline(PROMPT);
 		if (input && *input != '|' && *input != '\0')
 		{

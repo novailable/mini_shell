@@ -134,13 +134,19 @@ char	*handle_env(char *str, t_list *envp, int status);
 char	*handle_quotes(char *str);
 
 //signals
-void signal_handling();
+void	signal_handling();
 // void control_c(int sigint);
 void handle_signals();
 void handle_sigint(int sigint);
 void handle_sigint_process(int sigint);
 void handle_sigquit_process(int sigint);
 void handle_sigint_heredoc(int sigint);
+
+void	set_signal(void);
+void	stop_signal(void);
+void	default_signal(void);
+int		wait_signal_status(int status);
+
 
 //helpers
 int is_balanced_quotes(char *input);
