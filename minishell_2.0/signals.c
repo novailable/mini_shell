@@ -12,19 +12,32 @@
 
 #include "minishell.h"
 
+int g_sig_interrupt = 0;
 
-int g_sig_interruption = 0;
-
-void handle_sigint_heredoc(int sigint)
+void	handle_sigint_heredoc(int sigint)
 {
 	(void)sigint;
-	g_sig_interruption = 1;
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	g_sig_interrupt = 1;
+	rl_event_hook = NULL;
+	rl_done = 1;
 }
 
-void handle_sigint(int sigint) //handling for the control C
+int	check_signal(void)
+{
+	if (!g_sig_interrupt)
+		return (0);
+	rl_done = 1;
+	return (1);
+}
+
+void	set_signal_heredoc(void)
+{
+	signal(SIGINT, &handle_sigint_heredoc);
+	signal(SIGQUIT, SIG_IGN);
+	rl_event_hook = check_signal;
+}
+
+void handle_sigint(int sigint)
 {
 	(void)sigint;
 	write(STDOUT_FILENO, "\n", 1);
@@ -79,9 +92,9 @@ int	wait_signal_status(int status)
 	{
 		signal = WTERMSIG(status);
 		if (signal == SIGINT)
-			printf("\n");
+			ft_putstr_fd("\n", 2);
 		else if (signal == SIGQUIT)
-			printf("Quit\n");
+			ft_putstr_fd("Quit\n", 2);
 		return (128 + WTERMSIG(status));
 	}
 	else if (WIFEXITED(status))

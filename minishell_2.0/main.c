@@ -71,6 +71,11 @@ int main(int argc, char **argv, char **envpath)
 	{
 		set_signal();
 		char *input = readline(PROMPT);
+		if (g_sig_interrupt)
+		{
+			status = 130;
+			g_sig_interrupt = 0;
+		}
 		if (input && *input != '|' && *input != '\0')
 		{
 			history_write(input);
@@ -78,7 +83,6 @@ int main(int argc, char **argv, char **envpath)
 			{
 				tokens = string_split(handle_env(input, envp, status));
 				tokenize_str(tokens);
-				// print_tokens(tokens);
 				prepare_heredoc(tokens, envp, status);
 				if(check_grammar_syntax(tokens, input))
 				{

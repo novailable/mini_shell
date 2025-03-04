@@ -28,7 +28,8 @@
 
 # define PROMPT "\033[38;2;131;255;212mminishell % \001\033[0m\002"
 
-extern int g_sig_interruption;
+extern int g_sig_interrupt;
+
 //enum for tokenization
 typedef enum e_token_types
 {
@@ -143,6 +144,7 @@ void handle_sigquit_process(int sigint);
 void handle_sigint_heredoc(int sigint);
 
 void	set_signal(void);
+void	set_signal_heredoc(void);
 void	stop_signal(void);
 void	default_signal(void);
 int		wait_signal_status(int status);

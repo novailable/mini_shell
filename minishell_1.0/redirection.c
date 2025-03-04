@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 19:08:12 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/02 14:37:07 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/04 10:27:55 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ char	*get_heredoc(char *eof, t_list *envp, int status)
 	temp = NULL;
 	while (1)
 	{
+		set_signal_heredoc();	
 		line = readline("> ");
 		if (!line || ft_strcmp(line, eof) == 0)
 		{
@@ -91,6 +92,7 @@ char	*get_heredoc(char *eof, t_list *envp, int status)
 		temp = ft_strcjoin(temp, '\n');
 		free(line);
 	}
+	rl_event_hook = NULL;
 	return (temp);
 }
 
