@@ -57,6 +57,7 @@ int	external(t_ast *l_node, int	*org_fd, t_list *envp)
 	{
 		default_signal();
 		(close(org_fd[0]), close(org_fd[1]));
+		default_signal();
 		if (l_node->args)
 		{
 			if (exec_cmd(l_node->args, envp) == -1)
@@ -71,6 +72,7 @@ int	external(t_ast *l_node, int	*org_fd, t_list *envp)
 		}
 	}
 	waitpid(pid, &status, 0);
+	return (wait_signal_status(status));
 
 	return (wait_signal_status(status));
 }
