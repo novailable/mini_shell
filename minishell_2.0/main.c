@@ -84,14 +84,22 @@ int main(int argc, char **argv, char **envpath)
 				tokens = string_split(handle_env(input, envp, status));
 				tokenize_str(tokens);
 				prepare_heredoc(tokens, envp, status);
+				if (g_sig_interrupt)
+				{
+					status = 130;
+					g_sig_interrupt = 0;
+					continue ;
+				}
+				// print_tokens(tokens);
 				if(check_grammar_syntax(tokens, input))
 				{
+					
 					ast_node = malloc(sizeof(t_ast));
 					if (!ast_node)
 						printf("Error in main_ast malloc\n");
 					ast(ast_node, tokens);
 					// if(ast_node)
-					// 	print_ast(ast_node);
+						// print_ast(ast_node);
 					status = execute_ast(ast_node, envp, status);	
 					free_tokens_ast(tokens, ast_node);
 				}

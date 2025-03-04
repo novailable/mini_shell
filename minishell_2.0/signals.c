@@ -14,6 +14,16 @@
 
 int g_sig_interrupt = 0;
 
+void handle_sigint(int sigint)
+{
+	(void)sigint;
+	write(STDOUT_FILENO, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	g_sig_interrupt = 1;
+}
+
 void	handle_sigint_heredoc(int sigint)
 {
 	(void)sigint;
@@ -37,14 +47,7 @@ void	set_signal_heredoc(void)
 	rl_event_hook = check_signal;
 }
 
-void handle_sigint(int sigint)
-{
-	(void)sigint;
-	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
+
 
 // void handle_sigint_process(int sigint)
 // {

@@ -56,11 +56,21 @@ char	*get_heredoc(char *eof, t_list *envp, int status)
 	temp = NULL;
 	while (1)
 	{
+		set_signal_heredoc();
 		line = readline("> ");
-		if (!line || ft_strcmp(line, eof) == 0)
+		if (g_sig_interrupt)
+			return (free(temp), free(eof), NULL);
+		if (!line)
+		{
+			ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", STDERR_FILENO);
+			ft_putstr_fd(eof, STDERR_FILENO);
+			ft_putstr_fd("')\n", STDERR_FILENO);
+			break;
+		}
+		if (ft_strcmp(line, eof) == 0)
 		{
 			free(line);
-			break ;
+			break;
 		}
 		temp = ft_strjoin(temp, handle_env(line, envp, status), 1, 1);
 		temp = ft_strcjoin(temp, '\n');
@@ -70,102 +80,17 @@ char	*get_heredoc(char *eof, t_list *envp, int status)
 	return (temp);
 }
 
-// int	re_heredoc(char *args, t_list *envp, int status)
-// {
-// 	char	*line;
-// 	int		fd_pipe[2];
-// 	char	*temp;
-
-// 	if (pipe(fd_pipe) == -1)
-// 		return (perror("pipe error"), -1);
-// 	signal(SIGINT, handle_sigint_heredoc);
-// 	// signal(SIGQUIT, SIG_IGN);
-// 	while (1)
-// 	{
-// 		line = readline("> ");
-// 		if(g_sig_interruption)
-// 		{
-// 			close(fd_pipe[1]);
-// 			return (-1);
-// 		}
-// 		if (!line || ft_strcmp(line, args) == 0)
-// 		{
-// 			free(line); 
-// 			break ;
-// 		}
-// 		temp = handle_env(line, envp, status);
-// 		(write(fd_pipe[1], temp, ft_strlen(temp)), write(fd_pipe[1], "\n", 1));
-// 		(free(line), free(temp));
-// 	}
-// 	return (close(fd_pipe[1]), fd_pipe[0]);
-// }
-
 int	re_heredoc(char *data)
 {
 	int		fd_pipe[2];
 
 	if (pipe(fd_pipe) == -1)
 		return (perror("pipe error"), -1);
-	write(fd_pipe[1], data, ft_strlen(data));
-	return (close(fd_pipe[1]), fd_pipe[0]);
+	if (data)
+		write(fd_pipe[1], data, ft_strlen(data));
+	close(fd_pipe[1]);
+	return (fd_pipe[0]);
 }
-
-// int	redirection(char **redirect, t_list *envp, int status)
-// {
-// 	int	i;
-// 	int here_fd;
-// 	int	in_fd;
-// 	int out_fd;
-
-// 	i = 0;
-// 	here_fd = -1;
-// 	in_fd = -1;
-// 	out_fd = -1;
-// 	while (redirect[i])
-// 	{
-// 		if (!ft_strcmp(redirect[i], "<<") && redirect[++i])
-// 		{
-// 			if (here_fd > 0)
-// 				close (here_fd);
-// 			here_fd = re_heredoc(redirect[i], envp, status);
-// 		}
-// 		i++;
-// 	}
-// 	i = 0;
-// 	while (redirect[i])
-// 	{
-// 		if (!ft_strcmp(redirect[i], "<") && redirect[++i])
-// 		{
-// 			if (in_fd > 0)
-// 				close(in_fd);
-// 			in_fd = re_input(redirect[i]);
-// 			if (in_fd == -1)
-// 				return (-1);
-// 		}
-// 		else if (!ft_strcmp(redirect[i], "<<") && redirect[++i])
-// 			in_fd = here_fd;
-// 		i++;
-// 	}
-// 	i=0;
-// 	while (redirect[i])
-// 	{
-// 		if (!ft_strcmp(redirect[i], ">>") && redirect[++i])
-// 		{
-// 			if (re_output(redirect[i], 1) == -1)
-// 				return (-1);
-// 		}
-// 		else if (!ft_strcmp(redirect[i], ">") && redirect[++i])
-// 		{
-// 			if (re_output(redirect[i], 0) == -1)
-// 				return (-1);
-// 		}
-// 		i++;
-// 	}
-// 	if (in_fd > 0)
-// 		(dup2(in_fd, STDIN_FILENO), close(in_fd));
-// 	return (0);
-// }
-
 
 // Apply redirections using the prepared heredocs
 int redirection(char **redirect)
@@ -185,13 +110,13 @@ int redirection(char **redirect)
             if (in_fd == -1)
                 return -1;
         }
-        else if (!ft_strcmp(redirect[i], "<<") && redirect[i + 1])
+        else if (!ft_strcmp(redirect[i], "<<"))
         {
             if (in_fd > 0)
                 close(in_fd);
 			in_fd = re_heredoc(redirect[++i]);
 			if (in_fd == -1)
-				return -1;
+				return (-1);
         }
         i++;
     }
