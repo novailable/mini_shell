@@ -122,6 +122,11 @@ int		execute_ast(t_ast *ast_node, t_list *envp, int status);
 // redirection
 int		redirection(char **redirect);
 char	*get_heredoc(char *eof, t_list *envp, int status);
+int	re_input(char *file);
+int	re_output(char *file, int append);
+int	re_heredoc(char *data);
+int redirection_in_heredoc(char **redirect, int i,int in_fd);
+int redirection_out_append(char **redirect, int i,int in_fd);
 
 //shits
 char	**ft_split_2(char *str, char *delimiters, char *ignchars);

@@ -80,7 +80,7 @@ int main(int argc, char **argv, char **envpath)
 				tokenize_str(tokens);
 				// print_tokens(tokens);
 				prepare_heredoc(tokens, envp, status);
-				if(check_grammar_syntax(tokens, input))
+				if(check_grammar_syntax(tokens, input) == 1)
 				{
 					ast_node = malloc(sizeof(t_ast));
 					if (!ast_node)
@@ -92,7 +92,7 @@ int main(int argc, char **argv, char **envpath)
 					free_tokens_ast(tokens, ast_node);
 				}
 				else
-					return (ret_free_envp("<< exit >>\n", envp, tokens), 0);
+					free_tokens(tokens);
 			}
 			else
 			{
@@ -100,11 +100,11 @@ int main(int argc, char **argv, char **envpath)
 				status = 1;
 				continue;
 			}
-		}	
+		}
 		else if(input == NULL)
 			return (ret_free_envp("<< exit >>\n", envp, NULL), 0);
 		else if(*input == '|')
-			return (ret_free_envp("| cannot be at the beginning of cmd\n", envp, NULL), 0);
+			printf("minishell: syntax error near unexpected token `|'\n");
 	}
 	ft_lstclear(&envp, free_envp);
 	return (0);

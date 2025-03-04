@@ -52,7 +52,6 @@ void	prepare_heredoc(t_tokens *head, t_list	*envp, int status)
 			current->str = get_heredoc(current->str, envp, status);
 		}
 		current = current->next;
-
 	}
 }
 

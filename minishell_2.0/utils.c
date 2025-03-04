@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:32:19 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/03 17:37:21 by nsan             ###   ########.fr       */
+/*   Updated: 2025/03/04 22:34:29 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void free_envp(void *data)
 {
 	t_envp *env_var;
 
+	if(!data)
+		return ;
 	env_var = (t_envp *)data;
 	free(env_var->key);
 	free(env_var->value);

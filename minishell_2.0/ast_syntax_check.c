@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_syntax_check.c                               :+:      :+:    :+:   */
+/*   ast_syntax_check.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:54:08 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/02 14:42:33 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/04 22:02:59 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	syntax_word_error(t_tokens *temp)
 			temp->next->tok_types != T_REDIRECT_OUT && \
 			temp->next->tok_types != T_HERE_DOCS)
 		{
-			printf("Invalid syntax after T_WORD\n");
+			printf("minishell: syntax error near unexpected token `newline'\n");
 			return (0);
 		}
 	}
@@ -39,7 +39,7 @@ int	syntax_pipe_error(t_tokens *temp)
 		temp->next->tok_types != T_REDIRECT_IN && \
 		temp->next->tok_types != T_HERE_DOCS)
 		{
-			printf("Invalid syntax after T_PIPE\n");
+			printf("minishell: syntax error near unexpected token `newline'\n");
 			return (0);
 		}
 	}
@@ -53,9 +53,17 @@ int	syntax_redirect_error(t_tokens *temp)
 	temp->tok_types == T_APPEND || \
 	temp->tok_types == T_HERE_DOCS)
 	{
-		if (temp->next == NULL || temp->next->tok_types != T_WORD)
+		if(!temp->next)
 		{
-			printf("Invalid syntax after redirect\n");
+			printf("minishell: syntax error near unexpected token `newline'\n");
+			return (0);
+		}
+		if (temp->next->tok_types == T_PIPE)
+			return \
+			(printf("minishell: syntax error near unexpected token `|'\n"), 0);
+		else if (temp->next->tok_types != T_WORD)
+		{
+			printf("minishell: syntax error near unexpected token `newline'\n");
 			return (0);
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_all.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:49:13 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/03 19:15:33 by nsan             ###   ########.fr       */
+/*   Updated: 2025/03/04 22:43:54 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void ret_free_envp(char *str, t_list *envp, t_tokens *tokens)
     printf("%s", str);
     if(tokens)
         free_tokens(tokens);
-    ft_lstclear(&envp, free_envp);
+    if(envp)
+        ft_lstclear(&envp, free_envp);
 }
 
 void free_tokens_ast(t_tokens *tokens, t_ast *ast_node)
