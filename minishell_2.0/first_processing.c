@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   first_processing.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 19:33:28 by aoo               #+#    #+#             */
-/*   Updated: 2025/02/11 14:01:04 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/03 17:36:31 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,7 @@ char	*handle_dq(char *str, char **result)
 {
 	str++;
 	while (*str && *str != '\"')
-	{
-		if (*str == '\\')
-			str = handle_esc(str, result, 1);
-		else
-			*result = ft_strcjoin(*result, *str++);
-	}
+		*result = ft_strcjoin(*result, *str++);
 	*result = ft_strcjoin(*result, '\0');
 	str++;
 	return (str);
@@ -103,9 +98,7 @@ char	*handle_quotes(char *str)
 	result = NULL;
 	while (*str)
 	{
-		if (*str == '\\')
-			str = handle_esc(str, &result, 0);
-		else if (*str == '\'')
+		if (*str == '\'')
 		{
 			++str;
 			while (*str && *str != '\'')

@@ -155,4 +155,11 @@ int special_char_check(char curr_c, char next_c, char *str, t_tokens **head);
 
 //others
 // int apply_redirections(t_ast *node);
+
+//free
+void free_envp_list(t_list *envp);
+void ret_free_envp(char* str, t_list *envp, t_tokens *tokens);
+void	free_tokens(t_tokens *head);
+void free_tokens_ast(t_tokens *tokens, t_ast *ast_node);
+
 #endif

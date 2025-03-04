@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+         #
+#    By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 17:41:52 by aoo               #+#    #+#              #
-#    Updated: 2025/02/13 16:38:37 by aoo              ###   ########.fr        #
+#    Updated: 2025/03/03 15:57:29 by nsan             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ SRCS = main.c utils_str.c utils_ast.c utils_syntax_check.c \
 		utils_token.c ast_args.c node_branch.c ast_redirection.c ast_branch.c ast_utils.c \
 		utils.c redirection.c execution.c first_processing.c \
 		built_in/export.c built_in/env.c built_in/unset.c built_in/pwd.c built_in/echo.c\
-		built_in/cd.c built_in/history.c signals.c tokens.c
+		built_in/cd.c built_in/history.c signals.c tokens.c free_all.c
 
 OBJS = ${SRCS:.c=.o}
 

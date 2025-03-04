@@ -58,8 +58,6 @@ void	free_tokens(t_tokens *head)
 
 int main(int argc, char **argv, char **envpath)
 {
-	struct sigaction sa_int;
-	struct sigaction sa_newline;
 	t_ast *ast_node;
 	t_tokens	*tokens;
 	t_list	*envp;
@@ -80,8 +78,8 @@ int main(int argc, char **argv, char **envpath)
 			{
 				tokens = string_split(handle_env(input, envp, status));
 				tokenize_str(tokens);
-				prepare_heredoc(tokens, envp, status);
 				// print_tokens(tokens);
+				prepare_heredoc(tokens, envp, status);
 				if(check_grammar_syntax(tokens, input))
 				{
 					ast_node = malloc(sizeof(t_ast));
@@ -89,12 +87,12 @@ int main(int argc, char **argv, char **envpath)
 						printf("Error in main_ast malloc\n");
 					ast(ast_node, tokens);
 					// if(ast_node)
-						// print_ast(ast_node);
+					// 	print_ast(ast_node);
 					status = execute_ast(ast_node, envp, status);	
-					free_tokens(tokens);
-					free_ast(ast_node);
-					free(ast_node);
+					free_tokens_ast(tokens, ast_node);
 				}
+				else
+					return (ret_free_envp("<< exit >>\n", envp, tokens), 0);
 			}
 			else
 			{
@@ -102,14 +100,11 @@ int main(int argc, char **argv, char **envpath)
 				status = 1;
 				continue;
 			}
-		}
+		}	
 		else if(input == NULL)
-		{
-			printf("<< minishell has exited >>\n");
-			return (0);
-		}
+			return (ret_free_envp("<< exit >>\n", envp, NULL), 0);
 		else if(*input == '|')
-			printf("| cannot be at the beginning of cmd\n");
+			return (ret_free_envp("| cannot be at the beginning of cmd\n", envp, NULL), 0);
 	}
 	ft_lstclear(&envp, free_envp);
 	return (0);

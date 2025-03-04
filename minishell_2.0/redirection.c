@@ -66,6 +66,7 @@ char	*get_heredoc(char *eof, t_list *envp, int status)
 		temp = ft_strcjoin(temp, '\n');
 		free(line);
 	}
+	free(eof);
 	return (temp);
 }
 

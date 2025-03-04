@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:32:19 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/02 16:04:17 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/03 17:37:21 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_export(void *data)
+void print_export(void *data)
 {
-	t_envp	*env_var;
+	t_envp *env_var;
 
 	env_var = (t_envp *)data;
 	if (ft_strcmp(env_var->key, "_"))
@@ -26,9 +26,9 @@ void	print_export(void *data)
 	}
 }
 
-void	free_envp(void *data)
+void free_envp(void *data)
 {
-	t_envp	*env_var;
+	t_envp *env_var;
 
 	env_var = (t_envp *)data;
 	free(env_var->key);
@@ -36,9 +36,9 @@ void	free_envp(void *data)
 	free(env_var);
 }
 
-int	envp_arrsize(t_list *envp)
+int envp_arrsize(t_list *envp)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (envp)
@@ -50,11 +50,11 @@ int	envp_arrsize(t_list *envp)
 	return (i);
 }
 
-char	**envp_toarray(t_list *envp)
+char **envp_toarray(t_list *envp)
 {
-	t_envp	*envp_var;
-	char	**envp_array;
-	int		i;
+	t_envp *envp_var;
+	char **envp_array;
+	int i;
 
 	i = 0;
 	envp_array = (char **)malloc(sizeof(char *) * (envp_arrsize(envp) + 1));
@@ -72,10 +72,10 @@ char	**envp_toarray(t_list *envp)
 	return (envp_array[i] = NULL, envp_array);
 }
 
-t_list	*copy_envp(t_list *envp)
+t_list *copy_envp(t_list *envp)
 {
-	t_list	*result;
-	t_envp	*env_var;
+	t_list *result;
+	t_envp *env_var;
 
 	result = NULL;
 	while (envp)
@@ -89,14 +89,14 @@ t_list	*copy_envp(t_list *envp)
 	return (result);
 }
 
-void	sort_envp(t_list *envp)
+void sort_envp(t_list *envp)
 {
-	int		swapped;
-	void	*temp;
-	t_list	*current;
+	int swapped;
+	void *temp;
+	t_list *current;
 
 	if (!envp)
-		return ;
+		return;
 	swapped = 1;
 	while (swapped)
 	{
@@ -104,8 +104,8 @@ void	sort_envp(t_list *envp)
 		current = envp;
 		while (current && current->next)
 		{
-			if (ft_strcmp(((t_envp *)current->data)->key, \
-			((t_envp *)current->next->data)->key) > 0)
+			if (ft_strcmp(((t_envp *)current->data)->key,
+						  ((t_envp *)current->next->data)->key) > 0)
 			{
 				temp = current->data;
 				current->data = current->next->data;
@@ -117,18 +117,18 @@ void	sort_envp(t_list *envp)
 	}
 }
 
-void	export_noargs(t_list *envp)
+void export_noargs(t_list *envp)
 {
-	t_list	*copy;
+	t_list *copy;
 
 	copy = copy_envp(envp);
 	sort_envp(copy);
 	ft_lstiter(copy, print_export);
 }
 
-int	env_key_check(char *key)
+int env_key_check(char *key)
 {
-	char	*temp;
+	char *temp;
 
 	temp = key;
 	if (temp && *temp && !ft_isdigit(*temp))
@@ -143,11 +143,11 @@ int	env_key_check(char *key)
 	return (printf("export : not a valid identifier : %s\n", key), 1);
 }
 
-char	*ft_strcjoin(char *str, char c)
+char *ft_strcjoin(char *str, char c)
 {
-	char	*result;
-	int		char_len;
-	int		i;
+	char *result;
+	int char_len;
+	int i;
 
 	char_len = 2;
 	if (c == '\0')
@@ -167,11 +167,12 @@ char	*ft_strcjoin(char *str, char c)
 	return (result);
 }
 
-t_list	*init_envp(char **envpath)
+t_list *init_envp(char **envpath)
 {
-	t_list	*envp;
-	t_envp	*env_var;
-	char	*value;
+	t_list *envp;
+	t_list *new;
+	t_envp *env_var;
+	char *value;
 
 	envp = NULL;
 	while (*envpath)
@@ -179,8 +180,8 @@ t_list	*init_envp(char **envpath)
 		env_var = malloc(sizeof(t_envp));
 		if (!env_var)
 			return (NULL);
-		env_var->key = ft_strndup(*envpath, \
-						ft_strchr(*envpath, '=') - *envpath);
+		env_var->key = ft_strndup(*envpath,
+								  ft_strchr(*envpath, '=') - *envpath);
 		value = ft_strchr(*envpath, '=') + 1;
 		env_var->value = ft_strdup(value);
 		ft_lstadd_back(&envp, ft_lstnew(env_var));
@@ -189,9 +190,9 @@ t_list	*init_envp(char **envpath)
 	return (envp);
 }
 
-void	ft_strsncpy(char **dest, char **src, int n)
+void ft_strsncpy(char **dest, char **src, int n)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (src[i] && i < n)
@@ -203,20 +204,15 @@ void	ft_strsncpy(char **dest, char **src, int n)
 	}
 }
 
-int	is_in_quote(char *str)
+int is_in_quote(char *str)
 {
-	int	i;
-	int	in_quote;
+	int i;
+	int in_quote;
 
 	i = 0;
 	in_quote = 0;
 	while (str[i])
 	{
-		if (str[i] == '\\' && str[i + 1] && in_quote != '\'')
-		{
-			i += 2;
-			continue ;
-		}
 		is_quote("\'\"", str[i], &in_quote);
 		i++;
 	}
