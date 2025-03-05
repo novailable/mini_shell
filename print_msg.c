@@ -12,9 +12,25 @@
 
 #include "minishell.h"
 
-void print_heredoc_err(char *eof)
+void	print_heredoc_err(char *eof)
 {
-    ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", STDERR_FILENO);
-    ft_putstr_fd(eof, STDERR_FILENO);
-    ft_putstr_fd("')\n", STDERR_FILENO);
+	ft_putstr_fd("minishell: warning: here-document delimited by ",
+		STDERR_FILENO);
+	ft_putstr_fd("end-of-file (wanted `", STDERR_FILENO);
+	ft_putstr_fd (eof, STDERR_FILENO);
+	ft_putstr_fd ("')\n", STDERR_FILENO);
+}
+
+void	print_export(void *data)
+{
+	t_envp	*env_var;
+
+	env_var = (t_envp *)data;
+	if (ft_strcmp(env_var->key, "_"))
+	{
+		printf("deaclare -x %s", env_var->key);
+		if (env_var->value)
+			printf("=\"%s\"", env_var->value);
+		printf("\n");
+	}
 }

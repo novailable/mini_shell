@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:49:13 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/05 14:51:46 by marvin           ###   ########.fr       */
+/*   Updated: 2025/03/05 15:41:18 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,14 @@ void	free_tokens_ast(t_tokens *tokens, t_ast *ast_node)
 	free_tokens (tokens);
 	free_ast (ast_node);
 	free (ast_node);
+}
+
+void	free_envp(void *data)
+{
+	t_envp	*env_var;
+
+	env_var = (t_envp *)data;
+	free(env_var->key);
+	free(env_var->value);
+	free(env_var);
 }

@@ -133,9 +133,10 @@ char	**ft_split_2(char *str, char *delimiters, char *ignchars);
 int		is_quote(char *q_chars, char c, int *in_quote);
 void	ft_strsncpy(char **dest, char **src, int n);
 t_list	*init_envp(char **envpath);
-
+t_list	*init_env_empty(t_list *envp);
 char	*handle_env(char *str, t_list *envp, int status);
 char	*handle_quotes(char *str);
+int env_key_check(char *key);
 
 //signals
 void	signal_handling();

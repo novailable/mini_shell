@@ -20,8 +20,7 @@ void	create_add_token(t_tokens **head, char *str)
 		free(str);
 }
 
-
-int special_char_check(char curr_c, char next_c, char *str, t_tokens **head)
+int	special_char_check(char curr_c, char next_c, char *str, t_tokens **head)
 {
 	if (curr_c == next_c && curr_c != '|')
 		return (create_add_token(head, ft_strndup(str, 2)), 1);
