@@ -28,7 +28,8 @@
 
 # define PROMPT "\033[38;2;131;255;212mminishell % \001\033[0m\002"
 
-extern int g_sig_interruption;
+extern int g_sig_interrupt;
+
 //enum for tokenization
 typedef enum e_token_types
 {
@@ -96,6 +97,7 @@ int		pwd();
 int		cd(char **args, t_list *envp);
 int		env(t_list *envp);
 int		export(char **args, t_list *envp, int status);
+void	new_env(char *key, char *value, t_list **envp);
 t_list	*find_env(char *key, t_list *envp);
 char	*ft_getenv(char *key, t_list *envp);
 int		unset(char **args, t_list **envp);
@@ -122,11 +124,8 @@ int		execute_ast(t_ast *ast_node, t_list *envp, int status);
 // redirection
 int		redirection(char **redirect);
 char	*get_heredoc(char *eof, t_list *envp, int status);
-int	re_input(char *file);
-int	re_output(char *file, int append);
-int	re_heredoc(char *data);
-int redirection_in_heredoc(char **redirect, int i,int in_fd);
-int redirection_out_append(char **redirect, int i,int in_fd);
+int	redirection_in_heredoc(char **redirect, int i,int in_fd);
+int	redirection_out_append(char **redirect, int i,int in_fd);
 
 //shits
 char	**ft_split_2(char *str, char *delimiters, char *ignchars);
@@ -139,13 +138,20 @@ char	*handle_env(char *str, t_list *envp, int status);
 char	*handle_quotes(char *str);
 
 //signals
-void signal_handling();
+void	signal_handling();
 // void control_c(int sigint);
 void handle_signals();
 void handle_sigint(int sigint);
 void handle_sigint_process(int sigint);
 void handle_sigquit_process(int sigint);
 void handle_sigint_heredoc(int sigint);
+
+void	set_signal(void);
+void	set_signal_heredoc(void);
+void	stop_signal(void);
+void	default_signal(void);
+int		wait_signal_status(int status);
+
 
 //helpers
 int is_balanced_quotes(char *input);

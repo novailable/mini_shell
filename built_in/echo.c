@@ -29,5 +29,5 @@ int	echo_n(char **args, t_list *envp, int status)
 	}
 	if (n_line != 0)
 		printf("\n");
-	return (status);
+	return (0);
 }

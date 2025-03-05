@@ -7,7 +7,7 @@ char	*get_p_path(char *cmd, char *envp_path)
 	char	*path;
 	int		i;
 
-	if (!envp_path)
+	if (!envp_path || !ft_strncmp(cmd, ".", 1))
 		return (cmd);
 	paths = ft_split((envp_path), ":");
 	i = 0;
@@ -21,7 +21,6 @@ char	*get_p_path(char *cmd, char *envp_path)
 		path = NULL;
 		i++;
 	}
-	i = 0;
 	free_strs(paths);
 	if (!path)
 		return (cmd);
@@ -44,16 +43,19 @@ int	exec_cmd(char **args, t_list *envp)
 	return (status);
 }
 
-int	external(t_ast *l_node, t_list *envp)
+int	external(t_ast *l_node, int	*org_fd, t_list *envp)
 {
 	pid_t	pid;
 	int		status;
 
+	stop_signal();
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork operation failed!"), 1);
 	if (pid == 0)
 	{
+		(close(org_fd[0]), close(org_fd[1]));
+		default_signal();
 		if (l_node->args)
 		{
 			if (exec_cmd(l_node->args, envp) == -1)
@@ -68,10 +70,12 @@ int	external(t_ast *l_node, t_list *envp)
 		}
 	}
 	waitpid(pid, &status, 0);
-	return (WEXITSTATUS(status));
+	return (wait_signal_status(status));
+
+	return (wait_signal_status(status));
 }
 
-int	execution(t_ast *l_node, t_list *envp, int status)
+int	execution(t_ast *l_node, int *org_fd, t_list *envp, int status)
 {
 	char	**args;
 
@@ -102,50 +106,62 @@ int	execution(t_ast *l_node, t_list *envp, int status)
 	else if (!ft_strcmp(*args, "history"))
 		return (history_output());
 	else
-		return (external(l_node, envp));
+		return (external(l_node, org_fd, envp));
 }
-
-int	execute_pipe(t_ast *ast_node, int *org_fd, t_list *envp, int status)
+int execute_pipe(t_ast *ast_node, int *org_fd, t_list *envp, int status)
 {
-	pid_t	pid;
-	int		pipe_fds[2];
+	pid_t pid;
+	int pipe_fds[2];
+	int exit_status;
 
-	if (ast_node && ast_node->left)
+	if (!ast_node && !ast_node->left)
+		return (status);
+	if (pipe(pipe_fds) == -1)
+		return (perror("minishell : pipe failed"), 1);
+	pid = fork();
+	if (pid == -1)
+		return (perror("minishell : fork failed"), 1);
+	if (pid == 0)
 	{
-		if (pipe(pipe_fds) == -1)
-			return (perror("minishell : pipe failed"), 1);
-		pid = fork();
-		if (pid == -1)
-			return (perror("minishell : fork failed"), 1);
-		if (pid == 0)
-		{
-			if (ast_node->right)
-				(dup2(pipe_fds[1], STDOUT_FILENO), \
-				close(pipe_fds[1]), close(pipe_fds[0]));
-			(close(org_fd[0]), close(org_fd[1]));
-			exit(execution(ast_node->left, envp, status));
-		}
+		default_signal();
+		(close(org_fd[0]), close(org_fd[1]));
 		if (ast_node->right)
-			(dup2(pipe_fds[0], STDIN_FILENO), \
-			close(pipe_fds[1]), close(pipe_fds[0]));
-		execute_pipe(ast_node->right, org_fd, envp, status);
-		waitpid(pid, &status, 0);
+			dup2(pipe_fds[1], STDOUT_FILENO);
+		(close(pipe_fds[1]), close(pipe_fds[0]));
+		exit(execution(ast_node->left, org_fd, envp, status));
 	}
-	return (status);
+	if (ast_node->right)
+		dup2(pipe_fds[0], STDIN_FILENO);
+	(close(pipe_fds[1]), close(pipe_fds[0]));
+	if (ast_node->right)
+		exit_status = execute_pipe(ast_node->right, org_fd, envp, status);
+	else
+	{
+		waitpid(pid, &status, 0);
+		exit_status = status;
+	}
+	waitpid(pid, &status, 0);
+	if (!ast_node->right)
+		return(exit_status);
+	return (wait_signal_status(exit_status));
 }
 
 int	execute_ast(t_ast *ast_node, t_list *envp, int status)
 {
 	int	org_fd[2];
 
+	stop_signal();
 	org_fd[0] = dup(STDIN_FILENO);
 	org_fd[1] = dup(STDOUT_FILENO);
 	if (ast_node && ast_node->right)
+	{
 		status = execute_pipe(ast_node, org_fd, envp, status);
+	}
 	else if (ast_node && ast_node->left)
-		status = execution(ast_node->left, envp, status);
+		status = execution(ast_node->left, org_fd, envp, status);
 	dup2(org_fd[0], STDIN_FILENO);
 	dup2(org_fd[1], STDOUT_FILENO);
 	(close(org_fd[0]), close(org_fd[1]));
+	set_signal();
 	return (status);
 }

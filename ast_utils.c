@@ -34,7 +34,7 @@ void	print_ast(t_ast *ast_node)
 	{
 		printf("RIGHT\n");
 		print_ast(ast_node->right);
-	}
+	}  
 }
 
 void	free_ast(t_ast *ast_node)

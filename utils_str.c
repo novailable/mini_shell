@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_str.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 17:01:19 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/04 18:31:19 by nsan             ###   ########.fr       */
+/*   Updated: 2025/03/05 11:53:10 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,14 @@ int quote_check(const char *input_str)
 	return (0);
 }
 
-
-void	handle_newline(char *buf, int sz)
+void handle_newline(char *buf, int sz)
 {
-	int	i;
+	int i;
 
 	i = -1;
-	while (++i < sz)
+	while(++i < sz)
 	{
-		if (buf[i] != '\n')
+		if(buf[i] != '\n')
 			write(1, &buf[i], 1);
 		else
 			write(1, "\n", 1);

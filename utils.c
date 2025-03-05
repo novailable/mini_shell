@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 13:32:19 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/04 22:34:29 by marvin           ###   ########.fr       */
+/*   Updated: 2025/03/04 20:13:43 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ void free_envp(void *data)
 {
 	t_envp *env_var;
 
-	if(!data)
-		return ;
 	env_var = (t_envp *)data;
 	free(env_var->key);
 	free(env_var->value);
@@ -169,24 +167,38 @@ char *ft_strcjoin(char *str, char c)
 	return (result);
 }
 
-t_list *init_envp(char **envpath)
+t_list	*init_env_empty(t_list *envp)
 {
-	t_list *envp;
-	t_list *new;
-	t_envp *env_var;
-	char *value;
+	char	*pwd;
 
 	envp = NULL;
+	pwd = getcwd(NULL, 0);
+	new_env("PWD", pwd, &envp);
+	new_env("SHLVL", "1", &envp);
+	new_env("_", "./minishell", &envp);
+	free(pwd);
+	return (envp);
+}
+
+t_list	*init_envp(char **envpath)
+{
+	t_list	*envp;
+	char	*key;
+	char	*value;
+
+	envp = NULL;
+	if (!envpath || !*envpath)
+		return (init_env_empty(envp));
 	while (*envpath)
 	{
-		env_var = malloc(sizeof(t_envp));
-		if (!env_var)
-			return (NULL);
-		env_var->key = ft_strndup(*envpath,
-								  ft_strchr(*envpath, '=') - *envpath);
+		key = ft_strndup(*envpath, ft_strchr(*envpath, '=') - *envpath);
 		value = ft_strchr(*envpath, '=') + 1;
-		env_var->value = ft_strdup(value);
-		ft_lstadd_back(&envp, ft_lstnew(env_var));
+		if (!ft_strcmp(key, "SHLVL"))
+			value = ft_itoa(atoi(value) + 1);
+		else
+			value = ft_strdup(value);
+		new_env(key, value, &envp);
+		(free(key), free(value));
 		envpath++;
 	}
 	return (envp);

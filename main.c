@@ -43,6 +43,7 @@ void	print_tokens(t_tokens *head)
 	printf("\n");
 }
 
+
 void	free_tokens(t_tokens *head)
 {
 	t_tokens	*temp;
@@ -64,13 +65,18 @@ int main(int argc, char **argv, char **envpath)
 	int		status;
 
 	((void)argc, (void)argv);
-	handle_signals();
+	
 	envp = init_envp(envpath);
 	status = 0;
 	while (1)
 	{
-		signal(SIGINT, handle_sigint);
+		set_signal();
 		char *input = readline(PROMPT);
+		if (g_sig_interrupt)
+		{
+			status = 130;
+			g_sig_interrupt = 0;
+		}
 		if (input && *input != '|' && *input != '\0')
 		{
 			history_write(input);
@@ -78,16 +84,23 @@ int main(int argc, char **argv, char **envpath)
 			{
 				tokens = string_split(handle_env(input, envp, status));
 				tokenize_str(tokens);
-				// print_tokens(tokens);
 				prepare_heredoc(tokens, envp, status);
-				if(check_grammar_syntax(tokens, input) == 1)
+				if (g_sig_interrupt)
 				{
+					status = 130;
+					g_sig_interrupt = 0;
+					continue ;
+				}
+				// print_tokens(tokens);
+				if(check_grammar_syntax(tokens, input))
+				{
+					
 					ast_node = malloc(sizeof(t_ast));
 					if (!ast_node)
 						printf("Error in main_ast malloc\n");
 					ast(ast_node, tokens);
 					// if(ast_node)
-					// 	print_ast(ast_node);
+						// print_ast(ast_node);
 					status = execute_ast(ast_node, envp, status);	
 					free_tokens_ast(tokens, ast_node);
 				}
@@ -96,11 +109,12 @@ int main(int argc, char **argv, char **envpath)
 			}
 			else
 			{
+				free(input);
 				write(2, "minishell: unclosed quote\n", 27);
 				status = 1;
 				continue;
 			}
-		}
+		}	
 		else if(input == NULL)
 			return (ret_free_envp("<< exit >>\n", envp, NULL), 0);
 		else if(*input == '|')

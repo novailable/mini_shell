@@ -6,13 +6,13 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 21:18:45 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/02 16:01:48 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/04 20:03:21 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	new_env(char *key, char *value, t_list *envp)
+void	new_env(char *key, char *value, t_list **envp)
 {
 	t_envp	*env_var;
 
@@ -21,7 +21,7 @@ void	new_env(char *key, char *value, t_list *envp)
 		return ;
 	env_var->key = ft_strdup(key);
 	env_var->value = ft_strdup(value);
-	ft_lstadd_back(&envp, ft_lstnew((void *)env_var));
+	ft_lstadd_back(envp, ft_lstnew((void *)env_var));
 }
 
 t_list	*find_env(char *key, t_list *envp)
@@ -96,13 +96,12 @@ int	export(char **args, t_list *envp, int status)
 	while (args[++i])
 	{
 		get_keypair(args[i], keypair, envp, status);
-		
 		if (!env_key_check(keypair[0]))
 		{
 			if (find_env(keypair[0], envp))
 				update_env(keypair[1], find_env(keypair[0], envp));
 			else
-				new_env(keypair[0], keypair[1], envp);
+				new_env(keypair[0], keypair[1], &envp);
 		}
 		else
 			status = 1;
