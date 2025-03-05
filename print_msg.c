@@ -1,43 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_str.c                                        :+:      :+:    :+:   */
+/*   print_msg.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/11 17:01:19 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/05 15:11:16 by marvin           ###   ########.fr       */
+/*   Created: 2025/03/05 14:59:23 by marvin            #+#    #+#             */
+/*   Updated: 2025/03/05 14:59:23 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	quote_check(const char *input_str)
+void print_heredoc_err(char *eof)
 {
-	int	flag;
-	int	i;
-
-	flag = 0;
-	i = 0;
-	while (input_str[i])
-	{
-		if (input_str[i] == '\"')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-void	handle_newline(char *buf, int sz)
-{
-	int	i;
-
-	i = -1;
-	while (++i < sz)
-	{
-		if (buf[i] != '\n')
-			write(1, &buf[i], 1);
-		else
-			write(1, "\n", 1);
-	}
+    ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", STDERR_FILENO);
+    ft_putstr_fd(eof, STDERR_FILENO);
+    ft_putstr_fd("')\n", STDERR_FILENO);
 }

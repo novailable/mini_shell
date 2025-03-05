@@ -26,15 +26,13 @@ char	*get_heredoc(char *eof, t_list *envp, int status)
 			return (free(temp), free(eof), NULL);
 		if (!line)
 		{
-			ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", STDERR_FILENO);
-			ft_putstr_fd(eof, STDERR_FILENO);
-			ft_putstr_fd("')\n", STDERR_FILENO);
-			break;
+			print_heredoc_err(eof);
+			break ;
 		}
 		if (ft_strcmp(line, eof) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
 		temp = ft_strjoin(temp, handle_env(line, envp, status), 1, 1);
 		temp = ft_strcjoin(temp, '\n');
@@ -44,26 +42,25 @@ char	*get_heredoc(char *eof, t_list *envp, int status)
 	return (temp);
 }
 
-int redirection(char **redirect)
+int	redirection(char **redirect)
 {
 	int	in_fd;
 	int	i;
 
-    i = 0;
+	i = 0;
 	in_fd = -1;
-    while (redirect && redirect[i])
-    {
-        in_fd = redirection_in_heredoc(redirect, i, in_fd);
-        i++;
-    }
-    i = 0;
-    while (redirect[i])
-    {
-        redirection_out_append(redirect, i, in_fd);
-        i++;
-    }
-    if (in_fd > 0)
-        (dup2(in_fd, STDIN_FILENO), close(in_fd));
-    return 0;
+	while (redirect && redirect[i])
+	{
+		in_fd = redirection_in_heredoc(redirect, i, in_fd);
+		i++;
+	}
+	i = 0;
+	while (redirect[i])
+	{
+		redirection_out_append(redirect, i, in_fd);
+		i++;
+	}
+	if (in_fd > 0)
+		(dup2(in_fd, STDIN_FILENO), close(in_fd));
+	return (0);
 }
-

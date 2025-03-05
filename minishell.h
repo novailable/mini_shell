@@ -63,8 +63,9 @@ typedef struct s_envp
 	char			*value;
 }	t_envp;
 
+//strings and tokens
 t_tokens	*string_split(char *input);
-t_tokens *create_new_token(char *str);
+t_tokens	*create_new_token(char *str);
 void tokenize_str(t_tokens *head);
 void 	ast(t_ast *ast_node, t_tokens *whole_list);
 int	check_grammar_syntax(t_tokens *head, char *input);
@@ -130,7 +131,6 @@ int	redirection_out_append(char **redirect, int i,int in_fd);
 //shits
 char	**ft_split_2(char *str, char *delimiters, char *ignchars);
 int		is_quote(char *q_chars, char c, int *in_quote);
-// char	*first_processing(char *str, t_list *envp, int status);
 void	ft_strsncpy(char **dest, char **src, int n);
 t_list	*init_envp(char **envpath);
 
@@ -166,5 +166,8 @@ void free_envp_list(t_list *envp);
 void ret_free_envp(char* str, t_list *envp, t_tokens *tokens);
 void	free_tokens(t_tokens *head);
 void free_tokens_ast(t_tokens *tokens, t_ast *ast_node);
+
+//print_message
+void print_heredoc_err(char *eof);
 
 #endif

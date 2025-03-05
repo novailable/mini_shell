@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 18:14:31 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/04 18:30:13 by nsan             ###   ########.fr       */
+/*   Updated: 2025/03/05 14:54:43 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	re_heredoc(char *data)
 	return (close(fd_pipe[1]), fd_pipe[0]);
 }
 
-int	redirection_in_heredoc(char **redirect, int i,int in_fd)
+int	redirection_in_heredoc(char **redirect, int i, int in_fd)
 {
 	if (!ft_strcmp(redirect[i], "<") && redirect[i + 1])
 	{
@@ -79,7 +79,7 @@ int	redirection_in_heredoc(char **redirect, int i,int in_fd)
 	return (in_fd);
 }
 
-int	redirection_out_append(char **redirect, int i,int in_fd)
+int	redirection_out_append(char **redirect, int i, int in_fd)
 {
 	if (!ft_strcmp(redirect[i], ">") && redirect[i + 1])
 	{

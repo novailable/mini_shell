@@ -43,28 +43,14 @@ void	print_tokens(t_tokens *head)
 	printf("\n");
 }
 
-void	free_tokens(t_tokens *head)
-{
-	t_tokens	*temp;
-
-	while (head)
-	{
-		temp = head;
-		head = head->next;
-		free(temp->str);
-		free(temp);
-	}
-}
-
 int main(int argc, char **argv, char **envpath)
 {
-	t_ast *ast_node;
+	t_ast		*ast_node;
 	t_tokens	*tokens;
-	t_list	*envp;
-	int		status;
+	t_list		*envp;
+	int			status;
 
 	((void)argc, (void)argv);
-	
 	envp = init_envp(envpath);
 	status = 0;
 	while (1)
@@ -93,7 +79,6 @@ int main(int argc, char **argv, char **envpath)
 				// print_tokens(tokens);
 				if(check_grammar_syntax(tokens, input))
 				{
-					
 					ast_node = malloc(sizeof(t_ast));
 					if (!ast_node)
 						printf("Error in main_ast malloc\n");

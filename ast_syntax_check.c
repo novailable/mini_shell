@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:54:08 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/04 22:02:59 by marvin           ###   ########.fr       */
+/*   Updated: 2025/03/05 14:49:16 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	syntax_redirect_error(t_tokens *temp)
 	temp->tok_types == T_APPEND || \
 	temp->tok_types == T_HERE_DOCS)
 	{
-		if(!temp->next)
+		if (!temp->next)
 		{
 			printf("minishell: syntax error near unexpected token `newline'\n");
 			return (0);
