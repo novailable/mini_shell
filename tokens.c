@@ -28,34 +28,39 @@ int	special_char_check(char curr_c, char next_c, char *str, t_tokens **head)
 		return (create_add_token(head, ft_strndup(str, 1)), 0);
 }
 
+void	handle_space(char *input, t_tokens **head, char **start, int i)
+{
+	create_add_token(head, ft_strndup(*start, (input + i) - *start));
+	*start = input + i + 1;
+}
+
+void	handle_special_char(char *input, t_tokens **head, char **start, int *i)
+{
+	create_add_token(head, ft_strndup(*start, (input + *i) - *start));
+	*start = input + *i;
+	*i += special_char_check(input[*i], input[*i + 1], *start, head);
+	*start = input + *i + 1;
+}
+
 t_tokens	*string_split(char *input)
 {
-	int			i;
 	t_tokens	*head;
 	char		*start;
 	int			start_quote;
+	int			i;
 
-	i = 0;
 	head = NULL;
-	start_quote = 0;
 	start = input;
-	while (input[i])
+	start_quote = 0;
+	i = -1;
+	while (input[++i])
 	{
 		if (input[i] == '\\' && input[i + 1] && start_quote != '\'')
-			i += 2;
+			i++;
 		if (!is_quote("\"\'", input[i], &start_quote) && input[i] == ' ')
-		{
-			create_add_token(&head, ft_strndup(start, (input + i) - start));
-			start = input + i + 1;
-		}
+			handle_space(input, &head, &start, i);
 		else if (ft_strchr("<>|", input[i]) && !start_quote)
-		{
-			create_add_token(&head, ft_strndup(start, (input + i) - start));
-			start = input + i;
-			i += special_char_check(input[i], input[i + 1], start, &head);
-			start = input + i + 1;
-		}
-		i++;
+			handle_special_char(input, &head, &start, &i);
 	}
 	if (start && *start)
 		create_add_token(&head, ft_strdup(start));
