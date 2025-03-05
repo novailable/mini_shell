@@ -44,8 +44,6 @@ char	*get_heredoc(char *eof, t_list *envp, int status)
 	return (temp);
 }
 
-
-// Apply redirections using the prepared heredocs
 int redirection(char **redirect)
 {
 	int	in_fd;

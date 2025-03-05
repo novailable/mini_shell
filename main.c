@@ -43,7 +43,6 @@ void	print_tokens(t_tokens *head)
 	printf("\n");
 }
 
-
 void	free_tokens(t_tokens *head)
 {
 	t_tokens	*temp;
