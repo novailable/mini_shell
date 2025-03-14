@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_exe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 19:02:13 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/13 21:53:50 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/14 09:55:04 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	exec_cmd(char **args, t_core *core)
 	path_status = get_p_path(args[0], ft_getenv("PATH", core->envp), &path);
 	if (path_status != 0)
 		(free_core(core), exit(path_status));
-	// printf("path : %s\n", path);
 	envp_array = envp_toarray(core->envp);
 	if (execve(path, args, envp_array) == -1)
 	{
@@ -57,7 +56,9 @@ int	external(t_ast *l_node, int	*org_fd, t_core *core)
 		}
 	}
 	waitpid(pid, &status, 0);
-	return (signal_status(status));
+	if (core->single_time)
+		return (signal_print(status));
+	return (signal_pipe_exit(status, core));
 }
 
 int	execution_cmd(t_ast *l_node, t_core *core, int *org_fd)
@@ -86,6 +87,7 @@ int	execution_cmd(t_ast *l_node, t_core *core, int *org_fd)
 	else
 		return (external(l_node, org_fd, core));
 }
+
 
 void	update_udscore_env(t_ast *l_node, t_core *core)
 {

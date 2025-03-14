@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_signal.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:43:30 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/13 21:56:26 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/14 10:00:50 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,22 @@ int	signal_print(int status)
 			write(2, "Quit\n", 5);
 		}
 	}
+	else if (WIFEXITED(status))
+		status = WEXITSTATUS(status);
+	return (status);
+}
+
+int	signal_pipe_exit(int status, t_core *core)
+{
+	pid_t	pid;
+
+	pid = core->pid;
+	if (WIFSIGNALED(status))
+	{
+		free_core(core);
+		kill(pid, WTERMSIG(status));
+	}
+	else if (WIFEXITED(status))
+		status = WEXITSTATUS(status);
 	return (status);
 }

@@ -196,6 +196,7 @@ int			re_spec_in(char *file, int *in_fd);
 int			get_interrupt(t_core *core);
 int			signal_status(int status);
 int			signal_print(int status);
+int			signal_pipe_exit(int status, t_core *core);
 
 // built-in/env
 int			env(t_list *envp);

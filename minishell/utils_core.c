@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_core.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 19:00:59 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/13 15:58:57 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/14 09:58:34 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,6 @@ t_core	*init_core(char **envpath)
 									"/.minihistory", 0, 0);
 	core->status = 0;
 	core->single_time = 1;
+	core->pid = -1;
 	return (core);
 }
