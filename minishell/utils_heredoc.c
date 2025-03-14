@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:42:22 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/10 20:33:06 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/14 10:38:26 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@ char	*get_eof(char *eof, int quote)
 			temp = ft_strndup(temp, eof + i - temp);
 			result = ft_strjoin(result, handle_dollar(temp, (eof[i] == '\"' \
 													|| eof[i] == '\'')), 1, 1);
+			free(temp);
 		}
 		else
 			result = ft_strcjoin(result, eof[i++]);
 	}
-	temp = handle_quotes(result);
-	return (free(result), temp);
+	return (temp = handle_quotes(result), free(result), temp);
 }
 
 char	*get_heredoc(char *eof, int quote)

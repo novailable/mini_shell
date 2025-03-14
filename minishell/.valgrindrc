@@ -1,4 +1,4 @@
---track-fds=yes
+--track-fds=no
 --leak-check=full
 --track-origins=yes
 --trace-children=yes

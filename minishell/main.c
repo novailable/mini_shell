@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:51:21 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/13 15:31:59 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/14 10:31:53 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	main(int argc, char **argv, char **envpath)
 			continue ;
 		if (init_ast(core) && core->ast)
 		{
-			// print_ast(core->ast);
+			print_ast(core->ast);
 			execute_ast(core);
 			free_ast(&core->ast);
 		}

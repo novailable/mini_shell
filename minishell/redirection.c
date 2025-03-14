@@ -25,7 +25,7 @@ int	handle_in(char **redirect, int *in_fd)
 	{
 		if (*in_fd > 0)
 			close(*in_fd);
-		if (*(redirect + 1) && re_heredoc(*(redirect + 1), in_fd) == -1)
+		if (re_heredoc(*(redirect + 1), in_fd) == -1)
 			return (-1);
 	}
 	return (0);
