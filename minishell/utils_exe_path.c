@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_exe_path.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 19:01:58 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/13 22:03:54 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/14 11:28:20 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,9 @@ int	find_path(char *cmd, char *envp_path, char **path)
 	int		i;
 
 	if (!ft_strcmp(cmd, "."))
-		return (print_err_msg(cmd, "filename argument required\n", NULL), 2);
+		return (print_err_msg(cmd, ": filename argument required\n", NULL), 2);
+	if (!ft_strcmp(cmd, ".."))
+		return (print_err_msg(cmd, ": command not found\n", NULL), 127);
 	i = 0;
 	e_paths = ft_split(envp_path, ":");
 	while (e_paths[i])

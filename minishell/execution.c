@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:51:10 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/13 21:51:49 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/14 11:33:07 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ pid_t	child_process_execution(t_ast *ast_node, t_core *core, int *pipe_fds,
 int	signal_print_check(t_ast *ast_node)
 {
 	return (ast_node->left->args && ast_node->left->args[0] && \
-			ft_strcmp(ast_node->left->args[0], "exit"));
+			(ft_strcmp(ast_node->left->args[0], "exit") && \
+			ft_strcmp(ast_node->left->args[0], ".")));
 }
 
 int	execute_pipe(t_ast *ast_node, t_core *core, int *org_fd)
@@ -99,7 +100,8 @@ void	execute_ast(t_core *core)
 		core->single_time = 1;
 		update_udscore_env(ast_node->left, core);
 		core->status = execution_cmd(ast_node->left, core, org_fd);
-		signal_print(signal_status(core->status));
+		if (signal_print_check(ast_node))
+			signal_print(signal_status(core->status));
 	}
 	reset_close_fd(org_fd, 1, 1);
 	(signal(SIGINT, handle_sigint), signal(SIGQUIT, SIG_IGN));

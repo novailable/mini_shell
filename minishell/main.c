@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:51:21 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/14 10:31:53 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/14 11:39:18 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ int	init_token(t_core *core)
 		core->status = 2;
 		return (free_tokens(&core->tokens), 1);
 	}
+	core->status = 0;
 	return (0);
 }
 
@@ -117,7 +118,7 @@ int	main(int argc, char **argv, char **envpath)
 			continue ;
 		if (init_ast(core) && core->ast)
 		{
-			print_ast(core->ast);
+			// print_ast(core->ast);
 			execute_ast(core);
 			free_ast(&core->ast);
 		}

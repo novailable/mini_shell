@@ -172,7 +172,7 @@ char		**envp_toarray(t_list *envp);
 int			envp_arrsize(t_list *envp);
 
 // utils_exe.c
-void		exec_cmd(char **args, t_core *core);
+void		exec_cmd(char **args, char *path, t_core *core);
 int			external(t_ast *l_node, int *org_fd, t_core *core);
 int			execution_cmd(t_ast *l_node, t_core *core, int *org_fd);
 

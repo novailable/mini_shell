@@ -3,25 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   utils_exe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 19:02:13 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/13 21:53:50 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/14 11:47:53 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exec_cmd(char **args, t_core *core)
+void	exec_cmd(char **args, char *path, t_core *core)
 {
-	char	*path;
-	int		path_status;
 	char	**envp_array;
 
-	path_status = get_p_path(args[0], ft_getenv("PATH", core->envp), &path);
-	if (path_status != 0)
-		(free_core(core), exit(path_status));
-	// printf("path : %s\n", path);
 	envp_array = envp_toarray(core->envp);
 	if (execve(path, args, envp_array) == -1)
 	{
@@ -42,8 +36,13 @@ int	external(t_ast *l_node, int	*org_fd, t_core *core)
 {
 	pid_t	pid;
 	int		status;
+	char	*path;
+	int		path_status;
 
 	(signal(SIGINT, SIG_IGN), signal(SIGQUIT, SIG_IGN));
+	path_status = get_p_path(l_node->args[0], ft_getenv("PATH", core->envp), &path);
+	if (path_status != 0)
+		return (path_status);
 	pid = fork();
 	if (pid == -1)
 		return (perror("fork operation failed!"), 1);
@@ -52,11 +51,10 @@ int	external(t_ast *l_node, int	*org_fd, t_core *core)
 		(close(org_fd[0]), close(org_fd[1]));
 		(signal(SIGINT, SIG_DFL), signal(SIGQUIT, SIG_DFL));
 		if (l_node->args)
-		{
-			exec_cmd(l_node->args, core);
-		}
+			exec_cmd(l_node->args, path, core);
 	}
 	waitpid(pid, &status, 0);
+	free(path);
 	return (signal_status(status));
 }
 
