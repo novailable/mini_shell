@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:28:37 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/13 15:37:22 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/15 07:47:47 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ bool	ft_atoll_vali_ok(const char *nptr, long long *result)
 	while (*nptr == ' ' || (*nptr >= '\t' && *nptr <= '\r'))
 		nptr++;
 	nptr += change_sign(nptr, &sign);
+	while (*nptr == ' ' || (*nptr >= '\t' && *nptr <= '\r'))
+		nptr++;
 	if (!*nptr)
 		return (false);
 	while (*nptr >= '0' && *nptr <= '9')
@@ -60,6 +62,7 @@ int	get_exit_status(char *args, t_core *core, int *numeric)
 		{
 			core->status = 2;
 			*numeric = 0;
+			print_err_msg(args, ": numeric argument required\n", NULL);
 			return (2);
 		}
 		else

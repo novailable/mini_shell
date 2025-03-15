@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 04:56:28 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/13 12:30:44 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/15 07:49:34 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ int	cd(char **args, t_list *envp)
 		return (free(o_pwd), \
 				print_err_msg("cd: HOME not set\n", NULL, NULL), 1);
 	if (chdir(new_path) == -1)
-		return (print_err_msg("'", new_path, "'"), perror(" "), 1);
+		return (free(o_pwd), \
+		print_err_msg("'", new_path, "'"), perror(" "), 1);
 	update_env_pwds(envp, o_pwd);
 	free(o_pwd);
 	return (0);
