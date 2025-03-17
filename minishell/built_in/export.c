@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 21:18:45 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/12 15:13:08 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/16 21:18:12 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,24 +64,25 @@ void	print_export(void *data)
 	}
 }
 
-int	export(char **args, t_list *envp, int status)
+int	export(char **args, t_core *core)
 {
 	int		i;
 	char	*keypair[2];
+	int		status;
 
 	i = 0;
 	status = 0;
 	if (!args[1])
-		export_noargs(envp);
+		export_noargs(core->envp);
 	while (args[++i])
 	{
-		get_keypair(args[i], keypair);
+		get_keypair(args[i], keypair, core);
 		if (!env_key_check(keypair[0], args[i]))
 		{
-			if (find_env(keypair[0], envp))
-				update_env(keypair[1], find_env(keypair[0], envp));
+			if (find_env(keypair[0], core->envp))
+				update_env(keypair[1], find_env(keypair[0], core->envp));
 			else
-				new_env(keypair[0], keypair[1], &envp);
+				new_env(keypair[0], keypair[1], &core->envp);
 		}
 		else
 			status = 1;

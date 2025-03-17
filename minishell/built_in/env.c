@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 21:18:55 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/09 10:28:08 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/16 20:49:32 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,15 @@ void	print_env(void *data)
 		printf("%s=%s\n", env_var->key, env_var->value);
 }
 
-int	env(t_list *envp)
+int	env(char **args, t_core *core)
 {
-	return (ft_lstiter(envp, print_env), 0);
+	size_t	size;
+
+	size = 0;
+	while (args[size])
+		size++;
+	if (size > 1)
+		return (print_err_msg(args[1], \
+				": no such file or directory\n", NULL), 127);
+	return (ft_lstiter(core->envp, print_env), 0);
 }

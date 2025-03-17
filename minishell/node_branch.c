@@ -29,9 +29,9 @@ t_tokens	*parse_cmd(t_ast *left_node, t_tokens *whole_list)
 	current = whole_list;
 	while (current && current->tok_types != T_PIPE)
 	{
-		if (current->tok_types == T_WORD)
+		if (left_node->args && current->tok_types == T_WORD)
 			(left_node->args)[i++] = ft_strdup(current->str);
-		else if (is_redirect_type(current->tok_types))
+		else if (left_node->redirect && is_redirect_type(current->tok_types))
 		{
 			(left_node->redirect)[j++] = ft_strdup(current->str);
 			if (current->next && current->next->tok_types == T_WORD)

@@ -20,14 +20,14 @@ void	iterate_list(t_tokens *whole_list, int *redirect_len)
 	while (current && current->tok_types != T_PIPE)
 	{
 		if (current->tok_types == T_REDIRECT_IN && \
-			current->next->tok_types == T_REDIRECT_OUT)
+			current->next && current->next->tok_types == T_REDIRECT_OUT)
 			*redirect_len += 1;
 		else if (current->tok_types == T_REDIRECT_OUT \
 		|| current->tok_types == T_REDIRECT_IN \
 		|| current->tok_types == T_HERE_DOCS \
 		|| current->tok_types == T_APPEND)
 		{
-			if (current->next->tok_types == T_WORD)
+			if (current->next && current->next->tok_types == T_WORD)
 			{
 				*redirect_len += 2;
 				current = current->next;

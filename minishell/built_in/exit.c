@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 17:28:37 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/15 07:47:47 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/16 20:29:06 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ bool	ft_atoll_vali_ok(const char *nptr, long long *result)
 	while (*nptr == ' ' || (*nptr >= '\t' && *nptr <= '\r'))
 		nptr++;
 	nptr += change_sign(nptr, &sign);
-	while (*nptr == ' ' || (*nptr >= '\t' && *nptr <= '\r'))
-		nptr++;
 	if (!*nptr)
 		return (false);
 	while (*nptr >= '0' && *nptr <= '9')
@@ -48,7 +46,6 @@ bool	ft_atoll_vali_ok(const char *nptr, long long *result)
 		nptr++;
 	if (*nptr != '\0')
 		return (false);
-	
 	return (*result = i * sign, true);
 }
 
@@ -60,16 +57,13 @@ int	get_exit_status(char *args, t_core *core, int *numeric)
 	{
 		if (!ft_atoll_vali_ok(args, &num))
 		{
+			print_err_msg("exit: ", args, ": numeric argument required\n");
 			core->status = 2;
 			*numeric = 0;
-			print_err_msg(args, ": numeric argument required\n", NULL);
 			return (2);
 		}
 		else
-		{
-			// printf("num : %lld\n", num);
 			return (*numeric = 1, (unsigned int) num % 256);
-		}
 	}
 	*numeric = 1;
 	return (core->status);

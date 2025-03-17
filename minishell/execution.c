@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:51:10 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/14 11:33:07 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/16 17:32:57 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ int	signal_print_check(t_ast *ast_node)
 {
 	return (ast_node->left->args && ast_node->left->args[0] && \
 			(ft_strcmp(ast_node->left->args[0], "exit") && \
-			ft_strcmp(ast_node->left->args[0], ".")));
+			ft_strcmp(ast_node->left->args[0], ".") && \
+			ft_strcmp(ast_node->left->args[0], "ls")));
 }
 
 int	execute_pipe(t_ast *ast_node, t_core *core, int *org_fd)

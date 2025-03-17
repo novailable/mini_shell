@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_all.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 15:49:13 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/10 17:49:44 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/16 21:46:54 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,17 @@ void	free_ast(t_ast **ast)
 	*ast = NULL;
 }
 
-void	free_tokens(t_tokens **head)
+void	free_tokens(t_tokens **tokens)
 {
 	t_tokens	*temp;
 
-	while (*head)
+	while (*tokens)
 	{
-		temp = *head;
-		*head = (*head)->next;
-		free(temp->str);
-		free(temp);
-		temp = NULL;
+		temp = (*tokens)->next;
+		if ((*tokens)->str)
+			free((*tokens)->str);
+		free(*tokens);
+		*tokens = temp;
 	}
 }
 
@@ -85,16 +85,8 @@ void	free_core(t_core *core)
 		free_ast(&core->ast);
 	if (core->envp)
 		ft_lstclear(&core->envp, free_envp);
-	if (core->input && *core->input)
-	{
-		free(core->input);
-		core->input = NULL;
-	}
-	if (core->history_path && *core->history_path)
-	{
-		free(core->history_path);
-		core->history_path = NULL;
-	}
+	if (core->input)
+		free_str(&core->input);
 	free(core);
 	rl_clear_history();
 }

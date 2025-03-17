@@ -1,36 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strstr.c                                        :+:      :+:    :+:   */
+/*   free_str.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/31 16:31:50 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/15 19:31:49 by aoo              ###   ########.fr       */
+/*   Created: 2025/03/16 17:16:54 by aoo               #+#    #+#             */
+/*   Updated: 2025/03/16 17:17:58 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strstr(const char *big, const char *little)
+void	free_str(char **str)
 {
-	size_t		i;
-	const char	*start;
-
-	if (little && !*little)
-		return ((char *)big);
-	while (big && *big)
-	{
-		i = 0;
-		start = big;
-		while (little[i] && *big == little[i])
-		{
-			i++;
-			big++;
-		}
-		if (little[i] == 0)
-			return ((char *)start);
-		big = start + 1;
-	}
-	return (NULL);
+	if (*str)
+		free(*str);
+	*str = NULL;
 }

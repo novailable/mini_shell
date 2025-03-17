@@ -27,7 +27,7 @@ int	args_list_len_alloc(t_tokens *whole_list, char ***args_list)
 		current->tok_types == T_REDIRECT_IN || \
 		current->tok_types == T_APPEND)
 		{
-			if (current->next->tok_types == T_WORD)
+			if (current->next && current->next->tok_types == T_WORD)
 				current = current->next;
 		}
 		current = current->next;

@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 19:01:58 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/14 11:28:20 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/17 10:17:40 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,17 +79,22 @@ int	find_path(char *cmd, char *envp_path, char **path)
 int	get_p_path(char *cmd, char *envp_path, char **path)
 {
 	struct stat	st;
-	
+
 	if (!cmd || !*cmd)
 		return (*path = ft_strdup(cmd), 0);
 	if (!envp_path || ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, F_OK))
+		if (stat(cmd, &st) == -1)
 		{
+			if (errno == EACCES)
+			{
+				print_err_msg(cmd, ": Permission denied\n", NULL);
+				return (*path = NULL, 126);
+			}		
 			print_err_msg(cmd, ": No such file or directory\n", NULL);
 			return (*path = NULL, 127);
 		}
-		else if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
+		if (stat(cmd, &st) == 0 && S_ISDIR(st.st_mode))
 		{
 			print_err_msg(cmd, ": is a directory\n", NULL);
 			return (*path = NULL, 126);

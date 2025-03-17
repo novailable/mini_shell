@@ -28,6 +28,8 @@
 
 # define ERR_QUOTE "syntax error near unexpected token `"
 
+# define QUOTE_MARKER '\x01'
+
 extern volatile sig_atomic_t	g_sig_interrupt;
 
 typedef enum e_token_types
@@ -91,6 +93,7 @@ int			check_grammar_syntax(t_tokens *head);
 
 // ast_utils.c
 void		print_ast(t_ast *ast_node);
+void		print_tokens(t_tokens *head, char *str);
 
 // ast.c
 int			init_ast(t_core *core);
@@ -135,25 +138,28 @@ void		set_signal_heredoc(void);
 void		signal_pipe(int status, t_core *core);
 
 // token_utils.c
-t_tokens	*create_new_token(char *str);
+t_tokens	*create_new_token(char *str, int type);
 void		append_token(t_tokens **head, t_tokens *new_node);
 void		tokenize_str(t_tokens *head);
 
+// utils_token2.c
+void		token_expansion(t_core *core);
+void		token_split(t_core *core);
+int			check_tokens(t_core *core);
+
 // tokens.c
-void		create_add_token(t_tokens **head, char *str);
 int			special_char_check(char curr_c, char next_c, char *str, \
 t_tokens **head);
-void		handle_space(char *input, t_tokens **head, char **start, int i);
 void		handle_special_char(char *input, t_tokens **head, char **start, \
 int *i);
-t_tokens	*string_split(char *input);
+t_tokens	*string_split(char *input, int type, int spec_split);
 
 // export.c
 void		new_env(char *key, char *value, t_list **envp);
 void		update_env(char *value, t_list *envp);
 void		export_noargs(t_list *envp);
 void		print_export(void *data);
-int			export(char **args, t_list *envp, int status);
+int			export(char **args, t_core *core);
 
 // utils_core.c
 t_core		*init_core(char **envpath);
@@ -163,7 +169,7 @@ t_list		*init_env_empty(t_list *envp);
 // utils_envp.c
 t_list		*find_env(char *key, t_list *envp);
 char		*ft_getenv(char *key, t_list *envp);
-void		get_keypair(char *arg, char *result[2]);
+void		get_keypair(char *arg, char *result[2], t_core *core);
 
 // utils_exe_path.c
 void		update_udscore_env(t_ast *l_node, t_core *core);
@@ -198,7 +204,7 @@ int			signal_status(int status);
 int			signal_print(int status);
 
 // built-in/env
-int			env(t_list *envp);
+int			env(char **args, t_core *core);
 
 // built-in/echo
 int			echo_n(char **args);
@@ -207,7 +213,7 @@ int			echo_n(char **args);
 int			pwd(void);
 
 // built-in/cd
-int			cd(char **args, t_list *envp);
+int			cd(char **args, t_core *core);
 
 // built-in/unset
 int			unset(char **args, t_list **envp);

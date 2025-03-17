@@ -6,26 +6,34 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:51:21 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/14 11:39:18 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/17 13:39:29 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_tokens(t_tokens *head)
+void	print_tokens(t_tokens *head, char *str)
 {
 	t_tokens	*current;
 
 	current = head;
-	printf("Token: ");
+	printf("%s: ", str);
 	if (head == NULL)
 		printf("NULL");
 	while (current)
 	{
-		printf("{%s} ", current->str);
+		printf("{");
+		for (int i = 0; current->str[i]; i++)
+		{
+			if (current->str[i] == QUOTE_MARKER)
+				printf("ç");
+			else
+				printf("%c", current->str[i]);
+		}
+		printf(", %d} ", current->tok_types);
 		current = current->next;
 	}
-	printf("\n");
+	printf("\n\n");
 }
 
 int	is_in_quote(char *str)
@@ -64,7 +72,7 @@ int	get_input(t_core *core)
 	else
 	{
 		if (input && *input == '|')
-			core->status = (*input == '|') * 2;
+			core->status = 2;
 		return (core->input = input, 1);
 	}
 	core->input = input;
@@ -73,24 +81,32 @@ int	get_input(t_core *core)
 
 int	init_token(t_core *core)
 {
-	core->tokens = string_split(handle_env(core->input, core));
-	free(core->input);
-	core->input = NULL;
+	core->tokens = string_split(core->input, 0, 1);
 	if (!core->tokens)
 		return (1);
 	tokenize_str(core->tokens);
 	if (check_grammar_syntax(core->tokens) == 1)
 	{
+		token_expansion(core);
+		// print_tokens(core->tokens, "expan : ");
+		token_split(core);
+		// print_tokens(core->tokens, "after split : ");
 		prepare_heredoc(core);
+		// print_tokens(core->tokens, "after heredoc : ");
 		if (get_interrupt(core))
-			return (1);
+			return (free_tokens(&core->tokens), free_str(&core->input), 1);
+		if (check_tokens(core))
+			return (core->status = 1, free_tokens(&core->tokens), \
+					free_str(&core->input), 1);
 	}
 	else
 	{
 		core->status = 2;
-		return (free_tokens(&core->tokens), 1);
+		return (free_tokens(&core->tokens), free_str(&core->input), 1);
 	}
-	core->status = 0;
+	if (core->tokens == NULL && core->input)
+		core->status = 0;
+	free_str(&core->input);
 	return (0);
 }
 
@@ -107,21 +123,18 @@ int	main(int argc, char **argv, char **envpath)
 		{
 			status = core->status;
 			if (core->input == NULL)
-				return (ft_putstr_fd("exit\n", 2), free_core(core), status);
+				return (ft_putstr_fd("exit\n", 2), \
+				free_str(&core->input), free_core(core), status);
 			else if (*core->input == '|')
 				print_err_msg(" syntax error near unexpected token `|'\n", NULL,
 					NULL);
-			free(core->input);
+			free_str(&core->input);
 			continue ;
 		}
 		if (init_token(core))
 			continue ;
 		if (init_ast(core) && core->ast)
-		{
-			// print_ast(core->ast);
-			execute_ast(core);
-			free_ast(&core->ast);
-		}
+			(execute_ast(core), free_ast(&core->ast));
 	}
 	return (free_core(core), 0);
 }

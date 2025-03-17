@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_export.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 17:03:30 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/12 15:10:14 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/16 21:18:05 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	env_key_check(char *key, char *args)
 	temp = args;
 	if (!temp || !*temp)
 		temp = key;
-	return (print_err_msg("export : `", temp, \
+	return (print_err_msg("export : `", key, \
 			"': not a valid identifier\n"), 1);
 }
 

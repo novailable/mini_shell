@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:42:22 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/14 10:38:26 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/17 13:13:46 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,16 @@ char	*get_heredoc(char *eof, int quote)
 	char	*temp;
 	char	*q_eof;
 
-	temp = NULL;
+	temp = ft_strdup("");
 	q_eof = get_eof(eof, quote);
 	free(eof);
 	while (1)
 	{
-		set_signal_heredoc();
-		line = readline("> ");
 		if (g_sig_interrupt)
 			return (free(temp), free(q_eof), NULL);
+		set_signal_heredoc();
+		line = readline("> ");
+		(signal(SIGINT, SIG_IGN), signal(SIGQUIT, SIG_IGN));
 		if (!line && print_heredoc_err(q_eof))
 			break ;
 		if (ft_strcmp(line, q_eof) == 0)
@@ -117,7 +118,7 @@ void	prepare_heredoc(t_core *core)
 			quote = ft_strchr(current->str, '\"') || \
 					ft_strchr(current->str, '\'');
 			current->str = get_heredoc(current->str, quote);
-			if (!quote)
+			if (current->str && *current->str && !quote)
 			{
 				temp = current->str;
 				current->str = handle_env(current->str, core);

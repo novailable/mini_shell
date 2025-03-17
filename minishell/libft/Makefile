@@ -6,7 +6,7 @@
 #    By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/03 12:01:02 by aoo               #+#    #+#              #
-#    Updated: 2025/03/10 15:41:35 by aoo              ###   ########.fr        #
+#    Updated: 2025/03/16 17:20:32 by aoo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SRCS = ft_isalpha.c ft_isdigit.c ft_isdigit.c  ft_isalnum.c  ft_isascii.c ft_str
        ft_putendl_fd.c ft_putnbr_fd.c ft_atoi_vali.c ft_atoll_vali.c ft_atoi_base.c ft_lowercase.c ft_uppercase.c \
 	   ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c ft_lstadd_back.c ft_lstdelone.c \
 	   ft_lstdelnode.c ft_lstclear.c ft_lstiter.c ft_lstmap.c ft_strtokr_c.c free_strs.c ft_strcjoin.c\
-	   ft_strsncpy.c ft_strslen.c
+	   ft_strsncpy.c ft_strslen.c ft_strchrs.c free_str.c
 
 OBJS = ${SRCS:.c=.o}
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_core.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 19:00:59 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/13 15:58:57 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/16 22:47:58 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ t_list	*init_envp(char **envpath)
 		key = ft_strndup(*envpath, ft_strchr(*envpath, '=') - *envpath);
 		value = ft_strchr(*envpath, '=') + 1;
 		if (!ft_strcmp(key, "SHLVL"))
-			value = ft_itoa(ft_atoi(value) + 1);
+			value = ft_itoa(ft_atoi(value) + 1); 
+		else if (!ft_strcmp(key, "SHELL"))
+			value = ft_strdup("minishell");
 		else
 			value = ft_strdup(value);
-		// else if (!ft_strcmp(key, "SHELL"))
-			// value = ft_strdup("minishell");
 		new_env(key, value, &envp);
 		(free(key), free(value));
 		envpath++;
@@ -62,9 +62,8 @@ t_core	*init_core(char **envpath)
 	core->tokens = NULL;
 	core->ast = NULL;
 	core->input = NULL;
-	core->history_path = ft_strjoin(ft_getenv("PWD", core->envp), \
-									"/.minihistory", 0, 0);
 	core->status = 0;
 	core->single_time = 1;
+	ft_memset((void *)core, 0, sizeof(core));
 	return (core);
 }

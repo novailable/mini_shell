@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 19:02:13 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/14 11:47:53 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/17 13:48:59 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	exec_cmd(char **args, char *path, t_core *core)
 			free(path);
 		free_strs(envp_array);
 		if (errno == ENOENT)
-			(print_err_msg(args[0], ": command not found\n", NULL), 
+			(print_err_msg(args[0], ": command not found\n", NULL), \
 			free_core(core), exit(127));
 		else if (errno == EACCES)
 			(print_err_msg(args[0], NULL, NULL), \
@@ -40,7 +40,8 @@ int	external(t_ast *l_node, int	*org_fd, t_core *core)
 	int		path_status;
 
 	(signal(SIGINT, SIG_IGN), signal(SIGQUIT, SIG_IGN));
-	path_status = get_p_path(l_node->args[0], ft_getenv("PATH", core->envp), &path);
+	path_status = get_p_path(l_node->args[0], \
+				ft_getenv("PATH", core->envp), &path);
 	if (path_status != 0)
 		return (path_status);
 	pid = fork();
@@ -68,9 +69,9 @@ int	execution_cmd(t_ast *l_node, t_core *core, int *org_fd)
 	if (!args || !*args)
 		return (0);
 	if (!ft_strcmp(*args, "env"))
-		return (env(core->envp));
+		return (env(args, core));
 	else if (!ft_strcmp(*args, "export"))
-		return (export(args, core->envp, core->status));
+		return (export(args, core));
 	else if (!ft_strcmp(*args, "unset"))
 		return (unset(args, &core->envp));
 	else if (!ft_strcmp(*args, "echo"))
@@ -78,7 +79,7 @@ int	execution_cmd(t_ast *l_node, t_core *core, int *org_fd)
 	else if (!ft_strcmp(*args, "pwd"))
 		return (pwd());
 	else if (!ft_strcmp(*args, "cd"))
-		return (cd(args, core->envp));
+		return (cd(args, core));
 	else if (!ft_strcmp(*args, "exit"))
 		return (ft_exit(args, org_fd, core));
 	else
@@ -103,6 +104,6 @@ void	update_udscore_env(t_ast *l_node, t_core *core)
 		env_str = ft_strdup("_=");
 	export_cmds[1] = env_str;
 	export_cmds[2] = NULL;
-	export(export_cmds, core->envp, core->status);
+	export(export_cmds, core);
 	free(env_str);
 }

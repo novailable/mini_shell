@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 18:15:06 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/10 17:22:13 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/16 21:10:23 by nsan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,6 @@ int	unset(char **args, t_list **envp)
 	if (!args || !envp || !*envp)
 		return (1);
 	while (*++args)
-	{
-		if (!env_key_check(*args, NULL))
-			ft_lstdelnode(envp, *args, is_keymatch, free_envp);
-		else
-			status = 1;
-	}
+		ft_lstdelnode(envp, *args, is_keymatch, free_envp);
 	return (status);
 }

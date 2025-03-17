@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+         #
+#    By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 17:41:52 by aoo               #+#    #+#              #
-#    Updated: 2025/03/11 17:35:41 by nsan             ###   ########.fr        #
+#    Updated: 2025/03/17 13:58:01 by aoo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,15 +19,15 @@ RM = rm -rf
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRCS = main.c execution.c first_processing.c free_all.c print_msg.c signals.c node_branch.c\
+SRCS = main.c execution.c first_processing.c second_processing.c free_all.c print_msg.c signals.c node_branch.c\
 	\
 	ast.c ast_syntax_check.c ast_args.c ast_redirection.c ast_branch.c ast_utils.c \
 	\
 	token_utils.c tokens.c redirection.c\
 	\
-	built_in/export.c built_in/env.c built_in/unset.c built_in/pwd.c built_in/echo.c built_in/cd.c built_in/history.c built_in/exit.c \
+	built_in/export.c built_in/env.c built_in/unset.c built_in/pwd.c built_in/echo.c built_in/cd.c built_in/exit.c \
 	\
-	utils_envp.c utils_export.c utils_core.c utils_exe_path.c \
+	utils_envp.c utils_export.c utils_core.c utils_exe_path.c utils_token2.c \
 	utils_exe.c utils_heredoc.c utils_redirection.c utils_signal.c \
 
 OBJS = ${SRCS:.c=.o}

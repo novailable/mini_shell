@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 19:26:58 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/12 15:08:05 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/16 18:18:52 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	append_token(t_tokens **head, t_tokens *new_node)
 	current->next = new_node;
 }
 
-t_tokens	*create_new_token(char *str)
+t_tokens	*create_new_token(char *str, int type)
 {
 	t_tokens	*token_malloc;
 
@@ -35,6 +35,7 @@ t_tokens	*create_new_token(char *str)
 	if (!token_malloc)
 		return (printf("token creation\n"), NULL);
 	token_malloc->str = ft_strdup(str);
+	token_malloc->tok_types = type;
 	token_malloc->next = NULL;
 	return (token_malloc);
 }

@@ -6,7 +6,7 @@
 /*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 16:33:34 by aoo               #+#    #+#             */
-/*   Updated: 2025/03/10 15:39:39 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/16 17:33:18 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int		count_word(char const *s, const char *delimiters);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	free_mem(char **result, int i);
+void	free_str(char **str);
 void	free_strs(char **strs);
 bool	ft_atoi_base(char *str, char *base, int *value);
 int		ft_atoi(const char *nptr);
@@ -35,6 +36,7 @@ void	*ft_memmove(void *dest, const void *src, size_t n);
 void	*ft_memset(void *s, int c, size_t n);
 char	*ft_strdup(const char *s);
 char	*ft_strchr(const char *s, int c);
+char	*ft_strchrs(char *str, char *delimeters);
 char	*ft_strjoin(char *s1, char *s2, int fs1, int fs2);
 char	*ft_strcjoin(char *str, char c);
 size_t	ft_strlcat(char *dst, const char *src, size_t size);

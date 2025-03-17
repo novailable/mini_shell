@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_envp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsan <nsan@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 19:01:33 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/10 19:01:41 by nsan             ###   ########.fr       */
+/*   Updated: 2025/03/17 13:46:17 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,16 @@ char	*ft_getenv(char *key, t_list *envp)
 	return (NULL);
 }
 
-void	get_keypair(char *arg, char *result[2])
+void	get_keypair(char *arg, char *result[2], t_core *core)
 {
 	char	*value;
+	char	*temp;
 
-	value = ft_strchr(arg, '=');
+	temp = handle_env(arg, core);
+	value = ft_strchr(temp, '=');
 	if (value)
 	{
-		result[0] = ft_strndup(arg, value - arg);
+		result[0] = ft_strndup(temp, value - temp);
 		if (ft_strcmp(value, "=") == 0)
 			result[1] = ft_strdup("");
 		else
@@ -52,7 +54,8 @@ void	get_keypair(char *arg, char *result[2])
 	}
 	else
 	{
-		result[0] = ft_strdup(arg);
+		result[0] = ft_strdup(temp);
 		result[1] = NULL;
 	}
+	free(temp);
 }

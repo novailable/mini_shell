@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print_msg.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoo <aoo@student.42singapore.sg>           +#+  +:+       +#+        */
+/*   By: aoo <aoo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:29:49 by nsan              #+#    #+#             */
-/*   Updated: 2025/03/14 10:32:45 by aoo              ###   ########.fr       */
+/*   Updated: 2025/03/15 21:49:17 by aoo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	print_heredoc_err(char *eof)
 {
-	ft_putstr_fd("\nminishell: warning: here-document delimited by ",
+	ft_putstr_fd("minishell: warning: here-document delimited by ",
 		STDERR_FILENO);
 	ft_putstr_fd("end-of-file (wanted `", STDERR_FILENO);
 	ft_putstr_fd (eof, STDERR_FILENO);
